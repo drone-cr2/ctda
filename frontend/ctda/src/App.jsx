@@ -1,9 +1,12 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { useEffect } from 'react'
 import mpld3 from 'mpld3'
+import BarChart from './components/BarChart'
+import PieChart from './components/PieChart'
+import ScatterPlot from './components/ScatterPlot'
+import LineChart from './components/LineChart'
+import BubbleChart from './components/BubbleChart'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -57,32 +60,20 @@ function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
         {data.map((ele,index)=> 
         <span key={index}>
           {ele}
           <br></br>
         </span>  )}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <div id="plot-div"></div>
+ 
+
+      <BarChart/>
+      <PieChart/>
+      <ScatterPlot/>
+      <LineChart/>
+      <BubbleChart/>
 
       {/* 
       {plotData ? (
