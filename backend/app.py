@@ -7,6 +7,8 @@ import re
 import matplotlib.pyplot as plt
 import plotly.tools as tls
 import mpld3
+from preprocessing import preprocess
+from charts import timelines
 
 
 # file = open('WhatsApp Chat with BE IT A Official 2024-25.txt','r',encoding='utf-8')
@@ -20,6 +22,15 @@ import mpld3
 # current module (__name__) as argument.
 app = Flask(__name__)
 cors = CORS(app,origins='*' )
+
+
+# reading file
+f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')
+
+# processing and converting into dataframe
+data = f.read()
+df = preprocess(data)
+user = 'Overall'
 
 # The route() function of the Flask class is a decorator, 
 # which tells the application which URL should call 
@@ -58,6 +69,18 @@ def generate_plot_json():
 @app.route('/mpld3.js',methods=['GET'])
 def serve_mpld3_js():
     return send_from_directory('.', 'mpld3.js')
+
+# Timelines - real data
+@app.route('/timelines',methods=['GET'])
+def serve_timelines():
+    timeline_monthly_fig, buzy_day_fig, buzy_month_fig = timelines(df,user)
+
+    plot_json = mpld3.fig_to_dict(timeline_monthly_fig)
+    plt.close(timeline_monthly_fig)
+    return jsonify(plot_json)
+
+
+
 
 # main driver function
 if __name__ == '__main__':
