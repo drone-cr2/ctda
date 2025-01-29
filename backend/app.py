@@ -79,7 +79,13 @@ def serve_timelines():
     plt.close(timeline_monthly_fig)
     return jsonify(plot_json)
 
+@app.route('/dayfig',methods=['GET'])
+def serve_day_fig():
+    timeline_monthly_fig, buzy_day_fig, buzy_month_fig = timelines(df,user)
 
+    plot_json = mpld3.fig_to_dict(buzy_day_fig)
+    plt.close(buzy_day_fig)
+    return jsonify(plot_json)
 
 
 # main driver function

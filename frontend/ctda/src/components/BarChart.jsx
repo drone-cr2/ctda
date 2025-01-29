@@ -6,25 +6,54 @@ const BarChart = () => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8080/plot-json');
+      const response = await fetch('http://localhost:8080/timelines');
       const data = await response.json();
 
-      const x_co = data.data.data03[0]; // Assuming `data02` exists and is appropriate for a bar chart
-      const y_co = data.data.data03[1];
+      // Extracting x and y coordinates from the fetched data
+      const x_co = data.data.data01.map(point => point[0]);
+      const y_co = data.data.data01.map(point => point[1]);
 
+      // console.log(x_co);
+      // console.log(y_co);
+
+      // Define the month names
+      const months = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+
+      // Create an object to aggregate the total messages per month
+      const monthAggregates = {};
+
+      // Loop through the x_co and y_co arrays and aggregate the y values for each month
+      x_co.forEach((value, index) => {
+        const month = months[value % 12]; 
+        if (!monthAggregates[month]) {
+          monthAggregates[month] = 0; 
+        }
+        monthAggregates[month] += y_co[index]; 
+      });
+
+      // Prepare the x and y labels for the plot
+      const x_labels = Object.keys(monthAggregates);
+      const y_values = Object.values(monthAggregates);
+
+      // console.log(x_labels);
+      // console.log(y_values);
+
+      // Prepare the processed data for Plotly (bar chart)
       const processedData = [
         {
-          x: x_co.map((item) => item), // Mapping over x-axis categories
-          y: y_co.map((item) => item), // Mapping over y-axis values
-          type: 'bar',
+          x: x_labels, 
+          y: y_values, 
+          type: 'bar', 
           marker: {
-            color: x_co.map((_, index) =>
-              ['#1F77B4', '#FF7F0E', '#2CA02C'][index % 3]
-            ), // Assign a repeating color pattern
+            color: '#1F77B4', 
           },
-          name: 'Bar Data',
+          name: 'Messages',
         },
       ];
+
       setPlotData(processedData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -36,9 +65,17 @@ const BarChart = () => {
   }, []);
 
   const layout = {
-    title: 'Bar Chart',
-    xaxis: { title: 'X-axis' },
-    yaxis: { title: 'Y-axis' },
+    title: 'Monthly Message Chart',
+    xaxis: {
+      title: 'Months',
+      type: 'category', 
+    },
+    yaxis: {
+      title: 'Total Messages',
+      type: 'linear',
+      autorange: true,
+    },
+    barmode: 'group', 
   };
 
   return <Plot data={plotData} layout={layout} />;

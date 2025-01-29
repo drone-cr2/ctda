@@ -7,9 +7,9 @@ import PieChart from './components/PieChart'
 import ScatterPlot from './components/ScatterPlot'
 import LineChart from './components/LineChart'
 import BubbleChart from './components/BubbleChart'
+import BarChartDays from './components/BarChartDays'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   const [data,setData] = useState([])
 
@@ -19,8 +19,8 @@ function App() {
     fetch('http://127.0.0.1:8080')
     .then(response => response.json())
     .then(data => {
-      console.log(data)   
-      console.log(data.data)   
+      // console.log(data)   
+      // console.log(data.data)   
       setData(data.data)
     })
     .catch(error => console.error(error));
@@ -33,9 +33,15 @@ function App() {
 
   useEffect(() => {
     // Fetch the plot data from the backend
-    fetch('http://localhost:8080/plot-json')
-    .then(response => setplotData(response.data))
-    .catch(err => console.log(err))
+    // fetch('http://localhost:8080/plot-json')
+    // .then(response => setplotData(response.data))
+    // .catch(err => console.log(err))
+
+
+    // data fetching
+    // fetch('http://localhost:8080/timelines ')
+    // .then(response => setplotData(response.data))
+    // .catch(err => console.log(err))
 
 
   // Load mpld3.js dynamically
@@ -49,6 +55,8 @@ function App() {
 
   }, []);
 
+  // console.log(plotData)
+
     // const [plotData, setPlotData] = useState(null);
     // fetch(()=>{
 
@@ -60,19 +68,20 @@ function App() {
 
   return (
     <>
-      <div className="card">
+      {/* <div className="card">
         {data.map((ele,index)=> 
         <span key={index}>
           {ele}
           <br></br>
         </span>  )}
-      </div>
+      </div> */}
  
 
       <BarChart/>
+      <BarChartDays/>
       <PieChart/>
-      <ScatterPlot/>
       <LineChart/>
+      <ScatterPlot/>
       <BubbleChart/>
 
       {/* 
