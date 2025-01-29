@@ -87,7 +87,7 @@ def timelines(df,user):
 
     df['day_name'] = df['date'].dt.day_name() 
 
-    day_counts_df = df['day_name'].value_counts()
+    day_counts_df = df['day_name'].value_counts(sort=False)
     buzy_day_fig,ax2 = plt.subplots()
     ax2.bar(day_counts_df.index,day_counts_df.values,color='purple')
     plt.xticks(rotation='vertical')
