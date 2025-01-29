@@ -81,8 +81,8 @@ function App() {
       <BarChartDays/>
       <PieChart/>
       <LineChart/>
-      <ScatterPlot/>
-      <BubbleChart/>
+      {/* <ScatterPlot/>
+      <BubbleChart/> */}
 
       {/* 
       {plotData ? (

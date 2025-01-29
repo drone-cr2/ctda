@@ -1,10 +1,9 @@
-# from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
-# import seaborn as sns
-# from collections import Counter
+import seaborn as sns
+from collections import Counter
 import pandas as pd
-# import emoji
-
+import numpy as np
 
 # def fetch_charts(df,user):
 #     if user != 'Overall':
@@ -122,26 +121,38 @@ def timelines(df,user):
     
 #     return fig
 
-# def activity_heatmap(df,user):
-
+# def activity_heatmap(df, user):
 #     if user != 'Overall':
 #         df = df[df['user'] == user]
 
-#     df['day_name'] = df['date'].dt.day_name() 
+#     df['day_name'] = df['date'].dt.day_name()
 
 #     period = []
-#     for hour in df[['day_name', 'hour']]['hour']:
+#     for hour in df['hour']:
 #         if hour == 23:
-#             period.append(str(hour) + "-" + str('00'))
+#             period.append(f"{hour}-00")
 #         elif hour == 0:
-#             period.append(str('00') + "-" + str(hour + 1))
+#             period.append(f"00-{hour + 1}")
 #         else:
-#             period.append(str(hour) + "-" + str(hour + 1))
+#             period.append(f"{hour}-{hour + 1}")
 
 #     df['period'] = period
-    
-#     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
-#     fig,ax = plt.subplots()
-#     ax = sns.heatmap(user_heatmap)
+#     df['hour'] = df['hour'].astype(int)  
 
-#     return fig
+#     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
+
+#     user_heatmap = user_heatmap.astype(float)
+
+#     day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+#     user_heatmap = user_heatmap.reindex(day_order)
+
+#     fig, ax = plt.subplots()
+#     sns.heatmap(user_heatmap, ax=ax)
+
+#     plot_json = mpld3.fig_to_dict(fig)
+#     plt.close(fig)
+
+#     return jsonify(plot_json)
+
+
+

@@ -18,6 +18,7 @@ const BarChartDays = () => {
         'Friday': data.data.data05[2][1] || 0,
         'Saturday': data.data.data06[2][1] || 0,
         'Sunday': data.data.data07[2][1] || 0,
+        
       };
 
       // Days of the week in correct order (no sorting)
@@ -26,8 +27,8 @@ const BarChartDays = () => {
       // Get the corresponding message counts for the days
       const messageCounts = daysOfWeek.map(day => dayMappings[day]);
 
-      console.log(daysOfWeek); 
-      console.log(messageCounts); 
+      // console.log(daysOfWeek); 
+      // console.log(messageCounts); 
 
       // Prepare the processed data for Plotly (bar chart)
       const processedData = [
