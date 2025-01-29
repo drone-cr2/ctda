@@ -88,8 +88,10 @@ def timelines(df,user):
     df['day_name'] = df['date'].dt.day_name() 
 
     day_counts_df = df['day_name'].value_counts(sort=False)
+    day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    sorted_day_counts_df = day_counts_df.reindex(day_order)
     buzy_day_fig,ax2 = plt.subplots()
-    ax2.bar(day_counts_df.index,day_counts_df.values,color='purple')
+    ax2.bar(sorted_day_counts_df.index, sorted_day_counts_df.values,color='purple')
     plt.xticks(rotation='vertical')
 
     month_count_df = df['month'].value_counts()
