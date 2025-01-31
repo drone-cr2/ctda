@@ -8,19 +8,17 @@ import ScatterPlot from './components/ScatterPlot'
 import LineChart from './components/LineChart'
 import BubbleChart from './components/BubbleChart'
 import BarChartDays from './components/BarChartDays'
+import Heatmap from './components/Heatmap'
 
 function App() {
 
   const [data,setData] = useState([])
 
-  // dummy useeffect just to check
   useEffect(()=>{
     
     fetch('http://127.0.0.1:8080')
     .then(response => response.json())
     .then(data => {
-      // console.log(data)   
-      // console.log(data.data)   
       setData(data.data)
     })
     .catch(error => console.error(error));
@@ -81,6 +79,7 @@ function App() {
       <BarChartDays/>
       <PieChart/>
       <LineChart/>
+      <Heatmap/>
       {/* <ScatterPlot/>
       <BubbleChart/> */}
 

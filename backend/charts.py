@@ -4,6 +4,8 @@ import seaborn as sns
 from collections import Counter
 import pandas as pd
 import numpy as np
+import mpld3
+from flask import jsonify
 
 # def fetch_charts(df,user):
 #     if user != 'Overall':
@@ -121,38 +123,43 @@ def timelines(df,user):
     
 #     return fig
 
-# def activity_heatmap(df, user):
-#     if user != 'Overall':
-#         df = df[df['user'] == user]
+def activity_heatmap(df, user):
+    user = 'Overall'  
+    if user != 'Overall':
+        df_filtered = df[df['user'] == user]
+    else:
+        df_filtered = df
 
-#     df['day_name'] = df['date'].dt.day_name()
+    df_filtered['day_name'] = df_filtered['date'].dt.day_name()
 
-#     period = []
-#     for hour in df['hour']:
-#         if hour == 23:
-#             period.append(f"{hour}-00")
-#         elif hour == 0:
-#             period.append(f"00-{hour + 1}")
-#         else:
-#             period.append(f"{hour}-{hour + 1}")
+    # Create period column (hour ranges)
+    period = []
+    for hour in df_filtered['hour']:
+        if hour == 23:
+            period.append(f"{hour}-00")
+        elif hour == 0:
+            period.append(f"00-{hour + 1}")
+        else:
+            period.append(f"{hour}-{hour + 1}")
 
-#     df['period'] = period
-#     df['hour'] = df['hour'].astype(int)  
+    df_filtered['period'] = period
+    df_filtered['hour'] = df_filtered['hour'].astype(int)
 
-#     user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
+    # Pivot table for heatmap
+    user_heatmap = df_filtered.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
 
-#     user_heatmap = user_heatmap.astype(float)
+    # Ensure correct day order
+    day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    user_heatmap = user_heatmap.reindex(day_order)
 
-#     day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-#     user_heatmap = user_heatmap.reindex(day_order)
+    # Convert data to JSON
+    heatmap_data = {
+        "x": list(user_heatmap.columns),  # Periods
+        "y": list(user_heatmap.index),  # Days
+        "z": user_heatmap.fillna(0).values.tolist()  # Heatmap values
+    }
 
-#     fig, ax = plt.subplots()
-#     sns.heatmap(user_heatmap, ax=ax)
-
-#     plot_json = mpld3.fig_to_dict(fig)
-#     plt.close(fig)
-
-#     return jsonify(plot_json)
+    return heatmap_data
 
 
 

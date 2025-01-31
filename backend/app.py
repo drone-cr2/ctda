@@ -3,13 +3,14 @@
 from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 import re 
+import json
 # import pandas as pd
 import matplotlib.pyplot as plt
 import plotly.tools as tls
 import mpld3
 from preprocessing import preprocess
 from charts import timelines
-# from charts import activity_heatmap
+from charts import activity_heatmap
 
 
 # file = open('WhatsApp Chat with BE IT A Official 2024-25.txt','r',encoding='utf-8')
@@ -88,13 +89,12 @@ def serve_day_fig():
     plt.close(buzy_day_fig)
     return jsonify(plot_json)
 
-# @app.route('/heatmap',methods=['GET'])
-# def serve_activity_heatmap():
-#     fig = activity_heatmap(df, user)
+@app.route('/heatmap', methods=['GET'])
+def serve_activity_heatmap():
+    heatmap = activity_heatmap(df,user)
 
-#     plot_json = mpld3.fig_to_dict(fig)
-#     plt.close(fig)
-#     return jsonify(plot_json)
+    return jsonify(heatmap)
+
 
 
 # main driver function
