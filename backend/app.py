@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import plotly.tools as tls
 import mpld3
 from preprocessing import preprocess
-from charts import timelines
-from charts import activity_heatmap
+from charts import timelines, activity_heatmap, commons
+import stats
 
 
 # file = open('WhatsApp Chat with BE IT A Official 2024-25.txt','r',encoding='utf-8')
@@ -94,6 +94,37 @@ def serve_activity_heatmap():
     heatmap = activity_heatmap(df,user)
 
     return jsonify(heatmap)
+
+
+# RETURNS HORIZONTAL BAR GRAPH wrt to most used common words and their count
+@app.route('/commons')
+def common_words():
+    most_common_df_fig,emoji_df = commons(df,user)
+
+    plot_json = mpld3.fig_to_dict(most_common_df_fig)
+    plt.close(most_common_df_fig)
+    return jsonify(plot_json)
+
+
+
+# following is used for next 2 routes
+buzy_users_df,user_contribution_df = stats.most_busy_users(df)
+
+# RETURNS BAR GRAPH OF USERS WITH THE MOST NUM OF MESSAGES 
+@app.route('/buzy-users')
+def buzy_users():
+    buzy_users_fig, ax = plt.subplots()
+    ax.bar(buzy_users_df.index, buzy_users_df.values,color='red')
+    plt.xticks(rotation='vertical')
+
+    plot_json = mpld3.fig_to_dict(buzy_users_fig)
+    plt.close(buzy_users_fig)
+    return jsonify(plot_json)
+
+# RETURNS A DATAFRAME REPRESENTING % OF CONTRIBUTION OF EACH USER
+@app.route('/user-contribution')
+def user_contribution():
+    return user_contribution_df.to_json(orient='columns')
 
 
 

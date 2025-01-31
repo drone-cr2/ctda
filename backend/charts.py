@@ -1,11 +1,12 @@
 from wordcloud import WordCloud, STOPWORDS
 import matplotlib.pyplot as plt
-import seaborn as sns
+# import seaborn as sns
 from collections import Counter
 import pandas as pd
 import numpy as np
 import mpld3
 from flask import jsonify
+import emoji
 
 # def fetch_charts(df,user):
 #     if user != 'Overall':
@@ -27,41 +28,41 @@ from flask import jsonify
 
 #     return fig
 
-# def commons(df,user):
+def commons(df,user):
     
-#     if user != 'Overall':
-#         df = df[df['user'] == user]
+    if user != 'Overall':
+        df = df[df['user'] == user]
 
-#     # most common words ... extension of wordcloud
+    # most common words ... extension of wordcloud
 
-#     common_words = [] 
+    common_words = [] 
 
-#     temp = df[df['message'] != '<Media omitted>\n']
-#     for message in temp['message']:
-#         for common_word in message.lower().split():
-#             common_words.append(common_word)
+    temp = df[df['message'] != '<Media omitted>\n']
+    for message in temp['message']:
+        for common_word in message.lower().split():
+            common_words.append(common_word)
 
-#     most_common_df = pd.DataFrame(Counter(common_words).most_common(5))
+    most_common_df = pd.DataFrame(Counter(common_words).most_common(5))
 
-#     most_common_df_fig,ax = plt.subplots()
-#     ax.barh(most_common_df[0],most_common_df[1])
-#     plt.xticks(rotation='vertical')
+    most_common_df_fig,ax = plt.subplots()
+    ax.barh(most_common_df[0],most_common_df[1])
+    plt.xticks(rotation='vertical')
 
 
-#     # most common emojis
+    # most common emojis
     
-#     emojis = []
-#     for message in df['message']:
-#         emojis.extend([c for c in message if c in emoji.EMOJI_DATA])
+    emojis = []
+    for message in df['message']:
+        emojis.extend([c for c in message if c in emoji.EMOJI_DATA])
 
-#     emoji_df = pd.DataFrame(Counter(emojis).most_common(5))
+    emoji_df = pd.DataFrame(Counter(emojis).most_common(5))
 
-#     emoji_df_fig,ax = plt.subplots()
-#     ax.barh(emoji_df[0],emoji_df[1])
+    emoji_df_fig,ax = plt.subplots()
+    ax.barh(emoji_df[0],emoji_df[1])
 
-#     #  can do pie chart here but emojis are not displayed
+    #  can do pie chart here but emojis are not displayed
 
-#     return most_common_df_fig,emoji_df
+    return most_common_df_fig,emoji_df
 
 def timelines(df,user):
 

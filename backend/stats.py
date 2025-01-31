@@ -1,8 +1,8 @@
-from urlextract import URLExtract
-from wordcloud import WordCloud, STOPWORDS
+# from urlextract import URLExtract
+# from wordcloud import WordCloud, STOPWORDS
 
 
-extract = URLExtract()
+# extract = URLExtract()
 
 def fetch_stats(df,user):
     if user != 'Overall':
