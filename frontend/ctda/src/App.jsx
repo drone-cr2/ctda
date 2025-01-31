@@ -1,14 +1,17 @@
 import { useState } from 'react'
+import React from 'react'
 import './App.css'
 import { useEffect } from 'react'
 import mpld3 from 'mpld3'
 import BarChart from './components/BarChart'
 import PieChart from './components/PieChart'
-import ScatterPlot from './components/ScatterPlot'
 import LineChart from './components/LineChart'
-import BubbleChart from './components/BubbleChart'
 import BarChartDays from './components/BarChartDays'
 import Heatmap from './components/Heatmap'
+import BusyUsers from './components/BusyUsers'
+import TopContributors from './components/TopContributors'
+import BottomContributors from './components/BottomContributors'
+import CommonWords from './components/CommonWords'
 
 function App() {
 
@@ -30,16 +33,7 @@ function App() {
   const [plotData, setplotData] = useState('');
 
   useEffect(() => {
-    // Fetch the plot data from the backend
-    // fetch('http://localhost:8080/plot-json')
-    // .then(response => setplotData(response.data))
-    // .catch(err => console.log(err))
 
-
-    // data fetching
-    // fetch('http://localhost:8080/timelines ')
-    // .then(response => setplotData(response.data))
-    // .catch(err => console.log(err))
 
 
   // Load mpld3.js dynamically
@@ -53,26 +47,11 @@ function App() {
 
   }, []);
 
-  // console.log(plotData)
 
-    // const [plotData, setPlotData] = useState(null);
-    // fetch(()=>{
-
-    //   fetch('http://localhost:8080/plot-json')
-    //    .then(response => setPlotData(response.data))
-    //    .catch(err => console.log(err))
-
-    // },[])
 
   return (
     <>
-      {/* <div className="card">
-        {data.map((ele,index)=> 
-        <span key={index}>
-          {ele}
-          <br></br>
-        </span>  )}
-      </div> */}
+      
  
 
       <BarChart/>
@@ -80,19 +59,11 @@ function App() {
       <PieChart/>
       <LineChart/>
       <Heatmap/>
-      {/* <ScatterPlot/>
-      <BubbleChart/> */}
-
-      {/* 
-      {plotData ? (
-        <Plot
-          data={plotData.data} // The "data" part of the Plotly JSON
-          layout={plotData.layout} // The "layout" part of the Plotly JSON
-        />
-      ) : (
-        <p>Loading...</p>
-      )}
-      */}
+      <BusyUsers/>
+      <TopContributors/>
+      <BottomContributors/>
+      <CommonWords/>
+      
     </>
   )
 }

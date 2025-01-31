@@ -18,41 +18,37 @@ const Heatmap = () => {
     fetchData();
   }, []);
 
-  if (!data) {
-    return <div>Loading...</div>;
-  }
+  // Extract values from API response or use empty arrays if no data is available
+  const xValues = data ? data.x : [];
+  const yValues = data ? data.y : [];
+  const zValues = data ? data.z : [];
 
-  // Extract values from API response
-  const xValues = data.x; // Time periods
-  const yValues = data.y; // Days of the week
-  const zValues = data.z; // Heatmap intensity values
+  console.log("x", xValues);
+  console.log("y", yValues);
+  console.log("z", zValues);
 
-  console.log("x",xValues)
-  console.log("y",yValues)
-  console.log("z",zValues)
   // Plotly heatmap data
   const plotData = [
     {
       z: zValues,
       x: xValues,
-      y: yValues,  
+      y: yValues,
       type: "heatmap",
       colorscale: "Viridis",
       colorbar: { title: "Message Count" },
     },
   ];
-  
 
   // Layout settings
   const layout = {
     title: "User Activity Heatmap",
-    xaxis: { 
-      title: "Time Period", 
-      type: "category"
+    xaxis: {
+      title: "Time Period",
+      type: "category",
     },
-    yaxis: { 
+    yaxis: {
       title: "Days of the Week",
-      type: "category"
+      type: "category",
     },
     autosize: true,
     paper_bgcolor: "#f0f0f0",
@@ -64,7 +60,6 @@ const Heatmap = () => {
       <Plot data={plotData} layout={layout} />
     </div>
   );
-  
 };
 
 export default Heatmap;
