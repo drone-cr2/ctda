@@ -5,7 +5,11 @@ from flask_cors import CORS
 import re 
 import json
 # import pandas as pd
+import matplotlib
+matplotlib.use('Agg') # Set non-GUI backend
 import matplotlib.pyplot as plt
+# matplotlib.use('Agg') sets the backend for Matplotlib to Agg, 
+# which is a non-GUI backend that renders plots as image files (PNG, etc.) instead of displaying them in a window.
 import plotly.tools as tls
 import mpld3
 from preprocessing import preprocess
@@ -99,26 +103,32 @@ def serve_activity_heatmap():
 # RETURNS HORIZONTAL BAR GRAPH wrt to most used common words and their count
 @app.route('/commons')
 def common_words():
-    most_common_df_fig,emoji_df = commons(df,user)
+    most_common_df_fig, wordlist, emoji_df = commons(df,user)
 
     plot_json = mpld3.fig_to_dict(most_common_df_fig)
     plt.close(most_common_df_fig)
+
+    plot_json['wordlist'] = wordlist
+
     return jsonify(plot_json)
 
 
 
 # following is used for next 2 routes
-buzy_users_df,user_contribution_df = stats.most_busy_users(df)
+user_contribution_df, buzy_users_fig, usernames = stats.most_busy_users(df)
 
 # RETURNS BAR GRAPH OF USERS WITH THE MOST NUM OF MESSAGES 
 @app.route('/buzy-users')
 def buzy_users():
-    buzy_users_fig, ax = plt.subplots()
-    ax.bar(buzy_users_df.index, buzy_users_df.values,color='red')
-    plt.xticks(rotation='vertical')
+    # buzy_users_fig, ax = plt.subplots()
+    # ax.bar(buzy_users_df.index, buzy_users_df.values,color='red')
+    # plt.xticks(rotation='vertical')
 
     plot_json = mpld3.fig_to_dict(buzy_users_fig)
     plt.close(buzy_users_fig)
+
+    plot_json["usernames"] = usernames
+
     return jsonify(plot_json)
 
 # RETURNS A DATAFRAME REPRESENTING % OF CONTRIBUTION OF EACH USER

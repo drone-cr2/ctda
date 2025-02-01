@@ -1,4 +1,6 @@
 from wordcloud import WordCloud, STOPWORDS
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 # import seaborn as sns
 from collections import Counter
@@ -62,7 +64,7 @@ def commons(df,user):
 
     #  can do pie chart here but emojis are not displayed
 
-    return most_common_df_fig,emoji_df
+    return most_common_df_fig, most_common_df[0].to_list(), emoji_df
 
 def timelines(df,user):
 
