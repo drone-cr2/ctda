@@ -18,13 +18,9 @@ const BusyUsers = () => {
     fetchData();
   }, []);
 
-  // Extracting the bar values from the fetched data or using empty data if no data is available
-  const xValues = data
-    ? Object.keys(data.data).map((key, index) => `User ${index + 1}`)
-    : [];
-  const yValues = data
-    ? Object.values(data.data).map((coords) => coords[3][1])
-    : [];
+  // Extract usernames for x-axis and activity values for y-axis
+  const xValues = data ? data.usernames : [];
+  const yValues = data ? Object.values(data.data).map((coords) => coords[3][1]) : [];
 
   const plotData = [
     {
