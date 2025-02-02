@@ -1,21 +1,17 @@
-import re 
-# library for regular expression
+import re # regular expression
 import pandas as pd
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 def preprocess(data):
 
     #  as regex is for dates, we match it to find all dates
     date_regex = '\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}'
     dates = re.findall(date_regex,data)
-    len(dates)
 
     user_message_regex = '\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}\s-\s'
-    user_messages = re.split(user_message_regex,data)[1:]
-    #  from line 1 as line 0 is empty
-    len(user_messages)
+    user_messages = re.split(user_message_regex,data)[1:]   #  from line 1 as line 0 is empty
 
     df = pd.DataFrame({'user_message':user_messages,'date':dates})
-    # df.head()
 
     # convert date into proper format
     # format(input) is 'mm/dd/yy, hh:mm' and consider the',' and year is in yy format hence %y NOT %Y
@@ -30,7 +26,7 @@ def preprocess(data):
             users.append(linesplit[0])
             messages.append(linesplit[1])
         else:
-            users.append('Sys notif')
+            users.append('System generated')
             messages.append(linesplit[0])
 
     df['user'] = users
@@ -45,5 +41,48 @@ def preprocess(data):
     df['day'] = df['date'].dt.day
     df['hour'] = df['date'].dt.hour
     df['minute'] = df['date'].dt.minute
+    df['day_name'] = df['date'].dt.day_name() 
 
-    return df
+    period = []
+    for hour in df[['day_name', 'hour']]['hour']:
+        if hour == 23:
+            period.append(str(hour) + "-" + str('00'))
+        elif hour == 0:
+            period.append(str('00') + "-" + str(hour + 1))
+        else:
+            period.append(str(hour) + "-" + str(hour + 1))
+
+    df['period'] = period   # period will be used for heatmap and other projections
+
+    # NLP starts ...
+    
+    sentiments = SentimentIntensityAnalyzer()   # Object for analyzer
+    
+    # Creating different columns for (Positive/Negative/Neutral)
+    df["po"] = [sentiments.polarity_scores(i)["pos"] for i in df["message"]] # Positive
+    df["ne"] = [sentiments.polarity_scores(i)["neg"] for i in df["message"]] # Negative
+    df["nu"] = [sentiments.polarity_scores(i)["neu"] for i in df["message"]] # Neutral
+    
+    # CATEGORISATION : To indentify true sentiment per row in message column
+    def sentiment(d):
+        if d["po"] >= d["ne"] and d["po"] >= d["nu"]:
+            return 1
+        if d["ne"] >= d["po"] and d["ne"] >= d["nu"]:
+            return -1
+        if d["nu"] >= d["po"] and d["nu"] >= d["ne"]:
+            return 0
+
+    # Creating new column & Applying function
+    df['value'] = df.apply(lambda row: sentiment(row), axis=1)
+
+    user_list = df['user'].unique().tolist()    
+    user_list.remove('System generated')
+    sorted_user_list = sorted(user_list, 
+                        key=lambda x: (x.isdigit() or x.startswith("+"),
+                        x.lower()))
+        # custom sorting key to achieve names in ascending order, unsaved numbers at bottom
+        # If x[0].isdigit() (starts with a digit) or x.startswith("+"), it's a number.
+        # x.lower() ensures case-insensitive sorting for names.
+    sorted_user_list.insert(0,'Overall')
+
+    return df, sorted_user_list

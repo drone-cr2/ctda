@@ -10,25 +10,25 @@ import mpld3
 from flask import jsonify
 import emoji
 
-# def fetch_charts(df,user):
-#     if user != 'Overall':
-#         df = df[df['user'] == user]
+def wordcloud(df,user):
+    if user != 'Overall':
+        df = df[df['user'] == user]
 
-#     all_messages = " ".join(df['message'])
+    all_messages = " ".join(df['message'])
 
-#     custom_stopwords =  STOPWORDS.union(set([
-#         "Media","omitted","This","message","deleted"
-#     ]))
+    custom_stopwords =  STOPWORDS.union(set([
+        "Media","omitted","This","message","deleted"
+    ]))
 
-#     wordcloud = WordCloud(stopwords =custom_stopwords,width=800, height=400, background_color='white').generate(all_messages)
+    wordcloud = WordCloud(stopwords =custom_stopwords,width=800, height=400, background_color='white').generate(all_messages)
 
-#     fig, ax = plt.subplots(figsize=(10, 6))
-#     ax.imshow(wordcloud, interpolation='bilinear')
-#     ax.axis('off')
-#     ax.set_title('Word Cloud of Messages', fontsize=16)
-#     plt.tight_layout()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.imshow(wordcloud, interpolation='bilinear')
+    ax.axis('off')
+    ax.set_title('Word Cloud of Messages', fontsize=16)
+    plt.tight_layout()
 
-#     return fig
+    return fig
 
 def commons(df,user):
     

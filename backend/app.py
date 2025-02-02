@@ -1,42 +1,29 @@
-# Importing flask module in the project is mandatory
-# An object of Flask class is our WSGI application.
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_file, request
 from flask_cors import CORS
-import re 
-import json
 # import pandas as pd
 import matplotlib
 matplotlib.use('Agg') # Set non-GUI backend
 import matplotlib.pyplot as plt
-# matplotlib.use('Agg') sets the backend for Matplotlib to Agg, 
-# which is a non-GUI backend that renders plots as image files (PNG, etc.) instead of displaying them in a window.
-import plotly.tools as tls
+    # matplotlib.use('Agg') sets the backend for Matplotlib to Agg, which is a non-GUI backend
+    # that renders plots as image files (PNG, etc.) instead of displaying them in a window.
 import mpld3
 from preprocessing import preprocess
-from charts import timelines, activity_heatmap, commons
+from charts import timelines, activity_heatmap, commons, wordcloud
 import stats
 
-
-# file = open('WhatsApp Chat with BE IT A Official 2024-25.txt','r',encoding='utf-8')
-# data = file.read()
-# date_regex = '\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}'
-# dates = re.findall(date_regex,data)
+app = Flask(__name__)           # Flask constructor takes the name of current module (__name__) as argument.
+cors = CORS(app,origins='*')    # set app to send/accepts requests in localhost as well
 
 
+@app.route('/json', methods=['POST'])
+def json():
+    data = request.get_json()   # Get the JSON data from the request
+    return 'JSON received!'     # Return a success message
 
-# Flask constructor takes the name of 
-# current module (__name__) as argument.
-app = Flask(__name__)
-cors = CORS(app,origins='*' )
-
-
-# reading file
-f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')
-
-# processing and converting into dataframe
-data = f.read()
-df = preprocess(data)
-user = 'Overall'
+f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')    # reading file
+data = f.read() 
+df, user_list = preprocess(data)   # processing and converting into dataframe
+user = user_list[0]
 
 # The route() function of the Flask class is a decorator, 
 # which tells the application which URL should call 
@@ -71,10 +58,6 @@ def generate_plot_json():
 
     # Return the JSON object
     return jsonify(plot_json)
-
-@app.route('/mpld3.js',methods=['GET'])
-def serve_mpld3_js():
-    return send_from_directory('.', 'mpld3.js')
 
 # Timelines - real data
 @app.route('/timelines',methods=['GET'])
@@ -135,6 +118,12 @@ def buzy_users():
 @app.route('/user-contribution')
 def user_contribution():
     return user_contribution_df.to_json(orient='columns')
+
+@app.route('/wordcloud')
+def serve_wordcloud():
+    wdc = wordcloud(df,user)
+    wdc.to_file("wordcloud.png")  # Save to file
+    return send_file("wordcloud.png", mimetype='image/png')
 
 
 
