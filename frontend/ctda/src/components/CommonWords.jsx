@@ -36,7 +36,7 @@ const CommonWords = () => {
 
   const layout = {
     title: "Frequent Words",
-    xaxis: { title: "Contribution" },
+    xaxis: { title: "Occurances" },
     yaxis: { title: "Words", tickangle: 0 },
     paper_bgcolor: "#f0f0f0",
     plot_bgcolor: "#ffffff",
