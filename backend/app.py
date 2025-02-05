@@ -24,18 +24,18 @@ user = None
 def default():
     return "konichiwa bitch"
 
-# : accepts chat and returns list of users for dropdown
-@app.route('/post/', methods=['POST'])
-def json():
-    if(request.method == 'POST'):
-        data = request.get_json()           # Get the JSON data from the request
-        df , user_list = preprocess(data)   # processing and converting into dataframe
-        return user_list                    # Return the list of uesrs
+# # : accepts chat and returns list of users for dropdown
+# @app.route('/post/', methods=['POST'])
+# def post():
+#     if(request.method == 'POST'):
+#         data = request.get_json()           # Get the JSON data from the request
+#         df , user_list = preprocess(data)   # processing and converting into dataframe
+#         return jsonify(user_list)                    # Return the list of uesrs
     
-# : route to set user
-@app.route('/set-user')
-def set_user():
-    user = request.get_json()           # Set user
+# # : route to set user
+# @app.route('/set-user')
+# def set_user():
+#     user = request.get_json()               # Set user
     return "user set successfully"
 
 
