@@ -8,56 +8,87 @@ import matplotlib.pyplot as plt
     # that renders plots as image files (PNG, etc.) instead of displaying them in a window.
 import mpld3
 from preprocessing import preprocess
-from charts import timelines, activity_heatmap, commons, wordcloud
 import stats
+import charts
 
 app = Flask(__name__)           # Flask constructor takes the name of current module (__name__) as argument.
 cors = CORS(app,origins='*')    # set app to send/accepts requests in localhost as well
 
+df = None
+user_list = None
+user = None
 
-@app.route('/json', methods=['POST'])
+# The route() function of the Flask class is a decorator, 
+# mapping the URLs to a specific function that will handle the logic for that URL.
+@app.route('/')
+def default():
+    return "konichiwa bitch"
+
+# : accepts chat and returns list of users for dropdown
+@app.route('/post/', methods=['POST'])
 def json():
-    data = request.get_json()   # Get the JSON data from the request
-    return 'JSON received!'     # Return a success message
+    if(request.method == 'POST'):
+        data = request.get_json()           # Get the JSON data from the request
+        df , user_list = preprocess(data)   # processing and converting into dataframe
+        return user_list                    # Return the list of uesrs
+    
+# : route to set user
+@app.route('/set-user')
+def set_user():
+    user = request.get_json()           # Set user
+    return "user set successfully"
+
 
 f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')    # reading file
 data = f.read() 
 df, user_list = preprocess(data)   # processing and converting into dataframe
 user = user_list[0]
 
-# The route() function of the Flask class is a decorator, 
-# which tells the application which URL should call 
-# the associated function.
-@app.route('/',methods=['GET'])
-# ‘/’ URL is bound with hello_world() function.
-def hello_world():
-    return jsonify(
-        {
-            "data" : ['hello','world']
-        }
-    )
+# 1 : numerical stats
+@app.route('/top-stats')
+def serve_top_stats():
+    num_messages,num_words,num_media_messages,num_links = stats.fetch_stats(df,user)
+    top_stats = {"num_messages" : num_messages,
+                 "num_words" : num_words,
+                 "num_media_messages" : num_media_messages,
+                 "num_links" : num_links}
+    return jsonify(top_stats)
 
-@app.route('/plot-json',methods=['GET'])
-def generate_plot_json():
-    # Create a Matplotlib figure
-    fig, ax = plt.subplots()
-    ax.plot([1, 2, 3], [4, 5, 6], label='Example Line')
-    ax.set_title('Interactive Plot')
-    ax.set_xlabel('X-axis')
-    ax.set_ylabel('Y-axis')
-    ax.legend()
-
-    # # Convert the matplotlib figure to a Plotly JSON object
-    # plotly_fig = tls.mpl_to_plotly(fig)
-    # plt.close(fig)  
-    # return jsonify(plotly_fig)
-
-    # Convert the figure to JSON using mpld3
-    plot_json = mpld3.fig_to_dict(fig)
-    plt.close(fig)  # Close the figure to free memory
-
-    # Return the JSON object
+# 2 : bar ghaph of top 5 users woth message counts
+@app.route('/top-users')
+def serve_buzy_users():
+    buzy_users_fig, usernames = charts.top_users(df)
+    plot_json = mpld3.fig_to_dict(buzy_users_fig)
+    plt.close(buzy_users_fig)
+    plot_json["usernames"] = usernames
     return jsonify(plot_json)
+
+# 3 : dataframe of users and their chat contribution in %
+@app.route('/contributions')
+def serve_contributions():
+    user_contribution_df = stats.user_contribution(df)
+    return user_contribution_df.to_json(orient='columns')
+
+# 4 : horizontal bar graph of top 10(or less) most common words with occourance
+@app.route('/top-words')
+def serve_top_words():
+    fig, wordlist = charts.top_words(df,user)
+    plot_json = mpld3.fig_to_dict(fig)
+    plt.close(fig)
+    plot_json['wordlist'] = wordlist
+    return jsonify(plot_json)
+
+# 5 dataframe of top 10(or less) common emojis with occourance
+@app.route('/top-emojis')
+def serve_top_emojis():
+    emoji_df = stats.top_emojis(df,user)
+    return emoji_df.to_json(orient='columns')
+
+
+
+
+
+
 
 # Timelines - real data
 @app.route('/timelines',methods=['GET'])
@@ -82,42 +113,6 @@ def serve_activity_heatmap():
 
     return jsonify(heatmap)
 
-
-# RETURNS HORIZONTAL BAR GRAPH wrt to most used common words and their count
-@app.route('/commons')
-def common_words():
-    most_common_df_fig, wordlist, emoji_df = commons(df,user)
-
-    plot_json = mpld3.fig_to_dict(most_common_df_fig)
-    plt.close(most_common_df_fig)
-
-    plot_json['wordlist'] = wordlist
-
-    return jsonify(plot_json)
-
-
-
-# following is used for next 2 routes
-user_contribution_df, buzy_users_fig, usernames = stats.most_busy_users(df)
-
-# RETURNS BAR GRAPH OF USERS WITH THE MOST NUM OF MESSAGES 
-@app.route('/buzy-users')
-def buzy_users():
-    # buzy_users_fig, ax = plt.subplots()
-    # ax.bar(buzy_users_df.index, buzy_users_df.values,color='red')
-    # plt.xticks(rotation='vertical')
-
-    plot_json = mpld3.fig_to_dict(buzy_users_fig)
-    plt.close(buzy_users_fig)
-
-    plot_json["usernames"] = usernames
-
-    return jsonify(plot_json)
-
-# RETURNS A DATAFRAME REPRESENTING % OF CONTRIBUTION OF EACH USER
-@app.route('/user-contribution')
-def user_contribution():
-    return user_contribution_df.to_json(orient='columns')
 
 @app.route('/wordcloud')
 def serve_wordcloud():

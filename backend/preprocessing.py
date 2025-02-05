@@ -51,8 +51,9 @@ def preprocess(data):
             period.append(str('00') + "-" + str(hour + 1))
         else:
             period.append(str(hour) + "-" + str(hour + 1))
-
     df['period'] = period   # period will be used for heatmap and other projections
+
+    df = df[df['user'] != 'System generated']   # remove system messages
 
     # NLP starts ...
     
@@ -76,7 +77,6 @@ def preprocess(data):
     df['value'] = df.apply(lambda row: sentiment(row), axis=1)
 
     user_list = df['user'].unique().tolist()    
-    user_list.remove('System generated')
     sorted_user_list = sorted(user_list, 
                         key=lambda x: (x.isdigit() or x.startswith("+"),
                         x.lower()))

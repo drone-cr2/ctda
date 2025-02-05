@@ -2,69 +2,52 @@ from wordcloud import WordCloud, STOPWORDS
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-# import seaborn as sns
 from collections import Counter
 import pandas as pd
 import numpy as np
 import mpld3
 from flask import jsonify
-import emoji
 
-def wordcloud(df,user):
-    if user != 'Overall':
-        df = df[df['user'] == user]
+def top_users(df):
+    df = df[df['user'] != 'System generated'] 
+    buzy_users_series = df['user'].value_counts().head()
+    buzy_users_df = buzy_users_series.to_frame()
+    buzy_users_df = buzy_users_df.reset_index()
+    buzy_users_df.columns = ['user', 'message_count']  # Rename columns for clarity
 
-    all_messages = " ".join(df['message'])
+    buzy_users_fig, ax = plt.subplots()
+    ax.bar(buzy_users_df['user'], buzy_users_df['message_count'])
 
-    custom_stopwords =  STOPWORDS.union(set([
-        "Media","omitted","This","message","deleted"
-    ]))
+    return buzy_users_fig, buzy_users_df['user'].tolist()
 
-    wordcloud = WordCloud(stopwords =custom_stopwords,width=800, height=400, background_color='white').generate(all_messages)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.imshow(wordcloud, interpolation='bilinear')
-    ax.axis('off')
-    ax.set_title('Word Cloud of Messages', fontsize=16)
-    plt.tight_layout()
 
-    return fig
-
-def commons(df,user):
+def top_words(df,user):
     
     if user != 'Overall':
         df = df[df['user'] == user]
 
-    # most common words ... extension of wordcloud
-
     common_words = [] 
-
     temp = df[df['message'] != '<Media omitted>\n']
     for message in temp['message']:
         for common_word in message.lower().split():
             common_words.append(common_word)
 
-    most_common_df = pd.DataFrame(Counter(common_words).most_common(5))
+    # Read stopwords from file into a set
+    with open("stop_hinglish.txt", "r") as f:
+        stopwords = set(word.strip() for word in f.readlines())  # Remove newline characters
 
-    most_common_df_fig,ax = plt.subplots()
+    # Remove stopwords from the list
+    filtered_words = [word for word in common_words if word.lower() not in stopwords]
+    most_common_df = pd.DataFrame(Counter(filtered_words).most_common(10))
+    fig,ax = plt.subplots()
     ax.barh(most_common_df[0],most_common_df[1])
-    plt.xticks(rotation='vertical')
+
+    return fig, most_common_df[0].to_list()
 
 
-    # most common emojis
-    
-    emojis = []
-    for message in df['message']:
-        emojis.extend([c for c in message if c in emoji.EMOJI_DATA])
 
-    emoji_df = pd.DataFrame(Counter(emojis).most_common(5))
 
-    emoji_df_fig,ax = plt.subplots()
-    ax.barh(emoji_df[0],emoji_df[1])
-
-    #  can do pie chart here but emojis are not displayed
-
-    return most_common_df_fig, most_common_df[0].to_list(), emoji_df
 
 def timelines(df,user):
 
@@ -164,5 +147,23 @@ def activity_heatmap(df, user):
 
     return heatmap_data
 
+# def wordcloud(df,user):
+#     if user != 'Overall':
+#         df = df[df['user'] == user]
 
+#     all_messages = " ".join(df['message'])
+
+#     custom_stopwords =  STOPWORDS.union(set([
+#         "Media","omitted","This","message","deleted"
+#     ]))
+
+#     wordcloud = WordCloud(stopwords =custom_stopwords,width=800, height=400, background_color='white').generate(all_messages)
+
+#     fig, ax = plt.subplots(figsize=(10, 6))
+#     ax.imshow(wordcloud, interpolation='bilinear')
+#     ax.axis('off')
+#     ax.set_title('Word Cloud of Messages', fontsize=16)
+#     plt.tight_layout()
+
+#     return fig
 
