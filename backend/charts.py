@@ -4,9 +4,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from collections import Counter
 import pandas as pd
-import numpy as np
-import mpld3
-from flask import jsonify
 
 def top_users(df):
     df = df[df['user'] != 'System generated'] 
@@ -17,9 +14,7 @@ def top_users(df):
 
     buzy_users_fig, ax = plt.subplots()
     ax.bar(buzy_users_df['user'], buzy_users_df['message_count'])
-
     return buzy_users_fig, buzy_users_df['user'].tolist()
-
 
 
 def top_words(df,user):
@@ -36,78 +31,78 @@ def top_words(df,user):
     # Read stopwords from file into a set
     with open("stop_hinglish.txt", "r") as f:
         stopwords = set(word.strip() for word in f.readlines())  # Remove newline characters
-
-    # Remove stopwords from the list
-    filtered_words = [word for word in common_words if word.lower() not in stopwords]
+    filtered_words = [word for word in common_words if word.lower() not in stopwords]   # Remove stopwords from the list
     most_common_df = pd.DataFrame(Counter(filtered_words).most_common(10))
+
     fig,ax = plt.subplots()
     ax.barh(most_common_df[0],most_common_df[1])
-
     return fig, most_common_df[0].to_list()
 
-
-
-
-
-def timelines(df,user):
-
+def timeline(df,user):
     if user != 'Overall':
         df = df[df['user'] == user]
 
-    # monthly timeline for activity
+    timeline_df = df.groupby(['year', 'month_num', 'month']).count()['message'].reset_index()
+    timeline_labels = []
+    for i in range(timeline_df.shape[0]):
+        timeline_labels.append(timeline_df['month'][i] + "-" + str(timeline_df['year'][i]))
+    timeline_df['timeline_labels'] = timeline_labels
 
-    df['month_num'] = df['date'].dt.month
+    fig,ax = plt.subplots()
+    ax.plot(timeline_df['timeline_labels'], timeline_df['message'])
+    return fig,timeline_labels
 
-    timeline = df.groupby(['year', 'month_num', 'month']).count()['message'].reset_index()
+# days ranked as per number of messages per day
+def busiest_days(df,user):
+    if user != 'Overall':
+        df = df[df['user'] == user]
 
-    time = []
-    for i in range(timeline.shape[0]):
-        time.append(timeline['month'][i] + "-" + str(timeline['year'][i]))
-
-    timeline['time'] = time
-
-    timeline_monthly_fig,ax = plt.subplots()
-    ax.plot(timeline['time'], timeline['message'],color='green')
-    plt.xticks(rotation='vertical')
-
-    # most buzy day and month
-
-    df['day_name'] = df['date'].dt.day_name() 
-
-    day_counts_df = df['day_name'].value_counts(sort=False)
+    day_counts_series = df['day_name'].value_counts(sort=False)
     day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    sorted_day_counts_df = day_counts_df.reindex(day_order)
-    buzy_day_fig,ax2 = plt.subplots()
-    ax2.bar(sorted_day_counts_df.index, sorted_day_counts_df.values,color='purple')
-    plt.xticks(rotation='vertical')
+    sorted_day_counts_series = day_counts_series.reindex(day_order)
 
-    month_count_df = df['month'].value_counts()
-    buzy_month_fig,ax  = plt.subplots()
-    ax.bar(month_count_df.index, month_count_df.values, color='orange')
-    plt.xticks(rotation='vertical')
+    fig,ax = plt.subplots()
+    ax.bar(sorted_day_counts_series.index, sorted_day_counts_series.values)
+    return fig
 
-    return timeline_monthly_fig, buzy_day_fig, buzy_month_fig
+# days ranked as per number of words(content length) per day
+def daily_wordcount(df,user):
+    if user != 'Overall':
+        df = df[df['user'] == user]
 
-# def monthy_wordcount(df,user):
+    # Group by day and sum the word counts
+    daily_word_count = df.groupby('day_name')['word_count'].sum()
 
-#     if user != 'Overall':
-#         df = df[df['user'] == user]
+    fig,ax = plt.subplots()
+    ax.bar(df['day_name'].unique(),daily_word_count) 
+    return fig
 
-#     # Create a new column with word count for each message
-#     df['word_count'] = df['message'].apply(lambda x: len(x.split()))
+# months ranked as per number of messages per month
+def busiest_months(df,user):
+    if user != 'Overall':
+        df = df[df['user'] == user]
 
-#     # Group by month and sum the word counts
-#     monthly_word_count = df.groupby('month')['word_count'].sum()
+    month_count_series = df['month'].value_counts()
+    month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    sorted_month_count_series = month_count_series.reindex(month_order)
 
-#     # Plot the data
-#     fig,ax = plt.subplots()
-#     ax.bar(df['month'].unique(),monthly_word_count)
-#     plt.title('Total Word Count by Month')
-#     plt.xlabel('Month')
-#     plt.ylabel('Total Word Count')
-#     plt.xticks(rotation=45)
-    
-#     return fig
+    fig,ax  = plt.subplots()
+    ax.bar(sorted_month_count_series.index, sorted_month_count_series.values)
+    return fig
+
+# months ranked as per number of words(content length) per month
+def monthy_wordcount(df,user):
+    if user != 'Overall':
+        df = df[df['user'] == user]
+
+    # Group by month and sum the word counts
+    monthly_word_count = df.groupby('month')['word_count'].sum()
+
+    fig,ax = plt.subplots()
+    ax.bar(df['month'].unique(),monthly_word_count) 
+    return fig
+
+
 
 def activity_heatmap(df, user):
     user = 'Overall'  

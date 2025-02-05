@@ -36,12 +36,14 @@ def preprocess(data):
 
     # further classification of date into primitives ...
     # alrady in standard format and can be coverted using inbuild fns
-    df['year'] = df['date'].dt.year            # year is a property 
-    df['month'] = df['date'].dt.month_name()   # month is a property, month_name is a function returning jan, feb, ...
-    df['day'] = df['date'].dt.day
+    df['year'] = df['date'].dt.year             # year is a property 
+    df['month'] = df['date'].dt.month_name()    # month is a property, month_name is a function returning jan, feb, ...
+    df['month_num'] = df['date'].dt.month
+    df['day'] = df['date'].dt.day               # similar to above 
+    df['day_name'] = df['date'].dt.day_name() 
     df['hour'] = df['date'].dt.hour
     df['minute'] = df['date'].dt.minute
-    df['day_name'] = df['date'].dt.day_name() 
+    df['word_count'] = df['message'].apply(lambda x: len(x.split()))    # Create a new column with word count for each message
 
     period = []
     for hour in df[['day_name', 'hour']]['hour']:

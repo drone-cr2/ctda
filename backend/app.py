@@ -36,7 +36,7 @@ def default():
 # @app.route('/set-user')
 # def set_user():
 #     user = request.get_json()               # Set user
-    return "user set successfully"
+#     return "user set successfully"
 
 
 f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')    # reading file
@@ -47,11 +47,7 @@ user = user_list[0]
 # 1 : numerical stats
 @app.route('/top-stats')
 def serve_top_stats():
-    num_messages,num_words,num_media_messages,num_links = stats.fetch_stats(df,user)
-    top_stats = {"num_messages" : num_messages,
-                 "num_words" : num_words,
-                 "num_media_messages" : num_media_messages,
-                 "num_links" : num_links}
+    top_stats = stats.fetch_stats(df,user)
     return jsonify(top_stats)
 
 # 2 : bar ghaph of top 5 users woth message counts
@@ -60,7 +56,7 @@ def serve_buzy_users():
     buzy_users_fig, usernames = charts.top_users(df)
     plot_json = mpld3.fig_to_dict(buzy_users_fig)
     plt.close(buzy_users_fig)
-    plot_json["usernames"] = usernames
+    plot_json["labels"] = usernames
     return jsonify(plot_json)
 
 # 3 : dataframe of users and their chat contribution in %
@@ -75,7 +71,7 @@ def serve_top_words():
     fig, wordlist = charts.top_words(df,user)
     plot_json = mpld3.fig_to_dict(fig)
     plt.close(fig)
-    plot_json['wordlist'] = wordlist
+    plot_json['labels'] = wordlist
     return jsonify(plot_json)
 
 # 5 dataframe of top 10(or less) common emojis with occourance
@@ -84,6 +80,38 @@ def serve_top_emojis():
     emoji_df = stats.top_emojis(df,user)
     return emoji_df.to_json(orient='columns')
 
+# 6 : timeline of chats from group creation, wrt no of messages
+@app.route('/timeline')
+def serve_timeline():
+    fig,timeline_labels = charts.timeline(df,user)
+    plot_json = mpld3.fig_to_dict(fig)
+    plt.close(fig)
+    plot_json['labels'] = timeline_labels
+    return jsonify(plot_json)
+
+# 7 : busiest days wrt message counts (monday, tuesday, ...)
+@app.route('/buzy-days')
+def serve_buzy_days():
+    fig = charts.busiest_days(df,user)
+    plot_json = mpld3.fig_to_dict(fig)
+    plt.close(fig)
+    return jsonify(plot_json)
+
+# 8 : days and their word counts (amt of content shared)
+@app.route('/daily-wordcount')
+def serve_daily_wordcount():
+    fig = charts.daily_wordcount(df,user)
+    plot_json = mpld3.fig_to_dict(fig)
+    plt.close(fig)
+    return jsonify(plot_json)
+
+# 9 : busiest months wrt message counts (jan, feb, ...)
+@app.route('/buzy-months')
+def serve_buzy_months():
+    fig = charts.busiest_months(df,user)
+    plot_json = mpld3.fig_to_dict(fig)
+    plt.close(fig)
+    return jsonify(plot_json)
 
 
 
@@ -109,14 +137,14 @@ def serve_day_fig():
 
 @app.route('/heatmap', methods=['GET'])
 def serve_activity_heatmap():
-    heatmap = activity_heatmap(df,user)
+    heatmap = charts.activity_heatmap(df,user)
 
     return jsonify(heatmap)
 
 
 @app.route('/wordcloud')
 def serve_wordcloud():
-    wdc = wordcloud(df,user)
+    wdc = charts.wordcloud(df,user)
     wdc.to_file("wordcloud.png")  # Save to file
     return send_file("wordcloud.png", mimetype='image/png')
 
