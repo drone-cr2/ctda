@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 
-const BarChart = () => {
+const MonthlyMessageCount = () => {
   const [plotData, setPlotData] = useState([]);
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:8080/timelines');
+      const response = await fetch('http://localhost:8080/timeline');
       const data = await response.json();
 
       // Extracting x and y coordinates from the fetched data
       const x_co = data.data.data01.map(point => point[0]);
       const y_co = data.data.data01.map(point => point[1]);
-
-      // console.log(x_co);
-      // console.log(y_co);
 
       // Define the month names
       const months = [
@@ -37,9 +34,6 @@ const BarChart = () => {
       // Prepare the x and y labels for the plot
       const x_labels = Object.keys(monthAggregates);
       const y_values = Object.values(monthAggregates);
-
-      // console.log(x_labels);
-      // console.log(y_values);
 
       // Prepare the processed data for Plotly (bar chart)
       const processedData = [
@@ -65,7 +59,7 @@ const BarChart = () => {
   }, []);
 
   const layout = {
-    title: 'Monthly Message Chart',
+    title: 'Monthly Message Count Chart',
     xaxis: {
       title: 'Months',
       type: 'category', 
@@ -76,9 +70,11 @@ const BarChart = () => {
       autorange: true,
     },
     barmode: 'group', 
+    width: 1000, // Adjust width here
+    height: 600, // Adjust height here
   };
 
   return <Plot data={plotData} layout={layout} />;
 };
 
-export default BarChart;
+export default MonthlyMessageCount;

@@ -5,10 +5,10 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 def preprocess(data):
 
     #  as regex is for dates, we match it to find all dates
-    date_regex = '\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}'
+    date_regex = r'\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}'
     dates = re.findall(date_regex,data)
 
-    user_message_regex = '\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}\s-\s'
+    user_message_regex = r'\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}\s-\s'
     user_messages = re.split(user_message_regex,data)[1:]   #  from line 1 as line 0 is empty
 
     df = pd.DataFrame({'user_message':user_messages,'date':dates})

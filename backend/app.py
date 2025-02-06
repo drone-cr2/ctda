@@ -10,6 +10,7 @@ import mpld3
 from preprocessing import preprocess
 import stats
 import charts
+from charts import timeline
 
 app = Flask(__name__)           # Flask constructor takes the name of current module (__name__) as argument.
 cors = CORS(app,origins='*')    # set app to send/accepts requests in localhost as well
@@ -22,21 +23,23 @@ user = None
 # mapping the URLs to a specific function that will handle the logic for that URL.
 @app.route('/')
 def default():
-    return "konichiwa bitch"
+    return {
+        message : "konichiwa bitch"
+    }
 
-# # : accepts chat and returns list of users for dropdown
-# @app.route('/post/', methods=['POST'])
-# def post():
-#     if(request.method == 'POST'):
-#         data = request.get_json()           # Get the JSON data from the request
-#         df , user_list = preprocess(data)   # processing and converting into dataframe
-#         return jsonify(user_list)                    # Return the list of uesrs
+# : accepts chat and returns list of users for dropdown
+@app.route('/post/', methods=['POST'])
+def post():
+    if(request.method == 'POST'):
+        data = request.get_json()           # Get the JSON data from the request
+        df , user_list = preprocess(data)   # processing and converting into dataframe
+        return jsonify(user_list)                    # Return the list of uesrs
     
-# # : route to set user
-# @app.route('/set-user')
-# def set_user():
-#     user = request.get_json()               # Set user
-#     return "user set successfully"
+# : route to set user
+@app.route('/set-user')
+def set_user():
+    user = request.get_json()               # Set user
+    return "user set successfully"
 
 
 f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')    # reading file
@@ -50,7 +53,7 @@ def serve_top_stats():
     top_stats = stats.fetch_stats(df,user)
     return jsonify(top_stats)
 
-# 2 : bar ghaph of top 5 users woth message counts
+# 2 : bar graph of top 5 users woth message counts
 @app.route('/top-users')
 def serve_buzy_users():
     buzy_users_fig, usernames = charts.top_users(df)
@@ -106,12 +109,12 @@ def serve_daily_wordcount():
     return jsonify(plot_json)
 
 # 9 : busiest months wrt message counts (jan, feb, ...)
-@app.route('/buzy-months')
-def serve_buzy_months():
-    fig = charts.busiest_months(df,user)
-    plot_json = mpld3.fig_to_dict(fig)
-    plt.close(fig)
-    return jsonify(plot_json)
+# @app.route('/buzy-months')
+# def serve_buzy_months():
+#     fig = charts.busiest_months(df,user)
+#     plot_json = mpld3.fig_to_dict(fig)
+#     plt.close(fig)
+#     return jsonify(plot_json)
 
 
 

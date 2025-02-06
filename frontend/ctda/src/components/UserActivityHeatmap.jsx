@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
 
-const Heatmap = () => {
+const UserActivityHeatmap = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -23,9 +23,9 @@ const Heatmap = () => {
   const yValues = data ? data.y : [];
   const zValues = data ? data.z : [];
 
-  console.log("x", xValues);
-  console.log("y", yValues);
-  console.log("z", zValues);
+  // console.log("x", xValues);
+  // console.log("y", yValues);
+  // console.log("z", zValues);
 
   // Plotly heatmap data
   const plotData = [
@@ -50,7 +50,8 @@ const Heatmap = () => {
       title: "Days of the Week",
       type: "category",
     },
-    autosize: true,
+    width: 1000, // Adjust width here
+    height: 600, // Adjust height here
     paper_bgcolor: "#f0f0f0",
     plot_bgcolor: "#ffffff",
   };
@@ -62,4 +63,4 @@ const Heatmap = () => {
   );
 };
 
-export default Heatmap;
+export default UserActivityHeatmap;

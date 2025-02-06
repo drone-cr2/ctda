@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 
-const CommonWords = () => {
+const MostFrequentWords = () => {
   const [wordsData, setWordsData] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/commons")
+    fetch("http://localhost:8080/top-words")
       .then((response) => response.json())
       .then((data) => {
-        const wordList = data.wordlist || []; // Extract word labels
+        const wordList = data.labels || []; // Extract word labels
+        // console.log(wordList);
 
         const wordsContributions = wordList.map((word, index) => {
-          const yValue = data.data[`data0${index + 1}`][2][0]; // Extract contribution
+          const key = index + 1 < 10 ? `data0${index + 1}` : `data${index + 1}`;
+          const yValue = data.data[key]?.[2]?.[0] || 0; // Extract contribution
           return {
             word,
             contribution: yValue,
           };
         });
 
+        // console.log(wordsContributions);
         // Set the processed words data to the state
         setWordsData(wordsContributions);
       })
@@ -35,15 +38,16 @@ const CommonWords = () => {
   };
 
   const layout = {
-    title: "Frequent Words",
+    title: "Most Frequent Words",
     xaxis: { title: "Occurances" },
     yaxis: { title: "Words", tickangle: 0 },
     paper_bgcolor: "#f0f0f0",
     plot_bgcolor: "#ffffff",
-    autosize: true,
+    width: 1000, // Adjust width here
+    height: 600, // Adjust height here
   };
 
   return <Plot data={[chartData]} layout={layout} />;
 };
 
-export default CommonWords;
+export default MostFrequentWords;
