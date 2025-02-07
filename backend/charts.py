@@ -63,11 +63,12 @@ def busiest_hours(df, user):
     series = df['hour'].value_counts(sort=False)
     all_hours = pd.Series(0, index=range(24))       # Dummy series , ensuring all hours (0-23) are represented, filling missing values with 0
     series = all_hours.add(series, fill_value=0)    # Combine the two series, ensuring all hours exist.
+    # series[series == 0] = 1  # Replace zeros with a tiny value
     
     fig, ax = plt.subplots()
-    ax.bar(series.index, series.values)
+    ax.bar(series.index, series.values, width=0.8)
     # ax.set_xticks([int(i) for i in range(24)])    # [ ERROR ]Ensure all 24 x-axis labels are shown explicitly
-    return fig, series.index.to_list()
+    return fig 
 
 # days plotted against number of messages per day
 def busiest_days(df,user):

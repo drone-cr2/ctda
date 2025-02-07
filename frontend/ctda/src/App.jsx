@@ -15,6 +15,7 @@ import MostFrequentEmojis from "./components/MostFrequentEmojis";
 import WeeklyWordCount from "./components/WeeklyWordCount";
 import TopStats from "./components/TopStats";
 import FileUploader from "./components/FileUploader";
+import FileUpload from "./components/FileUpload";
 
 function App() {
   const [data, setData] = useState([]);
@@ -66,7 +67,10 @@ function App() {
 
   return (
     <>
-      <FileUploader />
+      <h1>heloo mf i fixed it</h1>
+      <FileUpload />
+      <h1>say thanks to daddy</h1>
+      {/* <FileUploader /> */}
       <MonthlyMessageCount />
       <WeeklyMessageCount />
       <WeeklyWordCount />
