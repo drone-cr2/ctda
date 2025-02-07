@@ -16,6 +16,7 @@ import WeeklyWordCount from "./components/WeeklyWordCount";
 import TopStats from "./components/TopStats";
 import FileUploader from "./components/FileUploader";
 import FileUpload from "./components/FileUpload";
+import BusiestHours from "./components/BusiestHours";
 
 function App() {
   const [data, setData] = useState([]);
@@ -31,26 +32,26 @@ function App() {
 
   // },[])
 
-  useEffect(() => {
-    const setUser = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/set-user", {
-          method: "GET", // Explicitly setting method
-        });
+  // useEffect(() => {
+  //   const setUser = async () => {
+  //     try {
+  //       const response = await fetch("http://localhost:8080/set-user", {
+  //         method: "GET", // Explicitly setting method
+  //       });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
+  //       if (!response.ok) {
+  //         throw new Error(`HTTP error! Status: ${response.status}`);
+  //       }
 
-        const data = await response.json();
-        console.log("Response:", data);
-      } catch (error) {
-        console.error("Error setting user:", error);
-      }
-    };
+  //       const data = await response.json();
+  //       console.log("Response:", data);
+  //     } catch (error) {
+  //       console.error("Error setting user:", error);
+  //     }
+  //   };
 
-    setUser();
-  }, []);
+  //   setUser();
+  // }, []);
 
   const [plotData, setplotData] = useState("");
 
@@ -67,13 +68,14 @@ function App() {
 
   return (
     <>
-      <h1>heloo mf i fixed it</h1>
+      {/* <h1>heloo mf i fixed it</h1>
       <FileUpload />
-      <h1>say thanks to daddy</h1>
-      {/* <FileUploader /> */}
+      <h1>say thanks to daddy</h1> */}
+      <FileUploader />
       <MonthlyMessageCount />
       <WeeklyMessageCount />
       <WeeklyWordCount />
+      {/* <BusiestHours/> */}
       <MonthlyContributions />
       <MessageTrendTillNow />
       <UserActivityHeatmap />
@@ -82,7 +84,7 @@ function App() {
       <LowestContributors />
       <MostFrequentWords />
       <MostFrequentEmojis />
-      <TopStats />
+      {/* <TopStats /> */}
     </>
   );
 }
