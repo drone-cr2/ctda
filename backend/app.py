@@ -23,9 +23,7 @@ user = None
 # mapping the URLs to a specific function that will handle the logic for that URL.
 @app.route('/')
 def default():
-    return {
-        message : "konichiwa bitch"
-    }
+    return "konichiwa bitch"
 
 # : accepts chat and returns list of users for dropdown
 @app.route('/post/', methods=['POST'])
@@ -95,49 +93,49 @@ def serve_timeline():
 # 7 : busiest days wrt message counts (monday, tuesday, ...)
 @app.route('/buzy-days')
 def serve_buzy_days():
-    fig = charts.busiest_days(df,user)
+    fig, day_order_labels = charts.busiest_days(df,user)
     plot_json = mpld3.fig_to_dict(fig)
+    plot_json['labels'] = day_order_labels
     plt.close(fig)
     return jsonify(plot_json)
 
-# 8 : days and their word counts (amt of content shared)
+# 8 : days and their word counts (amt of content shared) (monday, tuesday, ...)
 @app.route('/daily-wordcount')
 def serve_daily_wordcount():
-    fig = charts.daily_wordcount(df,user)
+    fig, day_order_labels = charts.daily_wordcount(df,user)
     plot_json = mpld3.fig_to_dict(fig)
+    plot_json['labels'] = day_order_labels
     plt.close(fig)
     return jsonify(plot_json)
 
 # 9 : busiest months wrt message counts (jan, feb, ...)
-# @app.route('/buzy-months')
-# def serve_buzy_months():
-#     fig = charts.busiest_months(df,user)
-#     plot_json = mpld3.fig_to_dict(fig)
-#     plt.close(fig)
-#     return jsonify(plot_json)
-
-
-
-
-
-
-# Timelines - real data
-@app.route('/timelines',methods=['GET'])
-def serve_timelines():
-    timeline_monthly_fig, buzy_day_fig, buzy_month_fig = timelines(df,user)
-
-    plot_json = mpld3.fig_to_dict(timeline_monthly_fig)
-    plt.close(timeline_monthly_fig)
+@app.route('/buzy-months')
+def serve_buzy_months():
+    fig, month_order_labels = charts.busiest_months(df,user)
+    plot_json = mpld3.fig_to_dict(fig)
+    plot_json['labels'] = month_order_labels
+    plt.close(fig)
     return jsonify(plot_json)
 
-@app.route('/dayfig',methods=['GET'])
-def serve_day_fig():
-    timeline_monthly_fig, buzy_day_fig, buzy_month_fig = timelines(df,user)
-
-    plot_json = mpld3.fig_to_dict(buzy_day_fig)
-    plt.close(buzy_day_fig)
+# 10 : months and their word counts (amt of content shared) (jan, feb, ...)
+@app.route('/monthly-wordcount')
+def serve_monthly_wordcount():
+    fig, month_order_labels = charts.monthy_wordcount(df,user)
+    plot_json = mpld3.fig_to_dict(fig)
+    plot_json['labels'] = month_order_labels
+    plt.close(fig)
     return jsonify(plot_json)
 
+# 11 : busiest hours wrt message counts (0, 1, 2, ...)
+@app.route('/buzy-hours')
+def serve_busiest_hours():
+    fig, hour_labels = charts.busiest_hours(df,user)
+    plot_json = mpld3.fig_to_dict(fig)
+    plot_json['labels'] = hour_labels
+    plt.close(fig)
+    return jsonify(plot_json)
+
+# 12 : heatmap
 @app.route('/heatmap', methods=['GET'])
 def serve_activity_heatmap():
     heatmap = charts.activity_heatmap(df,user)
@@ -145,12 +143,11 @@ def serve_activity_heatmap():
     return jsonify(heatmap)
 
 
-@app.route('/wordcloud')
-def serve_wordcloud():
-    wdc = charts.wordcloud(df,user)
-    wdc.to_file("wordcloud.png")  # Save to file
-    return send_file("wordcloud.png", mimetype='image/png')
-
+# @app.route('/wordcloud')
+# def serve_wordcloud():
+#     wdc = charts.wordcloud(df,user)
+#     wdc.to_file("wordcloud.png")  # Save to file
+#     return send_file("wordcloud.png", mimetype='image/png')
 
 
 # main driver function

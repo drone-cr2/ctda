@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 from collections import Counter
 import pandas as pd
 
+day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+
 def top_users(df):
     df = df[df['user'] != 'System generated'] 
     buzy_users_series = df['user'].value_counts().head()
@@ -45,62 +48,75 @@ def timeline(df,user):
     timeline_df = df.groupby(['year', 'month_num', 'month']).count()['message'].reset_index()
     timeline_labels = []
     for i in range(timeline_df.shape[0]):
-        timeline_labels.append(timeline_df['month'][i] + "-" + str(timeline_df['year'][i]))
+        timeline_labels.append(timeline_df['month'][i][:3] + "-" + str(timeline_df['year'][i]))
     timeline_df['timeline_labels'] = timeline_labels
 
     fig,ax = plt.subplots()
     ax.plot(timeline_df['timeline_labels'], timeline_df['message'])
     return fig,timeline_labels
 
-# days ranked as per number of messages per day
+# graph of hours in a day against number of messages sent
+def busiest_hours(df, user):
+    if user != 'Overall':
+        df = df[df['user'] == user]
+    
+    series = df['hour'].value_counts(sort=False)
+    all_hours = pd.Series(0, index=range(24))       # Dummy series , ensuring all hours (0-23) are represented, filling missing values with 0
+    series = all_hours.add(series, fill_value=0)    # Combine the two series, ensuring all hours exist.
+    
+    fig, ax = plt.subplots()
+    ax.bar(series.index, series.values)
+    ax.set_xticks(range(24))                        # Ensure all 24 x-axis labels are shown explicitly
+    return fig, 
+
+# days plotted against number of messages per day
 def busiest_days(df,user):
     if user != 'Overall':
         df = df[df['user'] == user]
 
-    day_counts_series = df['day_name'].value_counts(sort=False)
-    day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    sorted_day_counts_series = day_counts_series.reindex(day_order)
+    day_counts_series = df['day_name'].value_counts()
+    sorted_series = day_counts_series.reindex(day_order)
 
     fig,ax = plt.subplots()
-    ax.bar(sorted_day_counts_series.index, sorted_day_counts_series.values)
-    return fig
+    ax.bar(sorted_series.index, sorted_series.values)
+    return fig, day_order
 
-# days ranked as per number of words(content length) per day
+# days plotted against number of words(content length) per day
 def daily_wordcount(df,user):
     if user != 'Overall':
         df = df[df['user'] == user]
 
-    # Group by day and sum the word counts
-    daily_word_count = df.groupby('day_name')['word_count'].sum()
-
+    daily_wc_series = df.groupby('day_name')['word_count'].sum()
+    sorted_series = daily_wc_series.reindex(day_order)
     fig,ax = plt.subplots()
-    ax.bar(df['day_name'].unique(),daily_word_count) 
-    return fig
+    ax.bar(sorted_series.index,sorted_series.values) 
+    return fig, day_order
 
-# months ranked as per number of messages per month
+# months plotted against number of messages per month
 def busiest_months(df,user):
     if user != 'Overall':
         df = df[df['user'] == user]
 
     month_count_series = df['month'].value_counts()
-    month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    sorted_month_count_series = month_count_series.reindex(month_order)
+    sorted_series = month_count_series.reindex(month_order)
 
     fig,ax  = plt.subplots()
-    ax.bar(sorted_month_count_series.index, sorted_month_count_series.values)
-    return fig
+    ax.bar(sorted_series.index, sorted_series.values)
+    return fig, month_order
 
-# months ranked as per number of words(content length) per month
+# months plotted against number of words(content length) per month
 def monthy_wordcount(df,user):
     if user != 'Overall':
         df = df[df['user'] == user]
 
     # Group by month and sum the word counts
     monthly_word_count = df.groupby('month')['word_count'].sum()
+    sorted_series = monthly_word_count.reindex(month_order)
+
 
     fig,ax = plt.subplots()
-    ax.bar(df['month'].unique(),monthly_word_count) 
-    return fig
+    ax.bar(sorted_series.index, sorted_series.values) 
+    return fig, month_order
 
 
 
@@ -111,26 +127,12 @@ def activity_heatmap(df, user):
     else:
         df_filtered = df
 
-    df_filtered['day_name'] = df_filtered['date'].dt.day_name()
-
-    # Create period column (hour ranges)
-    period = []
-    for hour in df_filtered['hour']:
-        if hour == 23:
-            period.append(f"{hour}-00")
-        elif hour == 0:
-            period.append(f"00-{hour + 1}")
-        else:
-            period.append(f"{hour}-{hour + 1}")
-
-    df_filtered['period'] = period
     df_filtered['hour'] = df_filtered['hour'].astype(int)
 
     # Pivot table for heatmap
     user_heatmap = df_filtered.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
 
     # Ensure correct day order
-    day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     user_heatmap = user_heatmap.reindex(day_order)
 
     # Convert data to JSON
