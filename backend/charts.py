@@ -66,8 +66,8 @@ def busiest_hours(df, user):
     
     fig, ax = plt.subplots()
     ax.bar(series.index, series.values)
-    ax.set_xticks(range(24))                        # Ensure all 24 x-axis labels are shown explicitly
-    return fig, 
+    # ax.set_xticks([int(i) for i in range(24)])    # [ ERROR ]Ensure all 24 x-axis labels are shown explicitly
+    return fig, series.index.to_list()
 
 # days plotted against number of messages per day
 def busiest_days(df,user):
