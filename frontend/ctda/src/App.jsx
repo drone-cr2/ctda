@@ -16,6 +16,7 @@ import WeeklyWordCount from "./components/WeeklyWordCount";
 import TopStats from "./components/TopStats";
 import FileUploader from "./components/FileUploader";
 import FileUpload from "./components/FileUpload";
+import PlotlyBarChart from "./components/PlotlyPlot";
 
 function App() {
   const [data, setData] = useState([]);
@@ -70,8 +71,11 @@ function App() {
       <h1>heloo mf i fixed it</h1>
       <FileUpload />
       <h1>say thanks to daddy</h1>
+
+      <PlotlyBarChart url="http://127.0.0.1:8080/buzy-hours" />
+      <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
       {/* <FileUploader /> */}
-      <MonthlyMessageCount />
+      {/* <MonthlyMessageCount />
       <WeeklyMessageCount />
       <WeeklyWordCount />
       <MonthlyContributions />
@@ -82,7 +86,7 @@ function App() {
       <LowestContributors />
       <MostFrequentWords />
       <MostFrequentEmojis />
-      <TopStats />
+      <TopStats /> */}
     </>
   );
 }

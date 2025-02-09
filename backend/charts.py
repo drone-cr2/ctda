@@ -4,20 +4,43 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from collections import Counter
 import pandas as pd
+import plotly.express as px
 
 day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
+def series_to_df(sr):
+    df = pd.DataFrame({'titles':sr.index, 'values':sr.values})
+    return df
+
 def top_users(df):
     df = df[df['user'] != 'System generated'] 
     buzy_users_series = df['user'].value_counts().head()
-    buzy_users_df = buzy_users_series.to_frame()
-    buzy_users_df = buzy_users_df.reset_index()
-    buzy_users_df.columns = ['user', 'message_count']  # Rename columns for clarity
+    dfx = series_to_df(buzy_users_series)
 
-    buzy_users_fig, ax = plt.subplots()
-    ax.bar(buzy_users_df['user'], buzy_users_df['message_count'])
-    return buzy_users_fig, buzy_users_df['user'].tolist()
+    fig = px.bar(dfx, x='titles', y='values', title='Most Buzy Users',
+                            # color="titles",  # Different colors per category
+                            labels={"titles": "Categories", "values": "Values Count"},  # Custom axis labels
+                            text="values"  # Show values on top of bars
+        )
+        # Customize layout (legend, background, grid, font)
+    fig.update_layout(
+        title_font=dict(size=24, color="darkblue"),  # Title font size & color
+        xaxis_title="number of messages ( Custom X-Axis Label )",  # Custom X-axis label
+        yaxis_title="user names (Custom Y-Axis Label)",  # Custom Y-axis label
+        showlegend=True,  # Show legend
+        legend=dict(title="Legend", bgcolor="white", bordercolor="black", borderwidth=1)  # Legend styling
+    )
+
+    return fig
+
+    # buzy_users_df = buzy_users_series.to_frame()
+    # buzy_users_df = buzy_users_df.reset_index()
+    # buzy_users_df.columns = ['user', 'message_count']  # Rename columns for clarity
+
+    # buzy_users_fig, ax = plt.subplots()
+    # ax.bar(buzy_users_df['user'], buzy_users_df['message_count'])
+    # return buzy_users_fig, buzy_users_df['user'].tolist()
 
 
 def top_words(df,user):
@@ -55,19 +78,35 @@ def timeline(df,user):
     ax.plot(timeline_df['timeline_labels'], timeline_df['message'])
     return fig,timeline_labels
 
+# # graph of hours in a day against number of messages sent
+# def busiest_hours(df, user):
+#     if user != 'Overall':
+#         df = df[df['user'] == user]
+    
+#     series = df['hour'].value_counts(sort=False)
+#     all_hours = pd.Series(0, index=range(24))       # Dummy series , ensuring all hours (0-23) are represented, filling missing values with 0
+#     series = all_hours.add(series, fill_value=0)    # Combine the two series, ensuring all hours exist.
+#     df_hour = pd.DataFrame({'hour':series.index, 'value': series.values})
+    
+#     fig, ax = plt.subplots()
+#     ax.bar(df_hour['hour'],df_hour['value'], width=0.8)
+#     # ax.set_xticks([int(i) for i in range(24)])    # [ ERROR ]Ensure all 24 x-axis labels are shown explicitly
+#     return fig 
 # graph of hours in a day against number of messages sent
+
 def busiest_hours(df, user):
     if user != 'Overall':
         df = df[df['user'] == user]
     
     series = df['hour'].value_counts(sort=False)
-    all_hours = pd.Series(0, index=range(24))       # Dummy series , ensuring all hours (0-23) are represented, filling missing values with 0
+    all_hours = pd.Series(0, index=range(24))       # Dummy series , ensuring all hours (0-23) are represented, filling missing values with 0     
     series = all_hours.add(series, fill_value=0)    # Combine the two series, ensuring all hours exist.
-    # series[series == 0] = 1  # Replace zeros with a tiny value
-    
-    fig, ax = plt.subplots()
-    ax.bar(series.index, series.values, width=0.8)
-    # ax.set_xticks([int(i) for i in range(24)])    # [ ERROR ]Ensure all 24 x-axis labels are shown explicitly
+
+    df_hour = pd.DataFrame({'hour':series.index, 'value': series.values})
+
+    # Create Plotly figure from DataFrame
+    fig = px.bar(df_hour, x="hour", y="value", title="Bar Chart from DataFrame")
+
     return fig 
 
 # days plotted against number of messages per day
@@ -77,10 +116,11 @@ def busiest_days(df,user):
 
     day_counts_series = df['day_name'].value_counts()
     sorted_series = day_counts_series.reindex(day_order)
+    df_hour = pd.DataFrame({'hour':sorted_series.index, 'value': sorted_series.values})
 
     fig,ax = plt.subplots()
     ax.bar(sorted_series.index, sorted_series.values)
-    return fig, day_order
+    return df_hour
 
 # days plotted against number of words(content length) per day
 def daily_wordcount(df,user):
@@ -122,7 +162,7 @@ def monthy_wordcount(df,user):
 
 
 def activity_heatmap(df, user):
-    user = 'Overall'  
+    # user = 'Overall'  
     if user != 'Overall':
         df_filtered = df[df['user'] == user]
     else:

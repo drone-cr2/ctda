@@ -10,7 +10,8 @@ import mpld3
 from preprocessing import preprocess
 import stats
 import charts
-from charts import timeline
+import plotly.io as pio
+
 
 app = Flask(__name__)           # Flask constructor takes the name of current module (__name__) as argument.
 cors = CORS(app,origins='*')    # set app to send/accepts requests in localhost as well
@@ -70,7 +71,8 @@ def upload_file():
 f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')    # reading file
 data = f.read() 
 df, user_list = preprocess(data)   # processing and converting into dataframe
-user = user_list[0]
+# user = 'jayesh Badgujar, Dyp'
+user = "Overall"
 
 
 # 1 : numerical stats
@@ -82,7 +84,10 @@ def serve_top_stats():
 # 2 : bar graph of top 5 users woth message counts
 @app.route('/top-users')
 def serve_buzy_users():
-    return covert_to_json(*charts.top_users(df))
+    fig = charts.top_users(df)
+    json_data = pio.to_json(fig)
+    return json_data 
+    # return covert_to_json(*charts.top_users(df))
 
 # 3 : dataframe of users and their chat contribution in %
 @app.route('/contributions')
@@ -110,7 +115,8 @@ def serve_timeline():
 # 7 : busiest days wrt message counts (monday, tuesday, ...)
 @app.route('/buzy-days')
 def serve_buzy_days():
-    return covert_to_json(*charts.busiest_days(df,user))
+    # return covert_to_json(*charts.busiest_days(df,user))
+    return charts.busiest_days(df,user).to_json(orient='columns')
 
 
 # 8 : days and their word counts (amt of content shared) (monday, tuesday, ...)
@@ -134,7 +140,13 @@ def serve_monthly_wordcount():
 # 11 : busiest hours wrt message counts (0, 1, 2, ...)
 @app.route('/buzy-hours')
 def serve_busiest_hours():
-    return covert_to_json(charts.busiest_hours(df,user))
+    # return covert_to_json(charts.busiest_hours(df,user))
+    # return charts.busiest_hours(df,user).to_json(orient='columns')
+    fig = charts.busiest_hours(df,user)
+    json_data = pio.to_json(fig)
+    return json_data  # Send JSON to frontend
+
+
 
 # 12 : heatmap
 @app.route('/heatmap', methods=['GET'])
