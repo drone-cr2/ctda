@@ -10,6 +10,7 @@ import mpld3
 from preprocessing import preprocess
 import stats
 import charts
+import nlp_charts
 import plotly.io as pio
 
 
@@ -21,13 +22,13 @@ user_list = None
 user = None
 
 
-# helper function with default arg value for "labels"
-def covert_to_json(fig,labels=None):
-    plot_json = mpld3.fig_to_dict(fig)
-    plt.close(fig)
-    if(labels != None):
-        plot_json["labels"] = labels
-    return jsonify(plot_json)
+# # helper function with default arg value for "labels"
+# def covert_to_json(fig,labels=None):
+#     plot_json = mpld3.fig_to_dict(fig)
+#     plt.close(fig)
+#     if(labels != None):
+#         plot_json["labels"] = labels
+#     return jsonify(plot_json)
 
 # The route() function of the Flask class is a decorator, 
 # mapping the URLs to a specific function that will handle the logic for that URL.
@@ -52,14 +53,6 @@ def upload_file():
         return jsonify({"users" : user_list})   # Return the list of uesrs
 
     return jsonify({"error": "Invalid file type"}), 400
-
-# # : accepts chat and returns list of users for dropdown
-# @app.route('/post/', methods=['POST'])
-# def post():
-#     if(request.method == 'POST'):
-#         data = request.get_json()           # Get the JSON data from the request
-#         df , user_list = preprocess(data)   # processing and converting into dataframe
-#         return jsonify(user_list)                    # Return the list of uesrs
     
 # # : route to set user
 # @app.route('/set-user')
@@ -78,27 +71,25 @@ user = "Overall"
 # 1 : numerical stats
 @app.route('/top-stats')
 def serve_top_stats():
-    return covert_to_json(*stats.fetch_stats(df,user))
+    return jsonify(stats.fetch_stats(df,user))
 # NOTE :  helper functions' returns a tuple, and the * operator unpacks it into separate arguments for covert_to_json().
 
-# 2 : bar graph of top 5 users woth message counts
-@app.route('/top-users')
-def serve_buzy_users():
-    fig = charts.top_users(df)
-    json_data = pio.to_json(fig)
-    return json_data 
-    # return covert_to_json(*charts.top_users(df))
-
-# 3 : dataframe of users and their chat contribution in %
+# 2 : dataframe of users and their chat contribution in %
 @app.route('/contributions')
 def serve_contributions():
     user_contribution_df = stats.user_contribution(df)
     return user_contribution_df.to_json(orient='columns')
 
+# 3 : bar graph of top 5 users with message counts
+@app.route('/top-users')
+def serve_buzy_users():
+    return pio.to_json(charts.top_users(df)) 
+
 # 4 : horizontal bar graph of top 10(or less) most common words with occourance
 @app.route('/top-words')
 def serve_top_words():
-    return covert_to_json(*charts.top_words(df,user))
+    return pio.to_json(charts.top_words(df,user)) 
+    # return covert_to_json(*charts.top_words(df,user))
 
 # 5 dataframe of top 10(or less) common emojis with occourance
 @app.route('/top-emojis')
@@ -109,50 +100,43 @@ def serve_top_emojis():
 # 6 : timeline of chats from group creation, wrt no of messages
 @app.route('/timeline')
 def serve_timeline():
-    return covert_to_json(*charts.timeline(df,user))
-
+    return pio.to_json(charts.timeline(df,user)) 
 
 # 7 : busiest days wrt message counts (monday, tuesday, ...)
 @app.route('/buzy-days')
 def serve_buzy_days():
-    # return covert_to_json(*charts.busiest_days(df,user))
-    return charts.busiest_days(df,user).to_json(orient='columns')
-
+    return pio.to_json(charts.busiest_days(df,user)) 
 
 # 8 : days and their word counts (amt of content shared) (monday, tuesday, ...)
 @app.route('/daily-wordcount')
 def serve_daily_wordcount():
-    return covert_to_json(*charts.daily_wordcount(df,user))
-
+    return pio.to_json(charts.daily_wordcount(df,user)) 
 
 # 9 : busiest months wrt message counts (jan, feb, ...)
 @app.route('/buzy-months')
 def serve_buzy_months():
-    return covert_to_json(*charts.busiest_months(df,user))
-
+    return pio.to_json(charts.busiest_months(df,user)) 
 
 # 10 : months and their word counts (amt of content shared) (jan, feb, ...)
 @app.route('/monthly-wordcount')
 def serve_monthly_wordcount():
-    return covert_to_json(*charts.monthy_wordcount(df,user))
-
+    return pio.to_json(charts.monthy_wordcount(df,user)) 
 
 # 11 : busiest hours wrt message counts (0, 1, 2, ...)
 @app.route('/buzy-hours')
 def serve_busiest_hours():
-    # return covert_to_json(charts.busiest_hours(df,user))
-    # return charts.busiest_hours(df,user).to_json(orient='columns')
-    fig = charts.busiest_hours(df,user)
-    json_data = pio.to_json(fig)
-    return json_data  # Send JSON to frontend
-
-
+    return pio.to_json(charts.busiest_hours(df,user))
 
 # 12 : heatmap
 @app.route('/heatmap', methods=['GET'])
 def serve_activity_heatmap():
-    heatmap = charts.activity_heatmap(df,user)
-    return jsonify(heatmap)
+    return jsonify(charts.activity_heatmap(df,user))
+
+# NLP charts' routes ... still working on this
+
+@app.route('/sen-timeline/<k>')
+def serve_sentiment_timeline(k):
+    return pio.to_json(nlp_charts.daily_timeline(df,user,k))
 
 
 # @app.route('/wordcloud')

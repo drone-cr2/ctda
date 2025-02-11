@@ -18,29 +18,14 @@ def top_users(df):
     buzy_users_series = df['user'].value_counts().head()
     dfx = series_to_df(buzy_users_series)
 
-    fig = px.bar(dfx, x='titles', y='values', title='Most Buzy Users',
-                            # color="titles",  # Different colors per category
-                            labels={"titles": "Categories", "values": "Values Count"},  # Custom axis labels
-                            text="values"  # Show values on top of bars
-        )
-        # Customize layout (legend, background, grid, font)
+    fig = px.bar(dfx, x='titles', y='values', title='Most Buzy Users',  text="values" )
+    # "test" Show values on top of bars
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),  # Title font size & color
-        xaxis_title="number of messages ( Custom X-Axis Label )",  # Custom X-axis label
-        yaxis_title="user names (Custom Y-Axis Label)",  # Custom Y-axis label
-        showlegend=True,  # Show legend
-        legend=dict(title="Legend", bgcolor="white", bordercolor="black", borderwidth=1)  # Legend styling
+        title_font=dict(size=24, color="darkblue"),
+        xaxis_title="User names",
+        yaxis_title="Number of messages",
     )
-
     return fig
-
-    # buzy_users_df = buzy_users_series.to_frame()
-    # buzy_users_df = buzy_users_df.reset_index()
-    # buzy_users_df.columns = ['user', 'message_count']  # Rename columns for clarity
-
-    # buzy_users_fig, ax = plt.subplots()
-    # ax.bar(buzy_users_df['user'], buzy_users_df['message_count'])
-    # return buzy_users_fig, buzy_users_df['user'].tolist()
 
 
 def top_words(df,user):
@@ -58,11 +43,21 @@ def top_words(df,user):
     with open("stop_hinglish.txt", "r") as f:
         stopwords = set(word.strip() for word in f.readlines())  # Remove newline characters
     filtered_words = [word for word in common_words if word.lower() not in stopwords]   # Remove stopwords from the list
-    most_common_df = pd.DataFrame(Counter(filtered_words).most_common(10))
+    dfx = pd.DataFrame(Counter(filtered_words).most_common(10))
+    dfx.columns = ['titles','values']
 
-    fig,ax = plt.subplots()
-    ax.barh(most_common_df[0],most_common_df[1])
-    return fig, most_common_df[0].to_list()
+    fig = px.bar(dfx, x='titles', y='values', title='Most used words',  text="values" )
+    # "test" Show values on top of bars
+    fig.update_layout(
+        title_font=dict(size=24, color="darkblue"),
+        xaxis_title="Words",
+        yaxis_title="Occourances",
+    )
+    return fig
+
+    # fig,ax = plt.subplots()
+    # ax.barh(most_common_df[0],most_common_df[1])
+    # return fig, most_common_df[0].to_list()
 
 def timeline(df,user):
     if user != 'Overall':
@@ -74,25 +69,18 @@ def timeline(df,user):
         timeline_labels.append(timeline_df['month'][i][:3] + "-" + str(timeline_df['year'][i]))
     timeline_df['timeline_labels'] = timeline_labels
 
-    fig,ax = plt.subplots()
-    ax.plot(timeline_df['timeline_labels'], timeline_df['message'])
-    return fig,timeline_labels
+    fig = px.bar(timeline_df, x='timeline_labels', y='message', title='Timeline',  text="values" )
+    # "test" Show values on top of bars
+    fig.update_layout(
+        title_font=dict(size=24, color="darkblue"),
+        xaxis_title="User names",
+        yaxis_title="Number of messages",
+    )
+    return fig
 
-# # graph of hours in a day against number of messages sent
-# def busiest_hours(df, user):
-#     if user != 'Overall':
-#         df = df[df['user'] == user]
-    
-#     series = df['hour'].value_counts(sort=False)
-#     all_hours = pd.Series(0, index=range(24))       # Dummy series , ensuring all hours (0-23) are represented, filling missing values with 0
-#     series = all_hours.add(series, fill_value=0)    # Combine the two series, ensuring all hours exist.
-#     df_hour = pd.DataFrame({'hour':series.index, 'value': series.values})
-    
-#     fig, ax = plt.subplots()
-#     ax.bar(df_hour['hour'],df_hour['value'], width=0.8)
-#     # ax.set_xticks([int(i) for i in range(24)])    # [ ERROR ]Ensure all 24 x-axis labels are shown explicitly
-#     return fig 
-# graph of hours in a day against number of messages sent
+    # fig,ax = plt.subplots()
+    # ax.plot(timeline_df['timeline_labels'], timeline_df['message'])
+    # return fig,timeline_labels
 
 def busiest_hours(df, user):
     if user != 'Overall':
@@ -102,11 +90,15 @@ def busiest_hours(df, user):
     all_hours = pd.Series(0, index=range(24))       # Dummy series , ensuring all hours (0-23) are represented, filling missing values with 0     
     series = all_hours.add(series, fill_value=0)    # Combine the two series, ensuring all hours exist.
 
-    df_hour = pd.DataFrame({'hour':series.index, 'value': series.values})
+    dfx = series_to_df(series)
 
     # Create Plotly figure from DataFrame
-    fig = px.bar(df_hour, x="hour", y="value", title="Bar Chart from DataFrame")
-
+    fig = px.bar(dfx, x="titles", y="values", title="Busiest hours")
+    fig.update_layout(
+        title_font=dict(size=24, color="darkblue"),
+        xaxis_title="Hours",
+        yaxis_title="Message counts",
+    )
     return fig 
 
 # days plotted against number of messages per day
@@ -116,11 +108,19 @@ def busiest_days(df,user):
 
     day_counts_series = df['day_name'].value_counts()
     sorted_series = day_counts_series.reindex(day_order)
-    df_hour = pd.DataFrame({'hour':sorted_series.index, 'value': sorted_series.values})
+    dfx = series_to_df(sorted_series)
 
-    fig,ax = plt.subplots()
-    ax.bar(sorted_series.index, sorted_series.values)
-    return df_hour
+    fig = px.bar(dfx, x='titles', y='values', title='Busiest days',  text="values" )
+    fig.update_layout(
+        title_font=dict(size=24, color="darkblue"),
+        xaxis_title="Days in week",
+        yaxis_title="Number of messages",
+    )
+    return fig
+
+    # fig,ax = plt.subplots()
+    # ax.bar(sorted_series.index, sorted_series.values)
+    # return df_hour
 
 # days plotted against number of words(content length) per day
 def daily_wordcount(df,user):
@@ -129,9 +129,20 @@ def daily_wordcount(df,user):
 
     daily_wc_series = df.groupby('day_name')['word_count'].sum()
     sorted_series = daily_wc_series.reindex(day_order)
-    fig,ax = plt.subplots()
-    ax.bar(sorted_series.index,sorted_series.values) 
-    return fig, day_order
+    dfx = series_to_df(sorted_series)
+
+    fig = px.bar(dfx, x='titles', y='values', title='Daily wordcount',  text="values" )
+    fig.update_layout(
+        title_font=dict(size=24, color="darkblue"),
+        xaxis_title="Days in week",
+        yaxis_title="Amount of content shared",
+    )
+    return fig
+
+
+    # fig,ax = plt.subplots()
+    # ax.bar(sorted_series.index,sorted_series.values) 
+    # return fig, day_order
 
 # months plotted against number of messages per month
 def busiest_months(df,user):
@@ -140,10 +151,19 @@ def busiest_months(df,user):
 
     month_count_series = df['month'].value_counts()
     sorted_series = month_count_series.reindex(month_order)
+    dfx = series_to_df(sorted_series)
 
-    fig,ax  = plt.subplots()
-    ax.bar(sorted_series.index, sorted_series.values)
-    return fig, month_order
+    fig = px.bar(dfx, x='titles', y='values', title='Busiest Months',  text="values" )
+    fig.update_layout(
+        title_font=dict(size=24, color="darkblue"),
+        xaxis_title="Months in year",
+        yaxis_title="Number of messages",
+    )
+    return fig
+
+    # fig,ax  = plt.subplots()
+    # ax.bar(sorted_series.index, sorted_series.values)
+    # return fig, month_order
 
 # months plotted against number of words(content length) per month
 def monthy_wordcount(df,user):
@@ -154,11 +174,19 @@ def monthy_wordcount(df,user):
     monthly_word_count = df.groupby('month')['word_count'].sum()
     sorted_series = monthly_word_count.reindex(month_order)
 
+    dfx = series_to_df(sorted_series)
 
-    fig,ax = plt.subplots()
-    ax.bar(sorted_series.index, sorted_series.values) 
-    return fig, month_order
+    fig = px.bar(dfx, x='titles', y='values', title='Busiest Months',  text="values" )
+    fig.update_layout(
+        title_font=dict(size=24, color="darkblue"),
+        xaxis_title="Months in year",
+        yaxis_title="Amount of content shared",
+    )
+    return fig
 
+    # fig,ax = plt.subplots()
+    # ax.bar(sorted_series.index, sorted_series.values) 
+    # return fig, month_order
 
 
 def activity_heatmap(df, user):
