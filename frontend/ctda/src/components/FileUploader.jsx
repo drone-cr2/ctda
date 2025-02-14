@@ -56,7 +56,7 @@ const FileUploader = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#1E1E2E]">
+    <div className="flex justify-center items-center h-[700px] w-[700px] bg-[#1E1E2E]">
       <div className="shadow-xl flex flex-col justify-center items-center bg-[#2A2A3C] text-white rounded-lg p-6 sm:p-8 md:p-10 w-full max-w-md sm:max-w-lg md:max-w-3xl">
         {!fileContent && (
           <>

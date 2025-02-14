@@ -17,6 +17,7 @@ import TopStats from "./components/TopStats";
 import FileUploader from "./components/FileUploader";
 import FileUpload from "./components/FileUpload";
 import PlotlyBarChart from "./components/PlotlyPlot";
+import HeatmapPlot from "./components/HeatMapPlot";
 import BusiestHours from "./components/BusiestHours";
 
 function App() {
@@ -73,25 +74,27 @@ function App() {
       <FileUpload />
       <h1>say thanks to daddy</h1>*/}
 
+      <FileUploader />
       <PlotlyBarChart url="http://127.0.0.1:8080/buzy-hours" />
       <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/1" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/0" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/-1" />
-      {/* <FileUploader /> */}
-      {/* <MonthlyMessageCount />
-      <WeeklyMessageCount />
-      <WeeklyWordCount />
-      {/* <BusiestHours/> */}
-      {/* <MonthlyContributions />
-      <MessageTrendTillNow />
-      <UserActivityHeatmap />
-      <BusiestUsers />
-      <HighestContributors />
-      <LowestContributors />
-      <MostFrequentWords />
-      <MostFrequentEmojis />
-      <TopStats />  */}
+      <PlotlyBarChart url="http://127.0.0.1:8080/top-words" />
+      <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount" />
+      <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days" />
+      {/* <HeatmapPlot url="http://127.0.0.1:8080/heatmap"/> */}
+      {/* <MonthlyMessageCount /> ------- unclear
+      <WeeklyMessageCount /> ----- done (buzy-days)
+      <WeeklyWordCount /> ----- done (buzy-days)
+      {/* <BusiestHours/> ----- done (daily-wordcount)
+       <MonthlyContributions /> ----- unclear
+      <MessageTrendTillNow /> --------- unclear
+      <UserActivityHeatmap /> ------- semi-done
+      <BusiestUsers /> -------- done (top-users)
+      <HighestContributors /> ---------- not done
+      <LowestContributors /> ------- not done
+      <MostFrequentWords /> -------- done (top-words)
+      <MostFrequentEmojis /> -------- not done
+      */}
+      <TopStats />  
     </>
   );
 }
