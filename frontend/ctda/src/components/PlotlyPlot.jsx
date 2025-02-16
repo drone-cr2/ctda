@@ -56,7 +56,7 @@ const PlotlyPLot = (props) => {
             ) : (
                 <p>Loading chart...</p>
             )}
-            <button onClick={() => exportChart("svg")}>🎨 Download SVG</button>
+            {/* <button onClick={() => exportChart("svg")}>🎨 Download SVG</button> */}
         </div>
     );
 };

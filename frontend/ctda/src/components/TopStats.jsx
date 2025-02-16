@@ -62,7 +62,7 @@ const TopStats = () => {
           },
         ]}
         layout={{
-          width: 1000,
+          width: 700,
           height: 250,
           title: 'Top Stats',
           margin: { t: 50, b: 20, l: 10, r: 10 },

@@ -80,6 +80,7 @@ function App() {
       <PlotlyBarChart url="http://127.0.0.1:8080/top-words" />
       <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount" />
       <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days" />
+      <UserActivityHeatmap /> {/*------- semi-done*/}
       {/* <HeatmapPlot url="http://127.0.0.1:8080/heatmap"/> */}
       {/* <MonthlyMessageCount /> ------- unclear
       <WeeklyMessageCount /> ----- done (buzy-days)
@@ -87,7 +88,6 @@ function App() {
       {/* <BusiestHours/> ----- done (daily-wordcount)
        <MonthlyContributions /> ----- unclear
       <MessageTrendTillNow /> --------- unclear
-      <UserActivityHeatmap /> ------- semi-done
       <BusiestUsers /> -------- done (top-users)
       <HighestContributors /> ---------- not done
       <LowestContributors /> ------- not done

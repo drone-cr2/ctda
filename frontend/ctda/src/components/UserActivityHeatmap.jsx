@@ -34,7 +34,7 @@ const UserActivityHeatmap = () => {
       x: xValues,
       y: yValues,
       type: "heatmap",
-      colorscale: "Viridis",
+      colorscale: "Viridis", // Portland
       colorbar: { title: "Message Count" },
     },
   ];
@@ -50,10 +50,10 @@ const UserActivityHeatmap = () => {
       title: "Days of the Week",
       type: "category",
     },
-    width: 1000, // Adjust width here
-    height: 600, // Adjust height here
-    paper_bgcolor: "#f0f0f0",
-    plot_bgcolor: "#ffffff",
+    width: 700, 
+    height: 500,
+    paper_bgcolor: "white",
+    plot_bgcolor: "white",
   };
 
   return (
