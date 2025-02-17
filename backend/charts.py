@@ -69,7 +69,7 @@ def timeline(df,user):
         timeline_labels.append(timeline_df['month'][i][:3] + "-" + str(timeline_df['year'][i]))
     timeline_df['timeline_labels'] = timeline_labels
 
-    fig = px.bar(timeline_df, x='timeline_labels', y='message', title='Timeline',  text="values" )
+    fig = px.bar(timeline_df, x='timeline_labels', y='message', title='Timeline',  text="message" )
     # "test" Show values on top of bars
     fig.update_layout(
         title_font=dict(size=24, color="darkblue"),
