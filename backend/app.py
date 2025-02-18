@@ -134,7 +134,7 @@ def serve_activity_heatmap():
 
 # NLP charts' routes ... still working on this
 
-@app.route('/sen-timeline/<k>')
+@app.route('/sen-timeline/<int:k>')
 def serve_sentiment_timeline(k):
     return pio.to_json(nlp_charts.daily_timeline(df,user,k))
 

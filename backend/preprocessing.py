@@ -69,11 +69,11 @@ def preprocess(data):
     # CATEGORISATION : To indentify true sentiment per row in message column
     def sentiment(d):
         if d["po"] >= d["ne"] and d["po"] >= d["nu"]:
-            return 1
+            return 2    #positive
         if d["ne"] >= d["po"] and d["ne"] >= d["nu"]:
-            return -1
+            return 0   # negative
         if d["nu"] >= d["po"] and d["nu"] >= d["ne"]:
-            return 0
+            return 1    #neutral
 
     # Creating new column & Applying function
     df['value'] = df.apply(lambda row: sentiment(row), axis=1)

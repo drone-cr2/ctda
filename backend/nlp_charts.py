@@ -53,12 +53,14 @@ def week_activity_map(df,selected_user,k):
 def daily_timeline(df,selected_user,k):
     if selected_user != 'Overall':
         df = df[df['user'] == selected_user]
-    df = df[df['value']==k]
+
+    df = df[df['value'] == k]
+
     # count of message on a specific date
     dfx = df.groupby('day').count()['message'].reset_index()
     dfx.columns = ['titles','values']
-    print(dfx['titles'],k)
-    fig = px.line(dfx, x='titles', y='values', title="sentiment timeline", text="values" )
+
+    fig = px.bar(dfx, x='titles', y='values', title="sentiment timeline", text="values" )
     fig.update_layout(
         title_font=dict(size=24, color="darkblue"),
         xaxis_title="Words",
