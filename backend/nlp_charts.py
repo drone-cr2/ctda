@@ -15,9 +15,9 @@ def week_activity_map(df,selected_user,k):
     df = df[df['value'] == k]
 
     title = "Neutral"
-    if(k == 1):
+    if(k == 2):
         title = "Positive"
-    elif(k == -1):
+    elif(k == 1):
         title = "Negative"
 
     series = df['day_name'].value_counts()
@@ -81,9 +81,9 @@ def percentage(df,k):
 def most_common_words(df,selected_user,k):
     
     title = "Most used neutral words"
-    if(k == 1):
+    if(k == 2):
         title = "Most used positive words"
-    elif(k == -1):
+    elif(k == 1):
         title = "Most used negative words"
 
     with open("stop_hinglish.txt", "r") as f:
@@ -99,6 +99,8 @@ def most_common_words(df,selected_user,k):
             if word not in stopwords:
                 words.append(word)
     dfx = pd.DataFrame(Counter(words).most_common(20))
+    dfx.columns = ['titles','values']
+
 
     fig = px.bar(dfx, x='titles', y='values', title=title, text="values" )
     fig.update_layout(
