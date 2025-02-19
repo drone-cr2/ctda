@@ -1,105 +1,101 @@
-import { useState } from "react";
-import React from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import "./App.css";
-import { useEffect } from "react";
-import MonthlyMessageCount from "./components/MonthlyMessageCount";
-import MonthlyContributions from "./components/MonthlyContributions";
-import MessageTrendTillNow from "./components/MessageTrendTillNow";
-import WeeklyMessageCount from "./components/WeeklyMessageCount";
-import UserActivityHeatmap from "./components/UserActivityHeatmap";
-import BusiestUsers from "./components/BusiestUsers";
-import HighestContributors from "./components/HighestContributors";
-import LowestContributors from "./components/LowestContributors";
-import MostFrequentWords from "./components/MostFrequentWords";
-import MostFrequentEmojis from "./components/MostFrequentEmojis";
-import WeeklyWordCount from "./components/WeeklyWordCount";
-import TopStats from "./components/TopStats";
-import FileUploader from "./components/FileUploader";
-import FileUpload from "./components/FileUpload";
-import PlotlyBarChart from "./components/PlotlyPlot";
-import HeatmapPlot from "./components/HeatMapPlot";
-import BusiestHours from "./components/BusiestHours";
+
+const MonthlyMessageCount = lazy(() =>
+  import("./components/MonthlyMessageCount")
+);
+const MonthlyContributions = lazy(() =>
+  import("./components/MonthlyContributions")
+);
+const LinePlot = lazy(() =>
+  import("./components/LinePlot")
+);
+const WeeklyMessageCount = lazy(() =>
+  import("./components/WeeklyMessageCount")
+);
+const UserActivityHeatmap = lazy(() =>
+  import("./components/UserActivityHeatmap")
+);
+const BusiestUsers = lazy(() => import("./components/BusiestUsers"));
+const HighestContributors = lazy(() =>
+  import("./components/HighestContributors")
+);
+const LowestContributors = lazy(() =>
+  import("./components/LowestContributors")
+);
+const MostFrequentWords = lazy(() => import("./components/MostFrequentWords"));
+const MostFrequentEmojis = lazy(() =>
+  import("./components/MostFrequentEmojis")
+);
+const WeeklyWordCount = lazy(() => import("./components/WeeklyWordCount"));
+const TopStats = lazy(() => import("./components/TopStats"));
+const FileUploader = lazy(() => import("./components/FileUploader"));
+const PlotlyBarChart = lazy(() => import("./components/PlotlyPlot"));
+const HeatmapPlot = lazy(() => import("./components/HeatMapPlot"));
+const BusiestHours = lazy(() => import("./components/BusiestHours"));
 
 function App() {
-  const [data, setData] = useState([]);
-
-  // useEffect(()=>{
-
-  //   fetch('http://127.0.0.1:8080')
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     setData(data.data)
-  //   })
-  //   .catch(error => console.error(error));
-
-  // },[])
-
-  // useEffect(() => {
-  //   const setUser = async () => {
-  //     try {
-  //       const response = await fetch("http://localhost:8080/set-user", {
-  //         method: "GET", // Explicitly setting method
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error(`HTTP error! Status: ${response.status}`);
-  //       }
-
-  //       const data = await response.json();
-  //       console.log("Response:", data);
-  //     } catch (error) {
-  //       console.error("Error setting user:", error);
-  //     }
-  //   };
-
-  //   setUser();
-  // }, []);
-
-  const [plotData, setplotData] = useState("");
+  const [plotData, setPlotData] = useState("");
 
   useEffect(() => {
-    // Load mpld3.js dynamically
     const script = document.createElement("script");
-    script.src = "http://localhost:8080/mpld3.js"; // Serve mpld3.js from Flask
+    script.src = "http://localhost:8080/mpld3.js";
     script.onload = () => {
-      // Render the plot after mpld3.js is loaded
       window.mpld3.draw_figure("plot-div", plotData);
     };
     document.body.appendChild(script);
   }, []);
 
-  return (
-    <>
-      {/* <h1>heloo mf i fixed it</h1>
-      <FileUpload />
-      <h1>say thanks to daddy</h1>*/}
+  const [flag, setFlag] = useState(false);
 
+  const handleUpload = () => {
+    setFlag(true);
+  };
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
       <FileUploader />
-      <PlotlyBarChart url="http://127.0.0.1:8080/buzy-hours" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/top-words" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/0" /> 
-      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/1" />
-      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/2" />
-      <UserActivityHeatmap /> {/*------- semi-done*/}
-      {/* <HeatmapPlot url="http://127.0.0.1:8080/heatmap"/> */}
-      {/* <MonthlyMessageCount /> ------- unclear
-      <WeeklyMessageCount /> ----- done (buzy-days)
-      <WeeklyWordCount /> ----- done (buzy-days)
-      {/* <BusiestHours/> ----- done (daily-wordcount)
-      <MonthlyContributions /> ----- unclear
-      <MessageTrendTillNow /> --------- unclear
-      <BusiestUsers /> -------- done (top-users)
-      <HighestContributors /> ---------- not done
-      <LowestContributors /> ------- not done
-      <MostFrequentWords /> -------- done (top-words)
-      <MostFrequentEmojis /> -------- not done
-      */}
-      <TopStats />  
-    </>
+      <button
+        onClick={handleUpload}
+        className="mt-4 bg-[#3B82F6] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-200 w-full"
+      >
+        Analyze
+      </button>
+      {flag ? (
+        <>
+          <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/0" />
+          <LinePlot url="http://127.0.0.1:8080/sen-timeline/0"/>
+          <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/1" />
+          <LinePlot url="http://127.0.0.1:8080/sen-timeline/1"/>
+          <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/2" />
+          <LinePlot url="http://127.0.0.1:8080/sen-timeline/2"/>
+          <PlotlyBarChart url="http://127.0.0.1:8080/buzy-hours" />
+          <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
+          <MostFrequentEmojis />
+          <PlotlyBarChart url="http://127.0.0.1:8080/top-words" />
+          <LowestContributors />
+          <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount" />
+          <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days" />
+          <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
+          <LinePlot url="http://127.0.0.1:8080/timeline" />
+          <UserActivityHeatmap />
+          <HighestContributors />
+          <TopStats />
+          {/* <HeatmapPlot url="http://127.0.0.1:8080/heatmap"/> */}
+          {/* <MonthlyMessageCount /> ------- unclear
+        <WeeklyMessageCount /> ----- done (buzy-days)
+        <WeeklyWordCount /> ----- done (buzy-days)
+        {/* <BusiestHours/> ----- done (daily-wordcount)
+        <MonthlyContributions /> ----- unclear
+        
+        <BusiestUsers /> -------- done (top-users)
+        <MostFrequentWords /> -------- done (top-words)
+        */}
+        </>
+      ) : (
+        <></>
+      )}
+    </Suspense>
   );
 }
 

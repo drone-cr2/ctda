@@ -51,7 +51,7 @@ const UserActivityHeatmap = () => {
       type: "category",
     },
     width: 700, 
-    height: 500,
+    height: 450,
     paper_bgcolor: "white",
     plot_bgcolor: "white",
   };

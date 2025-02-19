@@ -70,7 +70,7 @@ const MostFrequentEmojis = () => {
   // Layout settings for the Plotly table
   const layout = {
     title: "Most Frequent Emojis",
-    width: 1000, // Adjust width here
+    width: 700, // Adjust width here
     height: 400, // Adjust height here
     paper_bgcolor: "#f0f0f0",
     plot_bgcolor: "#ffffff",

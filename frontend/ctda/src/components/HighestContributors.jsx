@@ -61,7 +61,7 @@ const HighestContributors = () => {
   // Layout settings for the Plotly table
   const layout = {
     title: "Highest Contributors",
-    width: 1000, 
+    width: 700, 
     height: 400,
     paper_bgcolor: "#f0f0f0",
     plot_bgcolor: "#ffffff",

@@ -54,7 +54,7 @@ const PlotlyPLot = (props) => {
                     onInitialized={handleInitialized} // Capture the initialized chart
                  />
             ) : (
-                <p>Loading chart...</p>
+                <Plot/>
             )}
             {/* <button onClick={() => exportChart("svg")}>🎨 Download SVG</button> */}
         </div>

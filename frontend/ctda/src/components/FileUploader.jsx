@@ -38,6 +38,7 @@ const FileUploader = () => {
     const formData = new FormData();
     formData.append("file", file);
 
+
     try {
       const response = await fetch("http://127.0.0.1:8080/upload", {
         method: "POST",
@@ -56,7 +57,7 @@ const FileUploader = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-[500px] w-[700px] bg-[#1E1E2E]">
+    <div className="flex justify-center items-center h-[700px] w-[700px] bg-[#1E1E2E]">
       <div className="shadow-xl flex flex-col justify-center items-center bg-[#2A2A3C] text-white rounded-lg p-6 sm:p-8 md:p-10 w-full max-w-md sm:max-w-lg md:max-w-3xl">
         {!fileContent && (
           <>
@@ -82,12 +83,12 @@ const FileUploader = () => {
                 {fileContent}
               </pre>
 
-              <button
+              {/* <button
                 onClick={handleUpload}
                 className="mt-4 bg-[#3B82F6] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-200 w-full"
               >
                 Analyze
-              </button>
+              </button> */}
 
               <button
                 onClick={handleRemoveFile}
@@ -96,7 +97,7 @@ const FileUploader = () => {
                 Remove
               </button>
 
-              {users.length > 0 && (
+              {/* {users.length > 0 && (
                 <div className="mt-4 w-full">
                   <label className="block text-sm font-semibold">
                     Select a User:
@@ -114,13 +115,13 @@ const FileUploader = () => {
                     ))}
                   </select>
                 </div>
-              )}
+              )} */}
 
-              {selectedUser && (
+              {/* {selectedUser && (
                 <p className="mt-2 text-xl text-green-400 font-thin">
                   Selected User: {selectedUser}
                 </p>
-              )}
+              )} */}
             </>
           )}
         </div>
