@@ -41,10 +41,10 @@ def daily_timeline(df,selected_user,k):
     sentiment = "Neutral"
     if(k == 2):
         sentiment = "Positive"
-    elif(k == 1):
+    elif(k == 0):
         sentiment = "Negative"
     
-    title = sentiment + "Timeline"
+    title = sentiment + " Timeline"
 
     # count of message on a specific date
     dfx = df.groupby('day').count()['message'].reset_index()

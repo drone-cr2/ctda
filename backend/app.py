@@ -132,6 +132,18 @@ def serve_busiest_hours():
 def serve_activity_heatmap():
     return jsonify(charts.activity_heatmap(df,user))
 
+# 13 : busiest months by wordcount
+@app.route('/buzy-month')
+def serve_busiest_months():
+    return pio.to_json(charts.busiest_months(df,user))
+
+# Wordcloud
+@app.route('/wordcloud')
+def serve_wordcloud():
+    wc_str = charts.wordcloud(df,user)
+    return jsonify({"wordcloud_image": wc_str})
+
+
 # NLP charts' routes ... still working on this
 
 @app.route('/sen-timeline/<int:k>')
@@ -151,14 +163,6 @@ def serve_sentiment_common_words(k):
 def serve_sen_activity_map(k):
     return pio.to_json(nlp_charts.week_activity_map(df,user,k))
 
-@app.route('/wordcloud')
-def serve_wordcloud():
-    wc_str = charts.wordcloud(df,user)
-    return jsonify({"wordcloud_image": wc_str})
-
-@app.route('/buzy-month')
-def serve_busiest_months():
-    return pio.to_json(charts.busiest_months(df,user))
 
 # main driver function
 if __name__ == '__main__':

@@ -1,16 +1,16 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import "./App.css";
 import WordCloud from "./components/WordCloud";
+import TablePlot from "./components/TablePlot";
 
 const MonthlyMessageCount = lazy(() =>
   import("./components/MonthlyMessageCount")
 );
+const PieChart = lazy(() => import("./components/PieChart"));
 const MonthlyContributions = lazy(() =>
   import("./components/MonthlyContributions")
 );
-const LinePlot = lazy(() =>
-  import("./components/LinePlot")
-);
+const LinePlot = lazy(() => import("./components/LinePlot"));
 const WeeklyMessageCount = lazy(() =>
   import("./components/WeeklyMessageCount")
 );
@@ -32,7 +32,6 @@ const WeeklyWordCount = lazy(() => import("./components/WeeklyWordCount"));
 const TopStats = lazy(() => import("./components/TopStats"));
 const FileUploader = lazy(() => import("./components/FileUploader"));
 const PlotlyBarChart = lazy(() => import("./components/PlotlyPlot"));
-const HeatmapPlot = lazy(() => import("./components/HeatMapPlot"));
 const BusiestHours = lazy(() => import("./components/BusiestHours"));
 
 function App() {
@@ -55,7 +54,9 @@ function App() {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <FileUploader />
+      <div className="flex justify-center">
+        <FileUploader />
+      </div>
       <button
         onClick={handleUpload}
         className="mt-4 bg-[#3B82F6] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-200 w-full"
@@ -64,37 +65,70 @@ function App() {
       </button>
       {flag ? (
         <>
-          <WordCloud />
-          <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/0" />
-          <LinePlot url="http://127.0.0.1:8080/sen-timeline/0"/>
-          <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/1" />
-          <LinePlot url="http://127.0.0.1:8080/sen-timeline/1"/>
-          <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/2" />
-          <LinePlot url="http://127.0.0.1:8080/sen-timeline/2"/>
-          <PlotlyBarChart url="http://127.0.0.1:8080/buzy-hours" />
-          <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
-          <MostFrequentEmojis />
-          <PlotlyBarChart url="http://127.0.0.1:8080/top-words" />
-          <LowestContributors />
-          <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount" />
-          <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days" />
-          <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
-          <PlotlyBarChart url="http://127.0.0.1:8080/buzy-month" />
-          <LinePlot url="http://127.0.0.1:8080/timeline" />
-          <UserActivityHeatmap />
-          <HighestContributors />
-          <TopStats />\
-          W
-          {/* <HeatmapPlot url="http://127.0.0.1:8080/heatmap"/> */}
+          <div className="flex justify-center">
+            <WordCloud /> {/* WordCloud */}
+          </div>
+          <div> {/* Negative Sentiment Plots */}
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-activity-map/0"/>
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-common-words/0"/>
+            <TablePlot url='http://127.0.0.1:8080/sen-contribution/0' sen="Negative"/>
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/0" />
+            <LinePlot url="http://127.0.0.1:8080/sen-timeline/0" />
+          </div>
+          
+          <div>{/* Neutral Sentiment Plots */}
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-activity-map/1"/>
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-common-words/1"/>
+            <TablePlot url='http://127.0.0.1:8080/sen-contribution/1' sen="Neutral"/>
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/1" />
+            <LinePlot url="http://127.0.0.1:8080/sen-timeline/1" />
+          </div>
+
+          <div>{/* Positive Sentiment Plots */}
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-activity-map/2"/>
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-common-words/2"/>
+            <TablePlot url='http://127.0.0.1:8080/sen-contribution/2' sen="Positive"/>
+            <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/2" />
+            <LinePlot url="http://127.0.0.1:8080/sen-timeline/2" />
+          </div>
+
+          <PlotlyBarChart url="http://127.0.0.1:8080/buzy-hours" />{/* Busiest Hours BarPlot*/}
+
+          <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />{/* Top Users BarPlot*/}
+          
+          <PlotlyBarChart url="http://127.0.0.1:8080/top-words" />{/* Top Words BarPlot*/}
+          
+          {/* <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount" /> Busiest Month BarChart */}
+          <PieChart url="http://127.0.0.1:8080/buzy-month"/> {/* Busiest Month PieChart*/}
+
+          {/* <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount" /> Weekly WordCount BarChart */}
+          <PieChart url="http://127.0.0.1:8080/daily-wordcount" />{/* Weekly WordCount PieChart */}
+          
+          {/* <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days" /> Weekly MessageCount BarChart */}
+          <PieChart url="http://127.0.0.1:8080/buzy-days" />{/* Weekly MessageCount PieChart */}
+
+
+          <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />{/* Chat Timeline BarChart */}
+          <LinePlot url="http://127.0.0.1:8080/timeline" />{/* Chart Timeline LineChart */}
+
+          <UserActivityHeatmap /> {/* Users Activity Heatmap */}
+
+          <TablePlot url="http://127.0.0.1:8080/contributions" sen="Highest" /> {/* Contribution Table Highest */}
+
+          <MostFrequentEmojis /> {/* Frequent Emoji Table */}
+
+          <TopStats /> {/* Stats Table */}
+
+          {/* <LowestContributors /> Contribution Table Lowest */}
           {/* <MonthlyMessageCount /> ------- unclear
-        <WeeklyMessageCount /> ----- done (buzy-days)
-        <WeeklyWordCount /> ----- done (buzy-days)
-        {/* <BusiestHours/> ----- done (daily-wordcount)
-        <MonthlyContributions /> ----- unclear
-        
-        <BusiestUsers /> -------- done (top-users)
-        <MostFrequentWords /> -------- done (top-words)
-        */}
+          <WeeklyMessageCount /> ----- done (buzy-days)
+          <WeeklyWordCount /> ----- done (buzy-days)
+          {/* <BusiestHours/> ----- done (daily-wordcount)
+          <MonthlyContributions /> ----- unclear
+          
+          <BusiestUsers /> -------- done (top-users)
+          <MostFrequentWords /> -------- done (top-words)
+          */}
         </>
       ) : (
         <></>
