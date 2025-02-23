@@ -1,5 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import "./App.css";
+import WordCloud from "./components/WordCloud";
 
 const MonthlyMessageCount = lazy(() =>
   import("./components/MonthlyMessageCount")
@@ -63,6 +64,7 @@ function App() {
       </button>
       {flag ? (
         <>
+          <WordCloud />
           <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/0" />
           <LinePlot url="http://127.0.0.1:8080/sen-timeline/0"/>
           <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/1" />
@@ -80,7 +82,8 @@ function App() {
           <LinePlot url="http://127.0.0.1:8080/timeline" />
           <UserActivityHeatmap />
           <HighestContributors />
-          <TopStats />
+          <TopStats />\
+          W
           {/* <HeatmapPlot url="http://127.0.0.1:8080/heatmap"/> */}
           {/* <MonthlyMessageCount /> ------- unclear
         <WeeklyMessageCount /> ----- done (buzy-days)

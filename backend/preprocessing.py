@@ -17,14 +17,21 @@ def preprocess(data):
     # format(input) is 'mm/dd/yy, hh:mm' and consider the',' and year is in yy format hence %y NOT %Y
     df['date'] = pd.to_datetime(df['date'],format='%m/%d/%y, %H:%M')
 
+    # handling sensetive information
+    aadhaar_regex = re.compile(r'(?<!\d)(?![01])[2-9]\d{3}\s\d{4}\s\d{4}(?!\d)')
+    pan_regex = re.compile(r'(?<!\w)[A-Z]{5}[0-9]{4}[A-Z](?!\w)')
+
     users = []
     messages = []
     for message in df['user_message']:
-        #  generalised and primitive regex used here due to vaiablity in contact names saved
+        #  generalised and primitive regex used here due to variablity in contact names saved
         linesplit =  re.split(':\s',message)
         if linesplit[1:]:
-            users.append(linesplit[0])
-            messages.append(linesplit[1])
+            user = linesplit[0]
+            msg = linesplit[1]
+            if not (aadhaar_regex.search(msg) or pan_regex.search(msg)):
+                users.append(user)
+                messages.append(msg)
         else:
             users.append('System generated')
             messages.append(linesplit[0])

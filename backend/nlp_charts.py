@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-# import seaborn as sns
 import pandas as pd
 from collections import Counter
 import plotly.express as px
@@ -14,40 +13,23 @@ def week_activity_map(df,selected_user,k):
         df = df[df['user'] == selected_user]
     df = df[df['value'] == k]
 
-    title = "Neutral"
+    sentiment = "Neutral"
     if(k == 2):
-        title = "Positive"
+        sentiment = "Positive"
     elif(k == 1):
-        title = "Negative"
+        sentiment = "Negative"
+    
+    title = sentiment + "Weekly Activity"
 
     series = df['day_name'].value_counts()
     dfx = series_to_df(series)
 
     fig = px.bar(dfx, x='titles', y='values', title=title,  text="values" )
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
         xaxis_title="Days in week",
-        yaxis_title="Number of messages",
+        yaxis_title="Number of messages (Daily)",
     )
     return fig
-
-    # fig, ax = plt.subplots()
-    # ax.bar(series.index, series.values)
-    # plt.xticks(rotation='vertical')
-    # return fig
-
-# def activity_heatmap(df,selected_user,k):
-#     if selected_user != 'Overall':
-#         df = df[df['user'] == selected_user]
-#     df = df[df['value'] == k]
-    
-#     # Creating heat map
-#     user_heatmap_df = df.pivot_table(index='day_name', columns='hour', values='message', aggfunc='count').fillna(0)
-
-#     # fig, ax = plt.subplots()
-#     fig, ax = plt.subplots()
-#     ax = sns.heatmap(user_heatmap_df)
-#     return fig
 
 # Will return count of messages of selected user per date having k(0/1/-1) sentiment
 def daily_timeline(df,selected_user,k):
@@ -56,27 +38,24 @@ def daily_timeline(df,selected_user,k):
 
     df = df[df['value'] == k]
 
+    sentiment = "Neutral"
+    if(k == 2):
+        sentiment = "Positive"
+    elif(k == 1):
+        sentiment = "Negative"
+    
+    title = sentiment + "Timeline"
+
     # count of message on a specific date
     dfx = df.groupby('day').count()['message'].reset_index()
     dfx.columns = ['titles','values']
 
-    fig = px.bar(dfx, x='titles', y='values', title="sentiment timeline", text="values" )
+    fig = px.line(dfx, x='titles', y='values', title=title, text="values" )
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
-        xaxis_title="Words",
-        yaxis_title="Occourances",
+        xaxis_title="Daily Timeline",
+        yaxis_title="Occourances of sentiment words",
     )
     return fig
-
-    # fig, ax = plt.subplots()
-    # ax.plot(dfx['day'], dfx['message'], color='green')
-    # plt.xticks(rotation='vertical')
-    # return fig
-
-def percentage(df,k):
-    df = round((df['user'][df['value']==k].value_counts() / df[df['value']==k].shape[0]) * 100, 2).reset_index().rename(
-        columns={'index': 'name', 'user': 'percent'})
-    return df.head(10)
 
 def most_common_words(df,selected_user,k):
     
@@ -110,7 +89,15 @@ def most_common_words(df,selected_user,k):
     )
     return fig
 
-    # fig, ax = plt.subplots()
-    # ax.barh(dfx[0], dfx[1])
-    # plt.xticks(rotation='vertical')
-    # return fig
+# def activity_heatmap(df,selected_user,k):
+#     if selected_user != 'Overall':
+#         df = df[df['user'] == selected_user]
+#     df = df[df['value'] == k]
+    
+#     # Creating heat map
+#     user_heatmap_df = df.pivot_table(index='day_name', columns='hour', values='message', aggfunc='count').fillna(0)
+
+#     # fig, ax = plt.subplots()
+#     fig, ax = plt.subplots()
+#     ax = sns.heatmap(user_heatmap_df)
+#     return fig

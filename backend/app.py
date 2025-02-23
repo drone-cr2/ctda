@@ -140,7 +140,7 @@ def serve_sentiment_timeline(k):
 
 @app.route('/sen-contribution/<int:k>')
 def serve_sentiment_precent_contribution(k):
-    sen_df = nlp_charts.percentage(df,k)
+    sen_df = stats.sen_percentage(df,k)
     return sen_df.to_json(orient='columns')
 
 @app.route('/sen-common-words/<int:k>')
@@ -151,13 +151,10 @@ def serve_sentiment_common_words(k):
 def serve_sen_activity_map(k):
     return pio.to_json(nlp_charts.week_activity_map(df,user,k))
 
-
-# @app.route('/wordcloud')
-# def serve_wordcloud():
-#     wdc = charts.wordcloud(df,user)
-#     wdc.to_file("wordcloud.png")  # Save to file
-#     return send_file("wordcloud.png", mimetype='image/png')
-
+@app.route('/wordcloud')
+def serve_wordcloud():
+    wc_str = charts.wordcloud(df,user)
+    return jsonify({"wordcloud_image": wc_str})
 
 # main driver function
 if __name__ == '__main__':

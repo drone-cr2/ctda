@@ -55,3 +55,8 @@ def top_emojis(df,user):
 
     return emoji_df
 
+def sen_percentage(df,k):
+    df = round((df['user'][df['value']==k].value_counts() / df[df['value']==k].shape[0]) * 100, 2).reset_index().rename(
+        columns={'index': 'name', 'user': 'percent'})
+    return df.head(10)
+

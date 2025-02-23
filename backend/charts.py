@@ -5,9 +5,20 @@ import matplotlib.pyplot as plt
 from collections import Counter
 import pandas as pd
 import plotly.express as px
+import io
+import base64
+from wordcloud import WordCloud
+import numpy as np
+from PIL import Image
 
 day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 month_order = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+# Read stopwords from file into a set
+with open("stop_hinglish.txt", "r") as f:
+    hinglish_stopwords = set(word.strip() for word in f.readlines())  # Remove newline characters
+    custom_stopwords =  STOPWORDS.union(set([
+        "Media","omitted","This","message","deleted"
+    ])).union(hinglish_stopwords)
 
 def series_to_df(sr):
     df = pd.DataFrame({'titles':sr.index, 'values':sr.values})
@@ -21,12 +32,10 @@ def top_users(df):
     fig = px.bar(dfx, x='titles', y='values', title='Most Buzy Users',  text="values" )
     # "test" Show values on top of bars
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
-        xaxis_title="User names",
+        xaxis_title="Top Users(by message counts)",
         yaxis_title="Number of messages",
     )
     return fig
-
 
 def top_words(df,user):
     
@@ -39,25 +48,17 @@ def top_words(df,user):
         for common_word in message.lower().split():
             common_words.append(common_word)
 
-    # Read stopwords from file into a set
-    with open("stop_hinglish.txt", "r") as f:
-        stopwords = set(word.strip() for word in f.readlines())  # Remove newline characters
-    filtered_words = [word for word in common_words if word.lower() not in stopwords]   # Remove stopwords from the list
+    filtered_words = [word for word in common_words if word.lower() not in custom_stopwords]   # Remove stopwords from the list
     dfx = pd.DataFrame(Counter(filtered_words).most_common(10))
     dfx.columns = ['titles','values']
 
     fig = px.bar(dfx, x='titles', y='values', title='Most used words',  text="values" )
     # "test" Show values on top of bars
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
-        xaxis_title="Words",
-        yaxis_title="Occourances",
+        xaxis_title="Most occouring words",
+        yaxis_title="Number of Occourances",
     )
     return fig
-
-    # fig,ax = plt.subplots()
-    # ax.barh(most_common_df[0],most_common_df[1])
-    # return fig, most_common_df[0].to_list()
 
 def timeline(df,user):
     if user != 'Overall':
@@ -67,20 +68,15 @@ def timeline(df,user):
     timeline_labels = []
     for i in range(timeline_df.shape[0]):
         timeline_labels.append(timeline_df['month'][i][:3] + "-" + str(timeline_df['year'][i]))
-    timeline_df['timeline_labels'] = timeline_labels
+    timeline_df['Timeline_labels'] = timeline_labels
 
-    fig = px.bar(timeline_df, x='timeline_labels', y='message', title='Timeline',  text="message" )
+    fig = px.line(timeline_df, x='Timeline_labels', y='message', title='Overall Timeline',  text="message" )
     # "test" Show values on top of bars
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
-        xaxis_title="User names",
-        yaxis_title="Number of messages",
+        xaxis_title="Months in year",
+        yaxis_title="Number of messages (Monthly)",
     )
     return fig
-
-    # fig,ax = plt.subplots()
-    # ax.plot(timeline_df['timeline_labels'], timeline_df['message'])
-    # return fig,timeline_labels
 
 def busiest_hours(df, user):
     if user != 'Overall':
@@ -92,12 +88,10 @@ def busiest_hours(df, user):
 
     dfx = series_to_df(series)
 
-    # Create Plotly figure from DataFrame
-    fig = px.bar(dfx, x="titles", y="values", title="Busiest hours")
+    fig = px.bar(dfx, x="titles", y="values", title="Busiest hours", text="values")
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
-        xaxis_title="Hours",
-        yaxis_title="Message counts",
+        xaxis_title="Active Hours",
+        yaxis_title="Number of messages (Hourly)",
     )
     return fig 
 
@@ -110,17 +104,13 @@ def busiest_days(df,user):
     sorted_series = day_counts_series.reindex(day_order)
     dfx = series_to_df(sorted_series)
 
-    fig = px.bar(dfx, x='titles', y='values', title='Busiest days',  text="values" )
-    fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
-        xaxis_title="Days in week",
-        yaxis_title="Number of messages",
-    )
+    # fig = px.bar(dfx, x='titles', y='values', title='Busiest days',  text="values" )
+    # fig.update_layout(
+    #     xaxis_title="Days in week",
+    #     yaxis_title="Number of messages (Daily)",
+    # )
+    fig = px.pie(dfx, names="titles", values="values", title="Buziest days")
     return fig
-
-    # fig,ax = plt.subplots()
-    # ax.bar(sorted_series.index, sorted_series.values)
-    # return df_hour
 
 # days plotted against number of words(content length) per day
 def daily_wordcount(df,user):
@@ -131,18 +121,13 @@ def daily_wordcount(df,user):
     sorted_series = daily_wc_series.reindex(day_order)
     dfx = series_to_df(sorted_series)
 
-    fig = px.bar(dfx, x='titles', y='values', title='Daily wordcount',  text="values" )
-    fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
-        xaxis_title="Days in week",
-        yaxis_title="Amount of content shared",
-    )
+    # fig = px.bar(dfx, x='titles', y='values', title='Daily wordcount',  text="values" )
+    # fig.update_layout(
+    #     xaxis_title="Days in week",
+    #     yaxis_title="Amount of content shared (Daily)",
+    # )
+    fig = px.pie(dfx, names="titles", values="values", title='Daily wordcount')
     return fig
-
-
-    # fig,ax = plt.subplots()
-    # ax.bar(sorted_series.index,sorted_series.values) 
-    # return fig, day_order
 
 # months plotted against number of messages per month
 def busiest_months(df,user):
@@ -153,17 +138,12 @@ def busiest_months(df,user):
     sorted_series = month_count_series.reindex(month_order)
     dfx = series_to_df(sorted_series)
 
-    fig = px.bar(dfx, x='titles', y='values', title='Busiest Months',  text="values" )
+    fig = px.bar(dfx, x='titles', y='values', title='Buziest Months',  text="values" )
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
         xaxis_title="Months in year",
-        yaxis_title="Number of messages",
+        yaxis_title="Number of messages (Monthly)",
     )
     return fig
-
-    # fig,ax  = plt.subplots()
-    # ax.bar(sorted_series.index, sorted_series.values)
-    # return fig, month_order
 
 # months plotted against number of words(content length) per month
 def monthy_wordcount(df,user):
@@ -176,18 +156,12 @@ def monthy_wordcount(df,user):
 
     dfx = series_to_df(sorted_series)
 
-    fig = px.bar(dfx, x='titles', y='values', title='Busiest Months',  text="values" )
+    fig = px.bar(dfx, x='titles', y='values', title='Monthly Wordcount',  text="values" )
     fig.update_layout(
-        title_font=dict(size=24, color="darkblue"),
         xaxis_title="Months in year",
-        yaxis_title="Amount of content shared",
+        yaxis_title="Amount of content shared (Monthly)",
     )
     return fig
-
-    # fig,ax = plt.subplots()
-    # ax.bar(sorted_series.index, sorted_series.values) 
-    # return fig, month_order
-
 
 def activity_heatmap(df, user):
     # user = 'Overall'  
@@ -213,23 +187,26 @@ def activity_heatmap(df, user):
 
     return heatmap_data
 
-# def wordcloud(df,user):
-#     if user != 'Overall':
-#         df = df[df['user'] == user]
+def wordcloud(df,user):
+    if user != 'Overall':
+        df = df[df['user'] == user]
 
-#     all_messages = " ".join(df['message'])
+    all_messages = " ".join(df['message'])
 
-#     custom_stopwords =  STOPWORDS.union(set([
-#         "Media","omitted","This","message","deleted"
-#     ]))
+    wordcloud = WordCloud(width=800, height=400, background_color="white", stopwords = custom_stopwords).generate(all_messages)
 
-#     wordcloud = WordCloud(stopwords =custom_stopwords,width=800, height=400, background_color='white').generate(all_messages)
+    # ✅ Convert to NumPy array
+    img_array = np.array(wordcloud)
 
-#     fig, ax = plt.subplots(figsize=(10, 6))
-#     ax.imshow(wordcloud, interpolation='bilinear')
-#     ax.axis('off')
-#     ax.set_title('Word Cloud of Messages', fontsize=16)
-#     plt.tight_layout()
+    # ✅ Convert image to base64 (so it can be sent via JSON)
+    img = Image.fromarray(img_array)
+    buffered = io.BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-#     return fig
+    # ✅ Create Plotly Figure using an Image
+    fig = px.imshow(img_array)
+    fig.update_layout(title="Word Cloud", xaxis_showticklabels=False, yaxis_showticklabels=False)
+
+    return img_str
 
