@@ -79,6 +79,7 @@ function App() {
           <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount" />
           <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days" />
           <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
+          <PlotlyBarChart url="http://127.0.0.1:8080/buzy-month" />
           <LinePlot url="http://127.0.0.1:8080/timeline" />
           <UserActivityHeatmap />
           <HighestContributors />

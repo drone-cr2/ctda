@@ -138,11 +138,12 @@ def busiest_months(df,user):
     sorted_series = month_count_series.reindex(month_order)
     dfx = series_to_df(sorted_series)
 
-    fig = px.bar(dfx, x='titles', y='values', title='Buziest Months',  text="values" )
-    fig.update_layout(
-        xaxis_title="Months in year",
-        yaxis_title="Number of messages (Monthly)",
-    )
+    # fig = px.bar(dfx, x='titles', y='values', title='Buziest Months',  text="values" )
+    # fig.update_layout(
+    #     xaxis_title="Months in year",
+    #     yaxis_title="Number of messages (Monthly)",
+    # )
+    fig = px.pie(dfx, names="titles", values="values", title='Buziest Months')
     return fig
 
 # months plotted against number of words(content length) per month

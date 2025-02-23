@@ -156,6 +156,10 @@ def serve_wordcloud():
     wc_str = charts.wordcloud(df,user)
     return jsonify({"wordcloud_image": wc_str})
 
+@app.route('/buzy-month')
+def serve_busiest_months():
+    return pio.to_json(charts.busiest_months(df,user))
+
 # main driver function
 if __name__ == '__main__':
 
