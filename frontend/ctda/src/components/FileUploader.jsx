@@ -57,14 +57,14 @@ const FileUploader = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-[700px] w-[700px] bg-[#1E1E2E]">
-      <div className="shadow-xl flex flex-col justify-center items-center bg-[#2A2A3C] text-white rounded-lg p-6 sm:p-8 md:p-10 w-full max-w-md sm:max-w-lg md:max-w-3xl">
+    <div className="flex justify-center items-center h-[50%] w-[700px] bg-[#364C63] rounded-b-md">
+      <div className="flex flex-col justify-center items-center text-white rounded-lg p-6 sm:p-8 md:p-10 w-full max-w-md sm:max-w-lg md:max-w-3xl">
         {!fileContent && (
           <>
             <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 text-[#E0E0E0]">
               Upload Your Conversation
             </h2>
-            <label className="inline-block cursor-pointer my-2 bg-[#3B82F6] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#2563EB] transition duration-200 sm:w-[15%] mx-auto text-center">
+            <label className="inline-block cursor-pointer my-2 bg-[#F3B340] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#f39c40] transition duration-200 sm:w-[15%] mx-auto text-center">
               Upload
               <input
                 type="file"
@@ -79,7 +79,7 @@ const FileUploader = () => {
         <div className="mt-4 w-full">
           {fileContent && (
             <>
-              <pre className="h-60 sm:h-72 md:h-80 max-h-80 bg-[#3C3C4E] text-[#E0E0E0] p-4 rounded-md shadow-md overflow-y-auto text-left">
+              <pre className="h-72 sm:h-80 md:h-84 max-h-80 bg-[#F4F3EF] text-[#364C63] p-4 rounded-md shadow-md overflow-y-auto text-left">
                 {fileContent}
               </pre>
 
@@ -92,7 +92,7 @@ const FileUploader = () => {
 
               <button
                 onClick={handleRemoveFile}
-                className="mt-3 bg-red-500 text-white px-5 py-2 rounded-lg shadow-md hover:bg-red-700 transition duration-200 w-full"
+                className="mt-3 bg-[#F3B340] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#f39c40] transition duration-200 w-[30%]"
               >
                 Remove
               </button>

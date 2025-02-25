@@ -7,39 +7,33 @@ const MostFrequentEmojis = () => {
 
   useEffect(() => {
     // Fetch data from the API
-    fetch("http://localhost:8080/top-emojis")
+    fetch("http://127.0.0.1:8080/top-emojis")
       .then((response) => {
-        // Check if the response is ok
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         return response.json();
       })
       .then((data) => {
-        // Extract emojis and counts
         const emojisList = Object.values(data[0]);
         const countsList = Object.values(data[1]);
 
-        // Combine the emojis and counts into a single array of objects
         const emojisData = emojisList.map((emoji, index) => ({
           emoji,
           count: countsList[index],
         }));
 
-        // Sort the emojis by count in descending order
         const sortedEmojis = emojisData.sort((a, b) => b.count - a.count);
-
-        // Set the top emojis to the state
         setEmojis(sortedEmojis);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        setError(error.message); // Set the error message
+        setError(error.message);
       });
   }, []);
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="text-red-500">Error: {error}</div>;
   }
 
   // Prepare the data for the Plotly table
@@ -49,8 +43,8 @@ const MostFrequentEmojis = () => {
       header: {
         values: ["Sr No", "Emoji", "Count"],
         align: "left",
-        font: { family: "Arial", size: 14, color: "black" },
-        fill: { color: "#f1f1f1" },
+        font: { family: "Arial", size: 12, color: "black" },
+        fill: { color: "#F3B340" }, // Golden header
         height: 30,
       },
       cells: {
@@ -60,8 +54,8 @@ const MostFrequentEmojis = () => {
           emojis.map((emoji) => emoji.count), // Count
         ],
         align: "left",
-        font: { family: "Arial", size: 14, color: "black" },
-        fill: { color: "#ffffff" },
+        font: { family: "Arial", size: 12, color: "white" },
+        fill: { color: "#222222" }, // Dark background for cells
         height: 30,
       },
     },
@@ -70,16 +64,12 @@ const MostFrequentEmojis = () => {
   // Layout settings for the Plotly table
   const layout = {
     title: "Most Frequent Emojis",
-    width: 700, // Adjust width here
-    height: 400, // Adjust height here
-    paper_bgcolor: "#f0f0f0",
-    plot_bgcolor: "#ffffff",
-    margin: {
-      l: 10, 
-      r: 10,
-      b: 20, 
-      t: 50, 
-    },
+    width: 700,
+    height: 450,
+    paper_bgcolor: "black", // Outer background
+    plot_bgcolor: "black",  // Inner background
+    font: { color: "white" }, // Global text color
+    margin: { l: 10, r: 10, b: 20, t: 50 },
   };
 
   return <Plot data={tableData} layout={layout} />;

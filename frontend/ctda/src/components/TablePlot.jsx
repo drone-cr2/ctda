@@ -38,10 +38,10 @@ const TablePlot = (props) => {
     {
       type: "table",
       header: {
-        values: ["Sr No", "Name", "Contributions"],
+        values: ["<b>Sr No</b>", "<b>Name</b>", "<b>Contributions</b>"],
         align: "left",
-        font: { family: "Arial", size: 12, color: "black" },
-        fill: { color: "#f1f1f1" },
+        font: { family: "Arial", size: 14, color: "white" }, // White header text
+        fill: { color: "#F3B340" },
         height: 30,
       },
       cells: {
@@ -51,8 +51,8 @@ const TablePlot = (props) => {
           contributors.map((contributor) => contributor.contribution), // Contributions
         ],
         align: "left",
-        font: { family: "Arial", size: 12, color: "black" },
-        fill: { color: "#ffffff" },
+        font: { family: "Arial", size: 12, color: "white" }, // White cell text
+        fill: { color: "#222222" }, // Darker background for cells
         height: 30,
       },
     },
@@ -60,16 +60,19 @@ const TablePlot = (props) => {
 
   // Layout settings for the Plotly table
   const layout = {
-    title: props.sen + " Contributors",
-    width: 700, 
-    height: 400,
-    paper_bgcolor: "#f0f0f0",
-    plot_bgcolor: "#ffffff",
+    title: {
+      text: props.sen + " Contributors",
+      font: { color: "white", size: 18 }, // White title
+    },
+    width: 700,
+    height: 450,
+    paper_bgcolor: "black", // Outer background black
+    plot_bgcolor: "black", // Inner background black
     margin: {
-      l: 10, 
+      l: 10,
       r: 10,
-      b: 20, 
-      t: 50, 
+      b: 20,
+      t: 50,
     },
   };
 

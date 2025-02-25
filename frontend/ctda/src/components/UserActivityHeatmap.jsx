@@ -23,10 +23,6 @@ const UserActivityHeatmap = () => {
   const yValues = data ? data.y : [];
   const zValues = data ? data.z : [];
 
-  // console.log("x", xValues);
-  // console.log("y", yValues);
-  // console.log("z", zValues);
-
   // Plotly heatmap data
   const plotData = [
     {
@@ -34,26 +30,41 @@ const UserActivityHeatmap = () => {
       x: xValues,
       y: yValues,
       type: "heatmap",
-      colorscale: "Viridis", // Portland
-      colorbar: { title: "Message Count" },
+      colorscale: "Cividis", // Cividis Inferno Hot
+      colorbar: {
+        title: "Activity",
+        tickcolor: "white",
+        titlefont: { color: "white" },
+        thickness: 16, 
+      },
     },
   ];
 
   // Layout settings
   const layout = {
-    title: "User Activity Heatmap",
+    title: {
+      text: "User Activity Heatmap",
+      font: { color: "white" },
+    },
     xaxis: {
       title: "Time Period",
       type: "category",
+      tickfont: { color: "white" },
+      titlefont: { color: "white" },
+      gridcolor: "gray",
     },
     yaxis: {
       title: "Days of the Week",
       type: "category",
+      tickfont: { color: "white" },
+      titlefont: { color: "white" },
+      gridcolor: "gray",
     },
-    width: 700, 
+    width: 700,
     height: 450,
-    paper_bgcolor: "white",
-    plot_bgcolor: "white",
+    paper_bgcolor: "black", // Outer background
+    plot_bgcolor: "black", // Inner background
+    hoverlabel: { font: { color: "black" }, bgcolor: "#f9e34a" },
   };
 
   return (

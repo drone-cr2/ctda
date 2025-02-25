@@ -17,11 +17,11 @@ const LinePlot = (props) => {
           y: data.data[0].y,
           type: "scatter",
           mode: "lines+markers",
-          line: { color: "#636efa", width: 2 },
+          line: { color: "#F3B340", width: 2 },
           name: data.data[0].name,
           marker: {
             size: 8,
-            color: "#636efa",
+            color: "#F3B340",
             symbol: "circle",
           },
         },
@@ -32,12 +32,26 @@ const LinePlot = (props) => {
           text: data.layout.title.text,
           x: 0.05,
           xanchor: "left",
+          font: { color: "white" }, // Title text color
         },
         margin: {
-          l: 50, 
+          l: 50,
         },
-        xaxis: data.layout.xaxis,
-        yaxis: data.layout.yaxis,
+        paper_bgcolor: "black", // Outer background
+        plot_bgcolor: "black", // Inner plot background
+        font: { color: "white" }, // Global text color
+        xaxis: {
+          ...data.layout.xaxis,
+          title: { ...data.layout.xaxis.title, font: { color: "white" } },
+          tickfont: { color: "white" },
+          gridcolor: "#444", // Light gridlines
+        },
+        yaxis: {
+          ...data.layout.yaxis,
+          title: { ...data.layout.yaxis.title, font: { color: "white" } },
+          tickfont: { color: "white" },
+          gridcolor: "#444",
+        },
         width: 700,
         height: 450,
       };

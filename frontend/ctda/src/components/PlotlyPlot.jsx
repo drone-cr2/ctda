@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
-import Plotly from "plotly.js-dist-min";
+import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
 
-const PlotlyPLot = (props) => {
+const PlotlyPlot = (props) => {
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -11,12 +10,45 @@ const PlotlyPLot = (props) => {
       .then((data) => {
         const updatedData = data.data.map((trace) => ({
           ...trace,
-          type:"bar",
+          type: "bar",
+          marker: { color: "#F3B340" }, // Bar color
         }));
 
-        setChartData({ ...data, data: updatedData });
+        const updatedLayout = {
+          ...data.layout,
+          paper_bgcolor: "black", // Outer background
+          plot_bgcolor: "black",  // Inner plot background
+          font: { color: "white" }, // Global text color
+
+          title: { 
+            text: data.layout.title?.text, 
+            font: { color: "white" } // Removed size property
+          },
+
+          xaxis: {
+            ...data.layout.xaxis,
+            title: { ...data.layout.xaxis.title, font: { color: "white" } },
+            tickfont: { color: "white" },
+            gridcolor: "#444", // Light gridlines for visibility
+          },
+
+          yaxis: {
+            ...data.layout.yaxis,
+            title: { ...data.layout.yaxis.title, font: { color: "white" } },
+            tickfont: { color: "white" },
+            gridcolor: "#444",
+          },
+
+          legend: { font: { color: "white" } },
+
+          coloraxis: { colorbar: { tickfont: { color: "white" } } },
+
+          hoverlabel: { font: { color: "black" }, bgcolor: "#F3B340" },
+        };
+
+        setChartData({ data: updatedData, layout: updatedLayout });
       });
-  }, []);
+  }, [props.url]);
 
   return (
     <div className="plot-container">
@@ -25,9 +57,8 @@ const PlotlyPLot = (props) => {
       ) : (
         <Plot />
       )}
-      {/* <button onClick={() => exportChart("svg")}>🎨 Download SVG</button> */}
     </div>
   );
 };
 
-export default PlotlyPLot;
+export default PlotlyPlot;

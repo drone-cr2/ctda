@@ -15,10 +15,10 @@ const WordCloud = () => {
         <img
           src={`data:image/png;base64,${imageData}`}
           alt="Word Cloud"
-          className="w-[700px] my-2"
+          className="my-2 h-[450px] "
         />
     ) : (
-        <div className="h-[300px] my-2 items-center text-center">
+        <div className="my-2 items-center text-center">
             Loading...
         </div>
     )}

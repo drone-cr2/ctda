@@ -16,7 +16,7 @@ def week_activity_map(df,selected_user,k):
     sentiment = "Neutral"
     if(k == 2):
         sentiment = "Positive"
-    elif(k == 1):
+    elif(k == 0):
         sentiment = "Negative"
     
     title = sentiment + "Weekly Activity"
@@ -62,7 +62,7 @@ def most_common_words(df,selected_user,k):
     title = "Most used neutral words"
     if(k == 2):
         title = "Most used positive words"
-    elif(k == 1):
+    elif(k == 0):
         title = "Most used negative words"
 
     with open("stop_hinglish.txt", "r") as f:

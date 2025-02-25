@@ -49,15 +49,16 @@ const TopStats = () => {
               align: 'left',
               font: { family: 'Arial, sans-serif', size: 12, color: 'black' },
               height: 30,
-              fill: { color: '#f1f1f1' },
+              fill: { color: '#F3B340' }, // Golden header
+              line: { color: 'white', width: 0.5 }, // Thinner white border for header
             },
             cells: {
               values: tableData.rows[0] && tableData.rows[0].map((_, colIndex) => tableData.rows.map(row => row[colIndex])),
               align: 'left',
-              font: { family: 'Arial, sans-serif', size: 12, color: 'black' },
+              font: { family: 'Arial, sans-serif', size: 12, color: 'white' },
               height: 30,
-              line: { color: 'black', width: 1 },
-              fill: { color: '#ffffff' },
+              line: { color: 'white', width: 0.5 }, // Thinner white border for cells
+              fill: { color: '#222222' }, // Dark background for cells
             },
           },
         ]}
@@ -65,6 +66,9 @@ const TopStats = () => {
           width: 700,
           height: 250,
           title: 'Top Stats',
+          paper_bgcolor: 'black', // Outer background
+          plot_bgcolor: 'black', // Inner background
+          font: { color: 'white' }, // Global text color
           margin: { t: 50, b: 20, l: 10, r: 10 },
         }}
       />
