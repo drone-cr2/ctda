@@ -103,25 +103,49 @@ def serve_timeline():
     return pio.to_json(charts.timeline(df,user)) 
 
 # 7 : busiest days wrt message counts (monday, tuesday, ...)
-@app.route('/buzy-days')
-def serve_buzy_days():
-    return pio.to_json(charts.busiest_days(df,user)) 
+@app.route('/buzy-days/<type>')
+def serve_buzy_days(type):
+    bar,pie = charts.busiest_days(df,user)
+    if(type == "pie"):
+        return pio.to_json(pie)
+    elif(type == "bar"):
+        return pio.to_json(bar)
+    else:
+        return "Invalid type. Expected 'bar' or 'pie'"
 
 # 8 : days and their word counts (amt of content shared) (monday, tuesday, ...)
-@app.route('/daily-wordcount')
-def serve_daily_wordcount():
-    return pio.to_json(charts.daily_wordcount(df,user)) 
+@app.route('/daily-wordcount/<type>')
+def serve_daily_wordcount(type):
+    bar,pie = charts.daily_wordcount(df,user)
+    if(type == "pie"):
+        return pio.to_json(pie)
+    elif(type == "bar"):
+        return pio.to_json(bar)
+    else:
+        return "Invalid type. Expected 'bar' or 'pie'"
 
 # 9 : busiest months wrt message counts (jan, feb, ...)
-@app.route('/buzy-months')
-def serve_buzy_months():
-    return pio.to_json(charts.busiest_months(df,user)) 
-
+@app.route('/buzy-months/<type>')
+def serve_buzy_months(type):
+    bar,pie = charts.busiest_months(df,user)
+    if(type == "pie"):
+        return pio.to_json(pie)
+    elif(type == "bar"):
+        return pio.to_json(bar)
+    else:
+        return "Invalid type. Expected 'bar' or 'pie'"
+    
 # 10 : months and their word counts (amt of content shared) (jan, feb, ...)
-@app.route('/monthly-wordcount')
-def serve_monthly_wordcount():
-    return pio.to_json(charts.monthy_wordcount(df,user)) 
-
+@app.route('/monthly-wordcount/<type>')
+def serve_monthly_wordcount(type):
+    bar,pie = charts.monthy_wordcount(df,user)
+    if(type == "pie"):
+        return pio.to_json(pie)
+    elif(type == "bar"):
+        return pio.to_json(bar)
+    else:
+        return "Invalid type. Expected 'bar' or 'pie'"
+    
 # 11 : busiest hours wrt message counts (0, 1, 2, ...)
 @app.route('/buzy-hours')
 def serve_busiest_hours():

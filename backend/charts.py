@@ -104,13 +104,13 @@ def busiest_days(df,user):
     sorted_series = day_counts_series.reindex(day_order)
     dfx = series_to_df(sorted_series)
 
-    # fig = px.bar(dfx, x='titles', y='values', title='Busiest days',  text="values" )
-    # fig.update_layout(
-    #     xaxis_title="Days in week",
-    #     yaxis_title="Number of messages (Daily)",
-    # )
-    fig = px.pie(dfx, names="titles", values="values", title="Buziest days")
-    return fig
+    fig_bar = px.bar(dfx, x='titles', y='values', title='Busiest days',  text="values" )
+    fig_bar.update_layout(
+        xaxis_title="Days in week",
+        yaxis_title="Number of messages (Daily)",
+    )
+    fig_pie = px.pie(dfx, names="titles", values="values", title="Buziest days")
+    return fig_bar,fig_pie
 
 # days plotted against number of words(content length) per day
 def daily_wordcount(df,user):
@@ -121,13 +121,13 @@ def daily_wordcount(df,user):
     sorted_series = daily_wc_series.reindex(day_order)
     dfx = series_to_df(sorted_series)
 
-    # fig = px.bar(dfx, x='titles', y='values', title='Daily wordcount',  text="values" )
-    # fig.update_layout(
-    #     xaxis_title="Days in week",
-    #     yaxis_title="Amount of content shared (Daily)",
-    # )
-    fig = px.pie(dfx, names="titles", values="values", title='Daily wordcount')
-    return fig
+    fig_bar = px.bar(dfx, x='titles', y='values', title='Daily wordcount',  text="values" )
+    fig_bar.update_layout(
+        xaxis_title="Days in week",
+        yaxis_title="Amount of content shared (Daily)",
+    )
+    fig_pie = px.pie(dfx, names="titles", values="values", title='Daily wordcount')
+    return fig_bar,fig_pie
 
 # months plotted against number of messages per month
 def busiest_months(df,user):
@@ -138,13 +138,13 @@ def busiest_months(df,user):
     sorted_series = month_count_series.reindex(month_order)
     dfx = series_to_df(sorted_series)
 
-    # fig = px.bar(dfx, x='titles', y='values', title='Buziest Months',  text="values" )
-    # fig.update_layout(
-    #     xaxis_title="Months in year",
-    #     yaxis_title="Number of messages (Monthly)",
-    # )
-    fig = px.pie(dfx, names="titles", values="values", title='Buziest Months')
-    return fig
+    fig_bar = px.bar(dfx, x='titles', y='values', title='Buziest Months',  text="values" )
+    fig_bar.update_layout(
+        xaxis_title="Months in year",
+        yaxis_title="Number of messages (Monthly)",
+    )
+    fig_pie = px.pie(dfx, names="titles", values="values", title='Buziest Months')
+    return fig_bar,fig_pie
 
 # months plotted against number of words(content length) per month
 def monthy_wordcount(df,user):
@@ -157,12 +157,13 @@ def monthy_wordcount(df,user):
 
     dfx = series_to_df(sorted_series)
 
-    fig = px.bar(dfx, x='titles', y='values', title='Monthly Wordcount',  text="values" )
-    fig.update_layout(
+    fig_bar = px.bar(dfx, x='titles', y='values', title='Monthly Wordcount',  text="values" )
+    fig_bar.update_layout(
         xaxis_title="Months in year",
         yaxis_title="Amount of content shared (Monthly)",
     )
-    return fig
+    fig_pie = px.pie(dfx, names="titles", values="values", title='Monthly Wordcount')
+    return fig_bar,fig_pie
 
 def activity_heatmap(df, user):
     # user = 'Overall'  

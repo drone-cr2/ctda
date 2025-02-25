@@ -74,9 +74,9 @@ def most_common_words(df,selected_user,k):
     words = []
     for message in temp['message'][temp['value'] == k]:
         for word in message.lower().split():
-            words.append(word)
-            if word not in stopwords:
-                words.append(word)
+            words.append(word[:5])
+            # if word not in stopwords:
+            #     words.append(word)
     dfx = pd.DataFrame(Counter(words).most_common(20))
     dfx.columns = ['titles','values']
 
