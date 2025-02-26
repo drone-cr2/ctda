@@ -10,14 +10,12 @@ const PieChart = (props) => {
       const response = await fetch(props.url);
       const data = await response.json();
 
-      // Improved diverse color palette (spread out similar colors)
       const pieColors = [
         "#E74C3C", "#2980B9", "#F4C542", "#8E44AD", "#1ABC9C",
         "#D35400", "#27AE60", "#C0392B", "#F39C12", "#7D3C98",
         "#2ECC71", "#A93226", "#3498DB", "#E67E22", "#16A085"
       ];
 
-      // Prepare the processed data for Plotly
       const processedData = [
         {
           labels: data.data[0].labels,
@@ -26,24 +24,24 @@ const PieChart = (props) => {
           hovertemplate: data.data[0].hovertemplate,
           name: data.data[0].name,
           showlegend: data.data[0].showlegend,
-          marker: { colors: pieColors }, // Applying reordered colors
+          marker: { colors: pieColors },
         },
       ];
 
       const structure = {
         title: {
-          text: data.layout.title ? data.layout.title.text : "Pie Chart",
-          font: { color: "white" },
+          text: data.layout.title?.text || "Pie Chart",
+          font: { color: "black" }, // Changed to black
         },
-        width: 700,
-        height: 450,
-        paper_bgcolor: "black", // Dark background
-        plot_bgcolor: "black",
-        font: { color: "white" }, // White text for contrast
+        paper_bgcolor: "white", // Changed to white
+        plot_bgcolor: "white", // Changed to white
+        font: { color: "black" }, // Changed to black
         legend: {
-          font: { color: "white" },
-          bgcolor: "rgba(0,0,0,0)", // Transparent legend background
+          font: { color: "black" }, // Changed to black
+          bgcolor: "rgba(255,255,255,0)",
         },
+        autosize: true,
+        responsive: true, // Enables dynamic resizing
       };
 
       setPlotData(processedData);
@@ -55,9 +53,18 @@ const PieChart = (props) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [props.url]);
 
-  return <Plot data={plotData} layout={layout} />;
+  return (
+    <div className="w-full h-auto md:h-[500px]">
+      <Plot
+        data={plotData}
+        layout={layout}
+        useResizeHandler
+        style={{ width: "100%", height: "100%" }}
+      />
+    </div>
+  );
 };
 
 export default PieChart;

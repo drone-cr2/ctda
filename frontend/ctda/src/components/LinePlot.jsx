@@ -17,11 +17,11 @@ const LinePlot = (props) => {
           y: data.data[0].y,
           type: "scatter",
           mode: "lines+markers",
-          line: { color: "#F3B340", width: 2 },
+          line: { color: "#636efa", width: 2 }, // Changed to blue
           name: data.data[0].name,
           marker: {
             size: 8,
-            color: "#F3B340",
+            color: "#636efa", // Changed to blue
             symbol: "circle",
           },
         },
@@ -32,28 +32,28 @@ const LinePlot = (props) => {
           text: data.layout.title.text,
           x: 0.05,
           xanchor: "left",
-          font: { color: "white" }, // Title text color
+          font: { color: "black" },
         },
         margin: {
           l: 50,
         },
-        paper_bgcolor: "black", // Outer background
-        plot_bgcolor: "black", // Inner plot background
-        font: { color: "white" }, // Global text color
+        paper_bgcolor: "white", // White background
+        plot_bgcolor: "white", // White plot area
+        font: { color: "black" }, // Black text
         xaxis: {
           ...data.layout.xaxis,
-          title: { ...data.layout.xaxis.title, font: { color: "white" } },
-          tickfont: { color: "white" },
-          gridcolor: "#444", // Light gridlines
+          title: { ...data.layout.xaxis.title, font: { color: "black" } },
+          tickfont: { color: "black" },
+          gridcolor: "#ddd", // Light gridlines
         },
         yaxis: {
           ...data.layout.yaxis,
-          title: { ...data.layout.yaxis.title, font: { color: "white" } },
-          tickfont: { color: "white" },
-          gridcolor: "#444",
+          title: { ...data.layout.yaxis.title, font: { color: "black" } },
+          tickfont: { color: "black" },
+          gridcolor: "#ddd",
         },
-        width: 700,
-        height: 450,
+        autosize: true, // Makes it auto-adjustable
+        responsive: true, // Ensures it adjusts dynamically
       };
 
       setPlotData(processedData);
@@ -65,9 +65,18 @@ const LinePlot = (props) => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [props.url]); // Rerun if URL changes
 
-  return <Plot data={plotData} layout={layout} />;
+  return (
+    <div className="w-full">
+      <Plot
+        data={plotData}
+        layout={layout}
+        useResizeHandler
+        style={{ width: "100%", height: "100%" }}
+      />
+    </div>
+  );
 };
 
 export default LinePlot;

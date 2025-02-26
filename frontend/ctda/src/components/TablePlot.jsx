@@ -25,7 +25,10 @@ const TablePlot = (props) => {
         );
 
         // Show all contributors if there are fewer than 10, else get the bottom 10
-        const bottomContributors = sortedContributors.slice(0, Math.min(10, sortedContributors.length));
+        const bottomContributors = sortedContributors.slice(
+          0,
+          Math.min(10, sortedContributors.length)
+        );
 
         // Set the contributors to the state
         setContributors(bottomContributors);
@@ -40,8 +43,8 @@ const TablePlot = (props) => {
       header: {
         values: ["<b>Sr No</b>", "<b>Name</b>", "<b>Contributions</b>"],
         align: "left",
-        font: { family: "Arial", size: 14, color: "white" }, // White header text
-        fill: { color: "#F3B340" },
+        font: { family: "Arial", size: 14, color: "black" }, // Black header text
+        fill: { color: "#F3F3F3" }, // Light gray header background
         height: 30,
       },
       cells: {
@@ -51,8 +54,8 @@ const TablePlot = (props) => {
           contributors.map((contributor) => contributor.contribution), // Contributions
         ],
         align: "left",
-        font: { family: "Arial", size: 12, color: "white" }, // White cell text
-        fill: { color: "#222222" }, // Darker background for cells
+        font: { family: "Arial", size: 12, color: "black" }, // Black cell text
+        fill: { color: "white" }, // White background for cells
         height: 30,
       },
     },
@@ -62,12 +65,12 @@ const TablePlot = (props) => {
   const layout = {
     title: {
       text: props.sen + " Contributors",
-      font: { color: "white", size: 18 }, // White title
+      font: { color: "black", size: 18 }, // Black title
     },
-    width: 700,
-    height: 450,
-    paper_bgcolor: "black", // Outer background black
-    plot_bgcolor: "black", // Inner background black
+    autosize: true, // Enables auto-resizing
+    responsive: true, // Prevents data loss during resizing
+    paper_bgcolor: "white", // Outer background white
+    plot_bgcolor: "white", // Inner background white
     margin: {
       l: 10,
       r: 10,
@@ -76,7 +79,14 @@ const TablePlot = (props) => {
     },
   };
 
-  return <Plot data={tableData} layout={layout} />;
+  return (
+    <Plot
+      data={tableData}
+      layout={layout}
+      useResizeHandler
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
 };
 
 export default TablePlot;

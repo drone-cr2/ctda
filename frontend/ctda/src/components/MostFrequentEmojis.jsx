@@ -43,8 +43,8 @@ const MostFrequentEmojis = () => {
       header: {
         values: ["Sr No", "Emoji", "Count"],
         align: "left",
-        font: { family: "Arial", size: 12, color: "black" },
-        fill: { color: "#F3B340" }, // Golden header
+        font: { family: "Arial", size: 12 },
+        fill: { color: "#EAEAEA" }, // Light gray header
         height: 30,
       },
       cells: {
@@ -54,25 +54,29 @@ const MostFrequentEmojis = () => {
           emojis.map((emoji) => emoji.count), // Count
         ],
         align: "left",
-        font: { family: "Arial", size: 12, color: "white" },
-        fill: { color: "#222222" }, // Dark background for cells
+        font: { family: "Arial", size: 12 },
+        fill: { color: "#FFFFFF" }, // White background for cells
         height: 30,
       },
     },
   ];
 
-  // Layout settings for the Plotly table
+  // Layout settings for the Plotly table (light theme)
   const layout = {
     title: "Most Frequent Emojis",
-    width: 700,
-    height: 450,
-    paper_bgcolor: "black", // Outer background
-    plot_bgcolor: "black",  // Inner background
-    font: { color: "white" }, // Global text color
+    autosize: true,
+    responsive: true,
     margin: { l: 10, r: 10, b: 20, t: 50 },
   };
 
-  return <Plot data={tableData} layout={layout} />;
+  return (
+    <Plot
+      data={tableData}
+      layout={layout}
+      useResizeHandler
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
 };
 
 export default MostFrequentEmojis;

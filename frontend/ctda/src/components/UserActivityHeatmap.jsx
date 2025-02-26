@@ -30,46 +30,36 @@ const UserActivityHeatmap = () => {
       x: xValues,
       y: yValues,
       type: "heatmap",
-      colorscale: "Cividis", // Cividis Inferno Hot
+      colorscale: "Viridis", // Default colorscale
       colorbar: {
         title: "Activity",
-        tickcolor: "white",
-        titlefont: { color: "white" },
-        thickness: 16, 
       },
     },
   ];
 
-  // Layout settings
+  // Layout settings (light theme)
   const layout = {
-    title: {
-      text: "User Activity Heatmap",
-      font: { color: "white" },
-    },
+    title: "User Activity Heatmap",
     xaxis: {
       title: "Time Period",
       type: "category",
-      tickfont: { color: "white" },
-      titlefont: { color: "white" },
-      gridcolor: "gray",
     },
     yaxis: {
       title: "Days of the Week",
       type: "category",
-      tickfont: { color: "white" },
-      titlefont: { color: "white" },
-      gridcolor: "gray",
     },
-    width: 700,
-    height: 450,
-    paper_bgcolor: "black", // Outer background
-    plot_bgcolor: "black", // Inner background
-    hoverlabel: { font: { color: "black" }, bgcolor: "#f9e34a" },
+    autosize: true,
+    responsive: true,
   };
 
   return (
     <div>
-      <Plot data={plotData} layout={layout} />
+      <Plot
+        data={plotData}
+        layout={layout}
+        useResizeHandler
+        style={{ width: "100%", height: "100%" }}
+      />
     </div>
   );
 };

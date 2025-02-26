@@ -3,36 +3,18 @@ import "./App.css";
 import WordCloud from "./components/WordCloud";
 import TablePlot from "./components/TablePlot";
 
-const MonthlyMessageCount = lazy(() =>
-  import("./components/MonthlyMessageCount")
-);
+
 const PieChart = lazy(() => import("./components/PieChart"));
-const MonthlyContributions = lazy(() =>
-  import("./components/MonthlyContributions")
-);
 const LinePlot = lazy(() => import("./components/LinePlot"));
-const WeeklyMessageCount = lazy(() =>
-  import("./components/WeeklyMessageCount")
-);
 const UserActivityHeatmap = lazy(() =>
   import("./components/UserActivityHeatmap")
 );
-const BusiestUsers = lazy(() => import("./components/BusiestUsers"));
-const HighestContributors = lazy(() =>
-  import("./components/HighestContributors")
-);
-const LowestContributors = lazy(() =>
-  import("./components/LowestContributors")
-);
-const MostFrequentWords = lazy(() => import("./components/MostFrequentWords"));
 const MostFrequentEmojis = lazy(() =>
   import("./components/MostFrequentEmojis")
 );
-const WeeklyWordCount = lazy(() => import("./components/WeeklyWordCount"));
 const TopStats = lazy(() => import("./components/TopStats"));
 const FileUploader = lazy(() => import("./components/FileUploader"));
 const PlotlyBarChart = lazy(() => import("./components/PlotlyPlot"));
-const BusiestHours = lazy(() => import("./components/BusiestHours"));
 
 function App() {
   const [flag, setFlag] = useState(false);
@@ -42,151 +24,216 @@ function App() {
   };
 
   return (
-    <div className="w-full h-full text-[#F4F3EF] font-mono">
-      <div className="bg-[#364C63] p-10 py-16">
+    <div className="w-full h-full text-[#F4F3EF] bg-black font-mono flex flex-col min-h-screen justify-center">
+      <div className="p-10 py-16 rounded">
         <Suspense fallback={<div>Loading...</div>}>
           {flag ? (
             <>
-              <div className="w-full space-y-48">
+              <div className="w-full space-y-36">
                 <div className="space-y-8">
-                  <h1 className="text-left text-2xl">Message Overview</h1>
+                  <h1 className="text-left text-3xl font-bold">
+                    Message Overview
+                  </h1>
                   <TopStats /> {/* Stats Table */}
                 </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">Chat Timeline</h1>
-                  <div className="flex justify-center space-x-10">
-                    <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
+                <div className="space-y-8 px-4">
+                  <h1 className="text-left text-3xl font-bold">
+                    Chat Timeline
+                  </h1>
+
+                  <div className="flex justify-evenly space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
                     {/* Chat Timeline BarChart */}
-                    <LinePlot url="http://127.0.0.1:8080/timeline" />
+                    <div className="w-1/2 p-4">
+                      <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
+                    </div>
+
                     {/* Chat Timeline LineChart */}
+                    <div className="w-1/2 p-4">
+                      <LinePlot url="http://127.0.0.1:8080/timeline" />
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">Contributors</h1>
-                  <div className="flex justify-center space-x-10">
-                    <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
-                    {/* Top Users BarPlot*/}
-                    <TablePlot
-                      url="http://127.0.0.1:8080/contributions"
-                      sen="Highest"
-                    />
-                    {/* Contribution Table Highest */}
+
+                <div className="space-y-8 px-4">
+                  <h1 className="text-left text-3xl font-bold">Contributors</h1>
+
+                  <div className="flex justify-evenly space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
+                    {/* Top Users BarPlot */}
+                    <div className="w-1/2 p-4">
+                      <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
+                    </div>
+
+                    {/* Contribution Table (Highest) */}
+                    <div className="w-1/2 p-4">
+                      <TablePlot
+                        url="http://127.0.0.1:8080/contributions"
+                        sen="Highest"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">Busiest Months</h1>
-                  <div className="flex justify-center space-x-10">
-                    <PlotlyBarChart url="http://127.0.0.1:8080/buzy-months/bar" />
-                    {/*Busiest Month BarChart*/}
-                    <PieChart url="http://127.0.0.1:8080/buzy-months/pie" />
-                    {/* Busiest Month PieChart*/}
+
+                <div className="space-y-8 px-4">
+                  <h1 className="text-left text-3xl font-bold">
+                    Busiest Months
+                  </h1>
+
+                  <div className="flex justify-evenly space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
+                    {/* Wrapper for equal sizing */}
+                    <div className="flex-1 min-h-[300px] flex items-center justify-center">
+                      <PlotlyBarChart url="http://127.0.0.1:8080/buzy-months/bar" />
+                    </div>
+
+                    <div className="flex-1 min-h-[300px] flex items-center justify-center">
+                      <PieChart url="http://127.0.0.1:8080/buzy-months/pie" />
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">
+
+                <div className="space-y-8 px-4">
+                  <h1 className="text-left text-3xl font-bold">
                     Busiest Days (by word count)
                   </h1>
-                  <div className="flex justify-center space-x-10">
-                    <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount/bar" />
-                    {/*Weekly WordCount BarChart*/}
-                    <PieChart url="http://127.0.0.1:8080/daily-wordcount/pie" />
-                    {/* Weekly WordCount PieChart */}
+
+                  <div className="flex justify-evenly space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
+                    {/* Wrapper for equal sizing */}
+                    <div className="flex-1 min-h-[300px] flex items-center justify-center">
+                      <PlotlyBarChart url="http://127.0.0.1:8080/daily-wordcount/bar" />
+                    </div>
+
+                    <div className="flex-1 min-h-[300px] flex items-center justify-center">
+                      <PieChart url="http://127.0.0.1:8080/daily-wordcount/pie" />
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">
+
+                <div className="space-y-8 px-4">
+                  <h1 className="text-left text-3xl font-bold">
                     Busiest Days (by message count)
                   </h1>
-                  <div className="flex justify-center space-x-10">
-                    <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days/bar" />
-                    {/* Weekly MessageCount BarChart*/}
-                    <PieChart url="http://127.0.0.1:8080/buzy-days/pie" />
+
+                  <div className="flex space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
+                    {/* Weekly MessageCount BarChart */}
+                    <div className="flex-1 min-h-[300px] flex items-center justify-center">
+                      <PlotlyBarChart url="http://127.0.0.1:8080/buzy-days/bar" />
+                    </div>
+
                     {/* Weekly MessageCount PieChart */}
+                    <div className="flex-1 min-h-[300px] flex items-center justify-center">
+                      <PieChart url="http://127.0.0.1:8080/buzy-days/pie" />
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">Activity HeatMap</h1>
-                  <div className="flex justify-center space-x-10">
-                    <UserActivityHeatmap /> {/* Users Activity Heatmap */}
-                  </div>
-                </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">Most Commons</h1>
-                  <div className="flex justify-center space-x-10 my-4">
-                    <PlotlyBarChart url="http://127.0.0.1:8080/top-words" />
-                    {/* Top Words BarPlot*/}
-                    <MostFrequentEmojis /> {/* Frequent Emoji Table */}
-                  </div>
-                </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">
-                    Negative Sentiment Analysis
+
+                <div className="space-y-8 px-4">
+                  <h1 className="text-left text-3xl font-bold">
+                    Activity HeatMap
                   </h1>
-                  <div className="space-y-6">
-                    {/* Negative Sentiment Plots */}
-                    <div className="flex justify-center space-x-10">
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-activity-map/0" />
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-common-words/0" />
+
+                  <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden">
+                    <div className="w-full p-4">
+                      <UserActivityHeatmap /> {/* Users Activity Heatmap */}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-8 px-4">
+                  <h1 className="text-left text-3xl font-bold">Most Commons</h1>
+
+                  <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden space-x-10 my-4">
+                    <div className="w-1/2 p-4">
+                      <PlotlyBarChart url="http://127.0.0.1:8080/top-words" />
+                      {/* Top Words BarPlot */}
                     </div>
 
-                    <div className="flex justify-center space-x-10">
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/0" />
-                      <LinePlot url="http://127.0.0.1:8080/sen-timeline/0" />
+                    <div className="w-1/2 p-4">
+                      <MostFrequentEmojis /> {/* Frequent Emoji Table */}
                     </div>
-                    <TablePlot
-                      url="http://127.0.0.1:8080/sen-contribution/0"
-                      sen="Negative"
-                    />
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">
-                    Neutral Sentiment Analysis
+                <div className="space-y-12 px-6">
+                  <h1 className="text-left text-3xl font-bold">
+                    Sentiment Analysis
                   </h1>
-                  <div className="space-y-6">
-                    {/* Neutral Sentiment Plots */}
-                    <div className="flex justify-center space-x-10">
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-activity-map/1" />
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-common-words/1" />
-                    </div>
 
-                    <div className="flex justify-center space-x-10">
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/1" />
-                      <LinePlot url="http://127.0.0.1:8080/sen-timeline/1" />
+                  {/* Weekly Activity */}
+                  <div className="space-y-8 px-4">
+                    <h1 className="text-left text-2xl">Weekly Activity</h1>
+                    <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden space-x-10 my-4">
+                      {[0, 1, 2].map((i) => (
+                        <div key={i} className="w-1/3 p-4">
+                          <PlotlyBarChart
+                            url={`http://127.0.0.1:8080/sen-activity-map/${i}`}
+                          />
+                        </div>
+                      ))}
                     </div>
-                    <TablePlot
-                      url="http://127.0.0.1:8080/sen-contribution/1"
-                      sen="Neutral"
-                    />
+                  </div>
+
+                  {/* Common Words */}
+                  <div className="space-y-8 px-4">
+                    <h1 className="text-left text-2xl">Common Words</h1>
+                    <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden space-x-10 my-4">
+                      {[0, 1, 2].map((i) => (
+                        <div key={i} className="w-1/3 p-4">
+                          <PlotlyBarChart
+                            url={`http://127.0.0.1:8080/sen-common-words/${i}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Timeline Bar Charts */}
+                  <div className="space-y-8 px-4">
+                    <h1 className="text-left text-2xl">Activity Overview</h1>
+                    <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden space-x-10 my-4">
+                      {[0, 1, 2].map((i) => (
+                        <div key={i} className="w-1/3 p-4">
+                          <PlotlyBarChart
+                            url={`http://127.0.0.1:8080/sen-timeline/${i}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Timeline Line Charts */}
+                  <div className="space-y-8 px-4">
+                    <h1 className="text-left text-2xl">Activity Timeline</h1>
+                    <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden space-x-10 my-4">
+                      {[0, 1, 2].map((i) => (
+                        <div key={i} className="w-1/3 p-4">
+                          <LinePlot
+                            url={`http://127.0.0.1:8080/sen-timeline/${i}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Contributors Table */}
+                  <div className="space-y-8 px-4">
+                    <h1 className="text-left text-2xl">Contributors</h1>
+                    <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden space-x-10 my-4">
+                      {["Negative", "Neutral", "Positive"].map((sen, i) => (
+                        <div key={i} className="w-1/3 p-4">
+                          <TablePlot
+                            url={`http://127.0.0.1:8080/sen-contribution/${i}`}
+                            sen={sen}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <h1 className="text-left text-2xl">
-                    Positive Sentiment Analysis
-                  </h1>
-                  <div className="space-y-6">
-                    {/* Positive Sentiment Plots */}
-                    <div className="flex justify-center space-x-10">
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-activity-map/2" />
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-common-words/2" />
-                    </div>
 
-                    <div className="flex justify-center space-x-10">
-                      <PlotlyBarChart url="http://127.0.0.1:8080/sen-timeline/2" />
-                      <LinePlot url="http://127.0.0.1:8080/sen-timeline/2" />
-                    </div>
-                    <TablePlot
-                      url="http://127.0.0.1:8080/sen-contribution/2"
-                      sen="Positive"
-                    />
-                  </div>
-                </div>
                 <div className="space-y-8">
-                  <h1 className="text-left text-2xl">Busiest Hours</h1>
+                  <h1 className="text-left text-3xl font-bold">Busiest Hours</h1>
                   <PlotlyBarChart url="http://127.0.0.1:8080/buzy-hours" />
                 </div>
                 <div className="space-y-8">
-                  <h1 className="text-left text-2xl">WordCloud</h1>
+                  <h1 className="text-left text-3xl font-bold">WordCloud</h1>
                   <div className="flex justify-center">
                     <WordCloud /> {/* WordCloud */}
                   </div>
@@ -200,7 +247,7 @@ function App() {
               </div>
               <button
                 onClick={handleUpload}
-                className="mt-4 bg-[#F3B340] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#f39c40] transition duration-200 w-[20%] my-12"
+                className="mt-4 bg-white text-black px-5 py-2 rounded-lg shadow-md hover:bg-slate-500 transition duration-200 w-[20%] my-12"
               >
                 Analyze
               </button>

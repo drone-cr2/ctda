@@ -11,39 +11,26 @@ const PlotlyPlot = (props) => {
         const updatedData = data.data.map((trace) => ({
           ...trace,
           type: "bar",
-          marker: { color: "#F3B340" }, // Bar color
         }));
 
         const updatedLayout = {
           ...data.layout,
-          paper_bgcolor: "black", // Outer background
-          plot_bgcolor: "black",  // Inner plot background
-          font: { color: "white" }, // Global text color
-
-          title: { 
-            text: data.layout.title?.text, 
-            font: { color: "white" } // Removed size property
+          title: {
+            text: data.layout.title?.text,
           },
 
           xaxis: {
             ...data.layout.xaxis,
-            title: { ...data.layout.xaxis.title, font: { color: "white" } },
-            tickfont: { color: "white" },
-            gridcolor: "#444", // Light gridlines for visibility
+            title: { ...data.layout.xaxis.title },
           },
 
           yaxis: {
             ...data.layout.yaxis,
-            title: { ...data.layout.yaxis.title, font: { color: "white" } },
-            tickfont: { color: "white" },
-            gridcolor: "#444",
+            title: { ...data.layout.yaxis.title },
           },
 
-          legend: { font: { color: "white" } },
-
-          coloraxis: { colorbar: { tickfont: { color: "white" } } },
-
-          hoverlabel: { font: { color: "black" }, bgcolor: "#F3B340" },
+          autosize: true, // Enables auto-resizing
+          responsive: true, // Prevents data loss during resizing
         };
 
         setChartData({ data: updatedData, layout: updatedLayout });
@@ -51,9 +38,14 @@ const PlotlyPlot = (props) => {
   }, [props.url]);
 
   return (
-    <div className="plot-container">
+    <div className="w-full">
       {chartData ? (
-        <Plot data={chartData.data} layout={chartData.layout} />
+        <Plot
+          data={chartData.data}
+          layout={chartData.layout}
+          useResizeHandler
+          style={{ width: "100%", height: "100%" }}
+        />
       ) : (
         <Plot />
       )}
