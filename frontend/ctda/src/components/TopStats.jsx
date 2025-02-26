@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Plot from "react-plotly.js";
 
 const TopStats = () => {
   const [stats, setStats] = useState(null);
@@ -18,29 +17,27 @@ const TopStats = () => {
     fetchStats();
   }, []);
 
-  if(!stats){
-    return (
-      <div>Loading...</div>
-    )
+  if (!stats) {
+    return <div>Loading...</div>;
   }
 
   return (
-    <div className="flex justify-evenly w-full">
-      <div>
-        <h1 className="text-5xl">{stats.num_words}</h1>
-        <h1 className="text-2xl">No. of Words</h1>
+    <div className="flex flex-wrap justify-evenly w-full">
+      <div className="text-center p-4">
+        <h1 className="text-4xl md:text-5xl">{stats.num_words}</h1>
+        <h1 className="text-lg md:text-2xl">No. of Words</h1>
       </div>
-      <div>
-        <h1 className="text-5xl">{stats.num_messages}</h1>
-        <h1 className="text-2xl">No. of Messages</h1>
+      <div className="text-center p-4">
+        <h1 className="text-4xl md:text-5xl">{stats.num_messages}</h1>
+        <h1 className="text-lg md:text-2xl">No. of Messages</h1>
       </div>
-      <div>
-        <h1 className="text-5xl">{stats.num_links}</h1>
-        <h1 className="text-2xl">No. of Links</h1>
+      <div className="text-center p-4">
+        <h1 className="text-4xl md:text-5xl">{stats.num_links}</h1>
+        <h1 className="text-lg md:text-2xl">No. of Links</h1>
       </div>
-      <div>
-        <h1 className="text-5xl">{stats.num_media_messages}</h1>
-        <h1 className="text-2xl">No. of Media</h1>
+      <div className="text-center p-4">
+        <h1 className="text-4xl md:text-5xl">{stats.num_media_messages}</h1>
+        <h1 className="text-lg md:text-2xl">No. of Media</h1>
       </div>
     </div>
   );

@@ -10,20 +10,18 @@ const WordCloud = () => {
   }, []);
 
   return (
-    <>
-    {imageData ? (
+    <div className="flex justify-center">
+      {imageData ? (
         <img
           src={`data:image/png;base64,${imageData}`}
           alt="Word Cloud"
-          className="my-2 h-[450px] "
+          className="my-2 max-w-full h-auto" // Responsive image
+          style={{ maxHeight: "450px", aspectRatio: "4/3" }} // Aspect ratio and max height
         />
-    ) : (
-        <div className="my-2 items-center text-center">
-            Loading...
-        </div>
-    )}
-      
-    </>
+      ) : (
+        <div className="my-2 items-center text-center">Loading...</div>
+      )}
+    </div>
   );
 };
 
