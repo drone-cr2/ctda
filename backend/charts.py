@@ -195,7 +195,12 @@ def wordcloud(df,user):
 
     all_messages = " ".join(df['message'])
 
-    wordcloud = WordCloud(width=800, height=400, background_color="white", stopwords = custom_stopwords).generate(all_messages)
+    wordcloud = WordCloud(width=800, height=400,
+                        colormap = 'bone',
+                        background_color="black",
+                        normalize_plurals = True,
+                        collocations = False,
+                        stopwords = custom_stopwords).generate(all_messages)
 
     # ✅ Convert to NumPy array
     img_array = np.array(wordcloud)
