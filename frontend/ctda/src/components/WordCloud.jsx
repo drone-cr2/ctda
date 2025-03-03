@@ -12,12 +12,14 @@ const WordCloud = () => {
   return (
     <div className="flex justify-center">
       {imageData ? (
-        <img
-          src={`data:image/png;base64,${imageData}`}
-          alt="Word Cloud"
-          className="my-2 max-w-full h-auto" // Responsive image
-          style={{ maxHeight: "450px", aspectRatio: "4/3" }} // Aspect ratio and max height
-        />
+        <div className="bg-white px-2 py-1">
+          <img
+            src={`data:image/png;base64,${imageData}`}
+            alt="Word Cloud"
+            className="my-2 max-w-full h-auto" // Responsive image
+            style={{ maxHeight: "600px", aspectRatio: "4/3" }} // Aspect ratio and max height
+          />
+        </div>
       ) : (
         <div className="my-2 items-center text-center">Loading...</div>
       )}

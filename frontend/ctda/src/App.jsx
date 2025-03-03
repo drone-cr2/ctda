@@ -32,7 +32,7 @@ function App() {
                 {/* Message Overview */}
                 <div className="space-y-4 md:space-y-8">
                   <h1 className="text-left text-2xl md:text-3xl font-bold">
-                    Message Overview
+                    Chat Overview
                   </h1>
                   <TopStats /> {/* Stats Table */}
                 </div>
@@ -43,18 +43,36 @@ function App() {
                     Chat Timeline
                   </h1>
 
-                  <div className="flex flex-col md:flex-row justify-evenly md:space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
-                    {/* Chat Timeline BarChart */}
-                    <div className="w-full md:w-1/2 p-2 md:p-4">
+                  <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden">
+                    <div className="w-full p-2 md:p-4">
                       <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
                     </div>
-
-                    {/* Chat Timeline LineChart */}
-                    <div className="w-full md:w-1/2 p-2 md:p-4">
+                  </div>
+                  <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden">
+                    <div className="w-full p-2 md:p-4">
                       <LinePlot url="http://127.0.0.1:8080/timeline" />
                     </div>
                   </div>
                 </div>
+
+                {/* Chat Timeline */}
+                {/* <div className="space-y-4 md:space-y-8 px-2 md:px-4">
+                  <h1 className="text-left text-2xl md:text-3xl font-bold">
+                    Chat Timeline
+                  </h1>
+
+                  <div className="flex flex-col md:flex-row justify-evenly md:space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
+                    Chat Timeline BarChart
+                    <div className="w-full md:w-1/2 p-2 md:p-4">
+                      <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
+                    </div>
+
+                    Chat Timeline LineChart
+                    <div className="w-full md:w-1/2 p-2 md:p-4">
+                      <LinePlot url="http://127.0.0.1:8080/timeline" />
+                    </div>
+                  </div>
+                </div> */}
 
                 {/* Contributors */}
                 <div className="space-y-4 md:space-y-8 px-2 md:px-4">
