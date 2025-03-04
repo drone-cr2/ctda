@@ -71,7 +71,7 @@ user = "Overall"
 # 1 : numerical stats
 @app.route('/top-stats')
 def serve_top_stats():
-    return jsonify(stats.fetch_stats(df,user))
+    return jsonify(stats.top_stats(df,user))
 # NOTE :  helper functions' returns a tuple, and the * operator unpacks it into separate arguments for covert_to_json().
 
 # 2 : dataframe of users and their chat contribution in %
@@ -186,6 +186,10 @@ def serve_sentiment_common_words(k):
 @app.route('/sen-activity-map/<int:k>')
 def serve_sen_activity_map(k):
     return pio.to_json(nlp_charts.week_activity_map(df,user,k))
+
+@app.route('/temporal-stats')
+def serve_temporal_stats():
+    return jsonify(stats.top_temporal_stats(df,user))
 
 
 # main driver function
