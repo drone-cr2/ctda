@@ -3,10 +3,14 @@ import Plot from "react-plotly.js";
 
 const UserActivityHeatmap = () => {
   const [data, setData] = useState({ x: [], y: [], z: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchAndSortHeatmapData = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const response = await fetch("http://127.0.0.1:8080/heatmap");
         const result = await response.json();
 
@@ -23,16 +27,19 @@ const UserActivityHeatmap = () => {
         indexedX.sort((a, b) => a.sortValue - b.sortValue);
 
         // Get sorted x values and their new order
-        let sortedX = indexedX.map(item => item.label);
-        let sortedIndices = indexedX.map(item => item.index);
+        let sortedX = indexedX.map((item) => item.label);
+        let sortedIndices = indexedX.map((item) => item.index);
 
         // Reorder z values based on sorted x indices
-        let sortedZ = z.map(row => sortedIndices.map(idx => row[idx]));
+        let sortedZ = z.map((row) => sortedIndices.map((idx) => row[idx]));
 
         // Update state with sorted data
         setData({ x: sortedX, y, z: sortedZ });
-      } catch (error) {
-        console.error("Error fetching or processing heatmap data:", error);
+      } catch (err) {
+        console.error("Error fetching temporal stats:", err);
+        setError(err.message || "Failed to fetch data.");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -60,9 +67,30 @@ const UserActivityHeatmap = () => {
     responsive: true,
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-40">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-40 text-red-500">
+        Error: {error}
+      </div>
+    );
+  }
+
   return (
     <div>
-      <Plot data={plotData} layout={layout} useResizeHandler style={{ width: "100%", height: "100%" }} />
+      <Plot
+        data={plotData}
+        layout={layout}
+        useResizeHandler
+        style={{ width: "100%", height: "100%" }}
+      />
     </div>
   );
 };

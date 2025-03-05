@@ -2,17 +2,22 @@ import React, { useState } from "react";
 
 const FileUploader = () => {
   const [file, setFile] = useState(null);
-  const [users, setUsers] = useState([]); // Store users list
-  const [selectedUser, setSelectedUser] = useState(""); // Selected user
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("");
   const [fileContent, setFileContent] = useState("");
+  const [loadingFile, setLoadingFile] = useState(false); // Loading state for file upload
+  const [loadingUsers, setLoadingUsers] = useState(false); // Loading state for users list
 
   const handleFileUpload = (event) => {
     setFile(event.target.files[0]);
     const file = event.target.files[0];
+
     if (file) {
+      setLoadingFile(true); // Start loading
       const reader = new FileReader();
       reader.onload = (e) => {
         setFileContent(e.target.result);
+        setLoadingFile(false); // Stop loading when file is read
       };
       reader.readAsText(file);
     }
@@ -23,6 +28,8 @@ const FileUploader = () => {
     setFile(null);
     setUsers([]);
     setSelectedUser("");
+    setLoadingFile(false);
+    setLoadingUsers(false);
   };
 
   const handleUpload = async () => {
@@ -30,6 +37,8 @@ const FileUploader = () => {
       alert("Please select a file first!");
       return;
     }
+
+    setLoadingUsers(true); // Start loading users
 
     const formData = new FormData();
     formData.append("file", file);
@@ -48,6 +57,8 @@ const FileUploader = () => {
       setUsers(data.users);
     } catch (error) {
       console.error("Error uploading file:", error);
+    } finally {
+      setLoadingUsers(false); // Stop loading after response
     }
   };
 
@@ -72,54 +83,78 @@ const FileUploader = () => {
         )}
 
         <div className="mt-4 w-full">
-          {fileContent && (
-            <>
-              <pre className="h-60 sm:h-72 md:h-80 lg:h-84 max-h-80 bg-[#F4F3EF] text-black p-4 rounded-md shadow-md overflow-y-auto text-left">
-                {fileContent}
-              </pre>
+          {loadingFile ? (
+            <div className="flex justify-center items-center h-60 sm:h-72 md:h-80 lg:h-84 max-h-80 bg-[#F4F3EF] text-black p-4 rounded-md shadow-md">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-black"></div>
+            </div>
+          ) : (
+            fileContent && (
+              <>
+                <pre className="h-60 sm:h-72 md:h-80 lg:h-84 max-h-80 bg-[#F4F3EF] text-black p-4 rounded-md shadow-md overflow-y-auto text-left">
+                  {fileContent}
+                </pre>
 
-              <div className="flex flex-col sm:flex-row justify-center sm:justify-start mt-3">
-                <button
-                  onClick={handleUpload}
-                  className="mt-2 sm:mt-0 bg-white text-black px-5 py-2 rounded-lg shadow-md hover:bg-slate-500 transition duration-200 w-full sm:w-auto sm:mr-2"
-                >
-                  Get Users
-                </button>
-
-                <button
-                  onClick={handleRemoveFile}
-                  className="mt-2 sm:mt-0 bg-white text-black px-5 py-2 rounded-lg shadow-md hover:bg-slate-500 transition duration-200 w-full sm:w-auto"
-                >
-                  Remove
-                </button>
-              </div>
-
-              {users.length > 0 && (
-                <div className="mt-4 w-full">
-                  <label className="block text-sm font-semibold">
-                    Select a User:
-                  </label>
-                  <select
-                    value={selectedUser}
-                    onChange={(e) => setSelectedUser(e.target.value)}
-                    className="border p-2 rounded w-full mt-1 bg-black text-white"
+                <div className="flex flex-col sm:flex-row justify-center sm:justify-start mt-3">
+                  <button
+                    onClick={handleUpload}
+                    disabled={loadingUsers} // Disable when loading
+                    className={`mt-2 sm:mt-0 px-5 py-2 rounded-lg shadow-md transition duration-200 w-full sm:w-auto sm:mr-2 ${
+                      loadingUsers
+                        ? "bg-gray-400 text-black cursor-not-allowed"
+                        : "bg-white text-black hover:bg-slate-500"
+                    }`}
                   >
-                    <option value="">-- Choose a user --</option>
-                    {users.map((user, index) => (
-                      <option key={index} value={user}>
-                        {user}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+                    {loadingUsers ? (
+                      <div className="flex justify-center items-center">
+                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black mr-2"></div>
+                        Fetching Users...
+                      </div>
+                    ) : (
+                      "Get Users"
+                    )}
+                  </button>
 
-              {selectedUser && (
-                <p className="mt-2 text-xl text-green-400 font-thin">
-                  Selected User: {selectedUser}
-                </p>
-              )}
-            </>
+                  <button
+                    onClick={handleRemoveFile}
+                    className="mt-2 sm:mt-0 bg-white text-black px-5 py-2 rounded-lg shadow-md hover:bg-slate-500 transition duration-200 w-full sm:w-auto"
+                  >
+                    Remove
+                  </button>
+                </div>
+
+                {loadingUsers ? (
+                  <div className="mt-4 w-full flex justify-center">
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-white"></div>
+                  </div>
+                ) : (
+                  users.length > 0 && (
+                    <div className="mt-4 w-full">
+                      <label className="block text-sm font-semibold">
+                        Select a User:
+                      </label>
+                      <select
+                        value={selectedUser}
+                        onChange={(e) => setSelectedUser(e.target.value)}
+                        className="border p-2 rounded w-full mt-1 bg-black text-white"
+                      >
+                        <option value="">-- Choose a user --</option>
+                        {users.map((user, index) => (
+                          <option key={index} value={user}>
+                            {user}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )
+                )}
+
+                {selectedUser && (
+                  <p className="mt-2 text-xl text-green-400 font-thin">
+                    Selected User: {selectedUser}
+                  </p>
+                )}
+              </>
+            )
           )}
         </div>
       </div>

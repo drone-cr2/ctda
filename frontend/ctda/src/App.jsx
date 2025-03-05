@@ -1,16 +1,12 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import "./App.css";
-import WordCloud from "./components/WordCloud";
-import TablePlot from "./components/TablePlot";
-
+const WordCloud = lazy(() => import("./components/WordCloud"));
+const TablePlot = lazy(() => import("./components/TablePlot"));
+const TemporalStats = lazy(() => import("./components/TemporalStats"));
 const PieChart = lazy(() => import("./components/PieChart"));
 const LinePlot = lazy(() => import("./components/LinePlot"));
-const UserActivityHeatmap = lazy(() =>
-  import("./components/UserActivityHeatmap")
-);
-const MostFrequentEmojis = lazy(() =>
-  import("./components/MostFrequentEmojis")
-);
+const UserActivityHeatmap = lazy(() =>import("./components/UserActivityHeatmap"));
+const MostFrequentEmojis = lazy(() =>import("./components/MostFrequentEmojis"));
 const TopStats = lazy(() => import("./components/TopStats"));
 const FileUploader = lazy(() => import("./components/FileUploader"));
 const PlotlyBarChart = lazy(() => import("./components/PlotlyPlot"));
@@ -25,7 +21,13 @@ function App() {
   return (
     <div className="w-full h-full text-[#F4F3EF] bg-black font-mono flex flex-col min-h-screen justify-center">
       <div className="p-4 md:p-10 py-16 rounded">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center h-40">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          }
+        >
           {flag ? (
             <>
               <div className="w-full space-y-16 md:space-y-36">
@@ -34,7 +36,15 @@ function App() {
                   <h1 className="text-left text-2xl md:text-3xl font-bold">
                     Chat Overview
                   </h1>
-                  <TopStats /> {/* Stats Table */}
+                  <TopStats /> {/* Stats */}
+                </div>
+
+                {/* Temporal Overview */}
+                <div className="space-y-4 md:space-y-8">
+                  <h1 className="text-left text-2xl md:text-3xl font-bold">
+                    Temporal Statistics
+                  </h1>
+                  <TemporalStats /> {/* Temporal Stats */}
                 </div>
 
                 {/* Chat Timeline */}
@@ -55,24 +65,6 @@ function App() {
                   </div>
                 </div>
 
-                {/* Chat Timeline */}
-                {/* <div className="space-y-4 md:space-y-8 px-2 md:px-4">
-                  <h1 className="text-left text-2xl md:text-3xl font-bold">
-                    Chat Timeline
-                  </h1>
-
-                  <div className="flex flex-col md:flex-row justify-evenly md:space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
-                    Chat Timeline BarChart
-                    <div className="w-full md:w-1/2 p-2 md:p-4">
-                      <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
-                    </div>
-
-                    Chat Timeline LineChart
-                    <div className="w-full md:w-1/2 p-2 md:p-4">
-                      <LinePlot url="http://127.0.0.1:8080/timeline" />
-                    </div>
-                  </div>
-                </div> */}
 
                 {/* Contributors */}
                 <div className="space-y-4 md:space-y-8 px-2 md:px-4">
@@ -300,7 +292,7 @@ function App() {
               </div>
               <button
                 onClick={handleUpload}
-                className="mt-4 bg-white text-black px-5 py-2 rounded-lg shadow-md hover:bg-slate-500 transition duration-200 w-[80%] md:w-[40%] lg:w-[20%] mx-auto block my-12"
+                className="mt-4 bg-white text-black px-5 py-2 rounded-lg shadow-md hover:bg-slate-500 cursor-pointer transition duration-200 w-[80%] md:w-[40%] lg:w-[20%] mx-auto block my-12"
               >
                 Analyze
               </button>
