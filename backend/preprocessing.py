@@ -5,17 +5,26 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 def preprocess(data):
 
     #  as regex is for dates, we match it to find all dates
-    date_regex = r'\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}'
-    dates = re.findall(date_regex,data)
+    # (?:\s?[APap][Mm])? to optionally match AM/PM.
+    # Anchor to the start of a line using '^' and enable multiline mode ... re.MULTILINE is a flag that changes how the ^ (caret) and $ (dollar) anchors behave.
+    # the pattern will only match if the date is at the start of a line.
+    date_regex = r'^(?:\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{2}(?:\s?[APap][Mm])?)'
+    dates = re.findall(date_regex, data, flags=re.MULTILINE)
 
-    user_message_regex = r'\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{1,2}\s-\s'
-    user_messages = re.split(user_message_regex,data)[1:]   #  from line 1 as line 0 is empty
-
+    # user_message_regex similarly to include the optional AM/PM part, and the '-' separator after the date and time.
+    user_message_regex = r'^(?:\d{1,2}/\d{1,2}/\d{1,2},\s\d{1,2}:\d{2}(?:\s?[APap][Mm])?\s-\s)'
+    user_messages = re.split(user_message_regex, data, flags=re.MULTILINE)[1:]  # Skip the first empty element
     df = pd.DataFrame({'user_message':user_messages,'date':dates})
+       
+    # Check the first date string to decide the datetime format
+    sample_date = df['date'].iloc[0].lower()
+    if "am" in sample_date or "pm" in sample_date:  #If AM/PM is found, the format '%d/%m/%y, %I:%M %p' (12‑hour clock) is used.
+        date_format = '%d/%m/%y, %I:%M %p'
+    else:
+        date_format = '%d/%m/%y, %H:%M' # else '%d/%m/%y, %H:%M' for 24‑hour clock.
 
-    # convert date into proper format
-    # format(input) is 'mm/dd/yy, hh:mm' and consider the',' and year is in yy format hence %y NOT %Y
-    df['date'] = pd.to_datetime(df['date'],format='%m/%d/%y, %H:%M')
+    # Convert the entire 'date' column using the determined format
+    df['date'] = pd.to_datetime(df['date'], format=date_format)
 
     # handling sensetive information
     aadhaar_regex = re.compile(r'(?<!\d)(?![01])[2-9]\d{3}\s\d{4}\s\d{4}(?!\d)')
