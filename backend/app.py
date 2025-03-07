@@ -54,18 +54,21 @@ def upload_file():
 
     return jsonify({"error": "Invalid file type"}), 400
     
-# # : route to set user
-# @app.route('/set-user')
-# def set_user():
-#     user = request.get_json()               # Set user
-#     return "user set successfully"
+
+@app.route('/set-user', methods=['POST'])  
+def set_user():
+    data = request.get_json() 
+    user = data.get("user") 
+
+    return jsonify({"message": f"User '{user}' set successfully!"})
 
 
-f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')    # reading file
-data = f.read() 
-df, user_list = preprocess(data)   # processing and converting into dataframe
-# user = 'jayesh Badgujar, Dyp'
-user = "Overall"
+if(user == None and df == None):
+    f = open("WhatsApp Chat with BE IT A Official 2024-25.txt",'r',encoding='utf-8')    # reading file
+    data = f.read() 
+    df, user_list = preprocess(data)   # processing and converting into dataframe
+    # user = 'jayesh Badgujar, Dyp'
+    user = "Overall"
 
 
 # 1 : numerical stats - num of messages, links etc
@@ -189,6 +192,10 @@ def serve_sentiment_common_words(k):
 @app.route('/sen-activity-map/<int:k>')
 def serve_sen_activity_map(k):
     return pio.to_json(nlp_charts.week_activity_map(df,user,k))
+
+@app.route('/testing')
+def test():
+    return df.to_json(orient='columns')
 
 
 # main driver function
