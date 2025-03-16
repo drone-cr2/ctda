@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const FileUploader = () => {
+const FileUploader = ({ onAnalyze }) => {
   const [file, setFile] = useState(null);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
@@ -94,14 +94,14 @@ const FileUploader = () => {
   };
 
   return (
-    <div className="flex justify-center items-center w-full md:w-[700px] bg-black rounded-b-md p-4">
-      <div className="flex flex-col justify-center items-center text-white rounded-lg p-6 w-full max-w-md sm:max-w-lg md:max-w-3xl">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 text-[#E0E0E0]">
+    <div className="flex justify-center items-center w-full md:w-[700px] bg-[#F4F3EF] rounded-b-md p-4">
+      <div className="flex flex-col justify-center items-center text-[#364C63] rounded-lg p-6 w-full max-w-md sm:max-w-lg md:max-w-3xl">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 text-[#364C63]">
           Upload Your Conversation
         </h2>
 
         {!fileContent && (
-          <label className="inline-block cursor-pointer my-2 bg-white text-black px-5 py-2 rounded-lg shadow-md hover:bg-slate-500 transition duration-200 w-full sm:w-auto text-center">
+          <label className="inline-block cursor-pointer my-2 bg-[#364C63] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#2a3b4e] transition duration-200 w-full sm:w-auto text-center border border-[#364C63]/20">
             Upload
             <input
               type="file"
@@ -114,13 +114,13 @@ const FileUploader = () => {
 
         <div className="mt-4 w-full">
           {loadingFile ? (
-            <div className="flex justify-center items-center h-60 sm:h-72 md:h-80 lg:h-84 max-h-80 bg-[#F4F3EF] text-black p-4 rounded-md shadow-md">
-              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-black"></div>
+            <div className="flex justify-center items-center h-60 sm:h-72 md:h-80 lg:h-84 max-h-80 bg-[#F4F3EF] text-[#364C63] p-4 rounded-md shadow-md">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#364C63]"></div>
             </div>
           ) : (
             fileContent && (
               <>
-                <pre className="h-60 sm:h-72 md:h-80 lg:h-84 max-h-80 bg-[#F4F3EF] text-black p-4 rounded-md shadow-md overflow-y-auto text-left">
+                <pre className="h-60 sm:h-72 md:h-80 lg:h-84 max-h-80 bg-white text-[#364C63] p-4 rounded-md shadow-md overflow-y-auto text-left border border-[#364C63]/10">
                   {fileContent}
                 </pre>
 
@@ -128,15 +128,15 @@ const FileUploader = () => {
                   <button
                     onClick={handleUpload}
                     disabled={loadingUsers}
-                    className={`mt-2 sm:mt-0 px-5 py-2 rounded-lg shadow-md transition duration-200 w-full sm:w-auto sm:mr-2 ${
+                    className={`mt-2 sm:mt-0 px-5 py-2 rounded-lg cursor-pointer shadow-md transition duration-200 w-full sm:w-auto sm:mr-2 ${
                       loadingUsers
-                        ? "bg-gray-400 text-black cursor-not-allowed"
-                        : "bg-white text-black hover:bg-slate-500"
+                        ? "bg-gray-400 text-[#364C63] cursor-not-allowed"
+                        : " bg-[#364C63] text-white hover:bg-[#2a3b4e] border border-[#364C63]/20"
                     }`}
                   >
                     {loadingUsers ? (
                       <div className="flex justify-center items-center">
-                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black mr-2"></div>
+                        <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-[#364C63] mr-2"></div>
                         Fetching Users...
                       </div>
                     ) : (
@@ -146,7 +146,7 @@ const FileUploader = () => {
 
                   <button
                     onClick={handleRemoveFile}
-                    className="mt-2 sm:mt-0 bg-white text-black px-5 py-2 rounded-lg shadow-md hover:bg-slate-500 transition duration-200 w-full sm:w-auto"
+                    className="mt-2 sm:mt-0 bg-[#364C63] cursor-pointer text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#2a3b4e] transition duration-200 w-full sm:w-auto border border-[#364C63]/20"
                   >
                     Remove
                   </button>
@@ -154,7 +154,7 @@ const FileUploader = () => {
 
                 {loadingUsers ? (
                   <div className="mt-4 w-full flex justify-center">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#364C63]"></div>
                   </div>
                 ) : (
                   users.length > 0 && (
@@ -165,7 +165,7 @@ const FileUploader = () => {
                       <select
                         value={selectedUser}
                         onChange={handleUserSelection}
-                        className="border p-2 rounded w-full mt-1 bg-black text-white"
+                        className="border p-2 rounded w-full mt-1 bg-white text-[#364C63] border-[#364C63]/20"
                       >
                         <option value="">-- Choose a user --</option>
                         {users.map((user, index) => (
@@ -179,9 +179,17 @@ const FileUploader = () => {
                 )}
 
                 {feedback && (
-                  <p className="mt-2 text-lg text-green-400 font-semibold">
-                    {feedback}
-                  </p>
+                  <div className="">
+                    <p className="mt-2 text-lg text-green-700">{feedback}</p>
+                    <div className="rounded-md">
+                      <button
+                        onClick={onAnalyze}
+                        className="mt-4 bg-[#364C63] cursor-pointer text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#2a3b4e] transition duration-200 w-full sm:w-auto border border-[#364C63]/20"
+                      >
+                        Analyze
+                      </button>
+                    </div>
+                  </div>
                 )}
               </>
             )
