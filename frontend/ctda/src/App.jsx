@@ -3,7 +3,6 @@ import {
   BarChart3,
   MessageSquare,
   Brain,
-  Clock,
   ArrowRight,
   Github,
 } from "lucide-react";
@@ -12,6 +11,8 @@ import Results from "./components/Results";
 
 function App() {
   const [showResults, setShowResults] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("");
 
   // Function to toggle Results view
   const handleShowResults = () => {
@@ -19,7 +20,12 @@ function App() {
   };
 
   return showResults ? (
-    <Results />
+    <Results
+      key={selectedUser}
+      users={users}
+      selectedUser={selectedUser}
+      setSelectedUser={setSelectedUser}
+    />
   ) : (
     <div className="min-h-screen bg-gradient-to-b from-[#F4F3EF] to-white">
       {/* Hero Section */}
@@ -49,7 +55,13 @@ function App() {
 
       {/* File Upload Section */}
       <div className="flex justify-center mb-16">
-        <FileUploader onAnalyze={handleShowResults} />
+        <FileUploader
+          onAnalyze={handleShowResults}
+          users={users}
+          setUsers={setUsers}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+        />
       </div>
 
       {/* Features Section */}
