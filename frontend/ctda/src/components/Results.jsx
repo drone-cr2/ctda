@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useState, useEffect } from "react";
 const WordCloud = lazy(() => import("./WordCloud"));
 const TablePlot = lazy(() => import("./TablePlot"));
 const TemporalStats = lazy(() => import("./TemporalStats"));
@@ -9,14 +9,65 @@ const MostFrequentEmojis = lazy(() => import("./MostFrequentEmojis"));
 const TopStats = lazy(() => import("./TopStats"));
 const PlotlyBarChart = lazy(() => import("./PlotlyPlot"));
 
-function Results() {
+function Results({ users, selectedUser, setSelectedUser }) {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    setRefreshKey((prevKey) => prevKey + 1);
+  }, [selectedUser]);
+
+  const handleUserSelection = async (event) => {
+    const selected = event.target.value;
+    setSelectedUser(selected);
+
+    if (selected) {
+      try {
+        const response = await fetch("http://127.0.0.1:8080/set-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user: selected }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to set user");
+        }
+      } catch (error) {
+        console.error("Error setting user:", error);
+      }
+    }
+  };
+
   return (
     <div className="w-full h-full text-[#364C63] bg-gradient-to-b from-[#F4F3EF] to-white font-mono flex flex-col min-h-screen justify-center">
       <div className="p-4 md:p-10 py-16 rounded">
+        {users.length > 0 && (
+          <div className="mb-20 mt-4 w-full max-w-sm mx-auto">
+            <label className="block text-sm font-semibold text-center">
+              Switch User:
+            </label>
+            <select
+              value={selectedUser}
+              onChange={handleUserSelection}
+              className="border p-2 rounded w-full mt-1 bg-white text-[#364C63] border-[#364C63]/20"
+            >
+              <option value="">-- Choose a user --</option>
+              {users.map((user, index) => (
+                <option key={index} value={user}>
+                  {user}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <Suspense
           fallback={
             <div className="flex justify-center items-center h-40">
-              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-[#364C63] border-b-2 border-[#364C63]"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-[#364C63] border-b-2"></div>
             </div>
           }
         >
@@ -57,23 +108,27 @@ function Results() {
               </div>
 
               {/* Contributors */}
-              <div className="space-y-4 md:space-y-8 px-2 md:px-4">
-                <h1 className="text-left text-2xl md:text-3xl font-bold text-[#364C63]">
-                  Contributors
-                </h1>
+              {selectedUser === "Overall" ? (
+                <div className="space-y-4 md:space-y-8 px-2 md:px-4">
+                  <h1 className="text-left text-2xl md:text-3xl font-bold text-[#364C63]">
+                    Contributors
+                  </h1>
 
-                <div className="flex flex-col md:flex-row justify-evenly md:space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
-                  <div className="w-full md:w-1/2 p-2 md:p-4">
-                    <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
-                  </div>
-                  <div className="w-full md:w-1/2 p-2 md:p-4">
-                    <TablePlot
-                      url="http://127.0.0.1:8080/contributions"
-                      sen="Highest"
-                    />
+                  <div className="flex flex-col md:flex-row justify-evenly md:space-x-6 w-full max-w-screen-xl mx-auto overflow-hidden">
+                    <div className="w-full md:w-1/2 p-2 md:p-4">
+                      <PlotlyBarChart url="http://127.0.0.1:8080/top-users" />
+                    </div>
+                    <div className="w-full md:w-1/2 p-2 md:p-4">
+                      <TablePlot
+                        url="http://127.0.0.1:8080/contributions"
+                        sen="Highest"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <></>
+              )}
 
               {/* Busiest Months */}
               <div className="space-y-4 md:space-y-8 px-2 md:px-4">
@@ -226,21 +281,25 @@ function Results() {
                 </div>
 
                 {/* Contributors Table */}
-                <div className="space-y-4 md:space-y-8 px-2 md:px-4">
-                  <h1 className="text-left text-xl md:text-2xl text-[#364C63]">
-                    Contributors
-                  </h1>
-                  <div className="flex flex-col md:flex-row justify-center w-full max-w-screen-xl mx-auto overflow-hidden md:space-x-10 my-4">
-                    {["Negative", "Neutral", "Positive"].map((sen, i) => (
-                      <div key={i} className="w-full md:w-1/3 p-2 md:p-4">
-                        <TablePlot
-                          url={`http://127.0.0.1:8080/sen-contribution/${i}`}
-                          sen={sen}
-                        />
-                      </div>
-                    ))}
+                {selectedUser === "Overall" ? (
+                  <div className="space-y-4 md:space-y-8 px-2 md:px-4">
+                    <h1 className="text-left text-xl md:text-2xl text-[#364C63]">
+                      Contributors
+                    </h1>
+                    <div className="flex flex-col md:flex-row justify-center w-full max-w-screen-xl mx-auto overflow-hidden md:space-x-10 my-4">
+                      {["Negative", "Neutral", "Positive"].map((sen, i) => (
+                        <div key={i} className="w-full md:w-1/3 p-2 md:p-4">
+                          <TablePlot
+                            url={`http://127.0.0.1:8080/sen-contribution/${i}`}
+                            sen={sen}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <></>
+                )}
               </div>
 
               {/* Busiest Hours */}
