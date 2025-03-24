@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
-const FileUploader = ({ onAnalyze }) => {
+const FileUploader = ({ onAnalyze , users,setUsers,selectedUser, setSelectedUser}) => {
   const [file, setFile] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("");
+  // const [users, setUsers] = useState([]);
+  // const [selectedUser, setSelectedUser] = useState("");
   const [fileContent, setFileContent] = useState("");
   const [loadingFile, setLoadingFile] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(false);
