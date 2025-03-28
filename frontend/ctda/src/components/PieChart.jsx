@@ -14,22 +14,10 @@ const PieChart = (props) => {
       const response = await fetch(props.url);
       const data = await response.json();
 
-      const pieColors = [
-        "#E74C3C",
-        "#2980B9",
-        "#F4C542",
-        "#8E44AD",
-        "#1ABC9C",
-        "#D35400",
-        "#27AE60",
-        "#C0392B",
-        "#F39C12",
-        "#7D3C98",
-        "#2ECC71",
-        "#A93226",
-        "#3498DB",
-        "#E67E22",
-        "#16A085",
+      const gradientColors = [
+        "#0A0F64", "#1B258A", "#2C3BAE", "#3E51D2", "#5167F6",
+        "#6580FF", "#7B94FF", "#91A8FF", "#A8BDFF", "#C0D2FF",
+        "#D9E6FF", "#F0F7FF"
       ];
 
       const processedData = [
@@ -37,27 +25,34 @@ const PieChart = (props) => {
           labels: data.data[0].labels,
           values: data.data[0].values,
           type: "pie",
-          hovertemplate: data.data[0].hovertemplate,
+          hovertemplate: "%{label}: %{value} (%{percent})<extra></extra>",
           name: data.data[0].name,
-          showlegend: data.data[0].showlegend,
-          marker: { colors: pieColors },
+          showlegend: true,
+          marker: { 
+            colors: gradientColors, 
+            line: { color: "white", width: 1.5 } // Slightly thicker for contrast
+          },
+          textinfo: "label+percent",
+          insidetextorientation: "radial",
         },
       ];
 
       const structure = {
         title: {
           text: data.layout.title?.text || "Pie Chart",
-          font: { color: "black" }, // Changed to black
+          font: { color: "#333", size: 20, family: "Inter, sans-serif" },
         },
-        paper_bgcolor: "white", // Changed to white
-        plot_bgcolor: "white", // Changed to white
-        font: { color: "black" }, // Changed to black
+        paper_bgcolor: "white",
+        plot_bgcolor: "white",
+        font: { color: "#444", size: 14, family: "Inter, sans-serif" },
         legend: {
-          font: { color: "black" }, // Changed to black
-          bgcolor: "rgba(255,255,255,0)",
+          font: { color: "#333", size: 14 },
+          bgcolor: "rgba(255,255,255,0.8)",
+          borderwidth: 0,
         },
+        margin: { l: 20, r: 20, t: 50, b: 20 },
         autosize: true,
-        responsive: true, // Enables dynamic resizing
+        responsive: true,
       };
 
       setPlotData(processedData);
@@ -77,7 +72,7 @@ const PieChart = (props) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-40">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
@@ -85,7 +80,7 @@ const PieChart = (props) => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-40 text-red-500">
-        Error: {error}
+        Error: Not Enough Data for plot
       </div>
     );
   }

@@ -46,7 +46,7 @@ const TablePlot = (props) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center"> 
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
@@ -54,7 +54,7 @@ const TablePlot = (props) => {
   if (error) {
     return (
       <div className="flex justify-center items-center text-red-500">
-        Error: {error}
+        Error: Not Enough Data for plot
       </div>
     );
   }
@@ -67,7 +67,7 @@ const TablePlot = (props) => {
         values: ["<b>#</b>", "<b>Name</b>", "<b>Contributions</b>"],
         align: "center",
         font: { family: "Arial", size: 16, color: "white" },
-        fill: { color: "#2C3E50" }, // Darker header
+        fill: { color: "#4f39f6" }, // Darker header
         height: 35,
         line: { width: 1, color: "black" },
       },

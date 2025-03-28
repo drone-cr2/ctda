@@ -41,7 +41,7 @@ const MostFrequentEmojis = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-40">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
@@ -49,7 +49,7 @@ const MostFrequentEmojis = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-40 text-red-500">
-        Error: {error}
+        Error: Not Enough Data for plot
       </div>
     );
   }
@@ -62,7 +62,7 @@ const MostFrequentEmojis = () => {
         values: ["<b>#</b>", "<b>Emoji</b>", "<b>Count</b>"],
         align: "center",
         font: { family: "Arial", size: 16, color: "white" },
-        fill: { color: "#2C3E50" }, // Darker header
+        fill: { color: "#4f39f6" }, // Darker header
         height: 35,
         line: { width: 1, color: "black" },
       },

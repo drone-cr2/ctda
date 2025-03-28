@@ -70,7 +70,7 @@ const UserActivityHeatmap = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-40">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-600"></div>
       </div>
     );
   }
@@ -78,7 +78,7 @@ const UserActivityHeatmap = () => {
   if (error) {
     return (
       <div className="flex justify-center items-center h-40 text-red-500">
-        Error: {error}
+        Error: Not Enough Data for plot
       </div>
     );
   }
