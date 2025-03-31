@@ -243,7 +243,7 @@ function Results({ users, selectedUser, setSelectedUser }) {
                       <MapIcon className="mr-2" /> Activity HeatMap
                     </h1>
                     <div className="flex justify-center items-center w-full overflow-hidden">
-                      <div className="w-full bg-white rounded-lg p-3 p-6 sm:p-2 shadow-inner">
+                      <div className="w-full bg-white rounded-lg p-6 sm:p-2 shadow-inner">
                         <UserActivityHeatmap />
                       </div>
                     </div>
