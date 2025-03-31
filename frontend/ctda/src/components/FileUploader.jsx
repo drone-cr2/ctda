@@ -158,7 +158,7 @@ const FileUploader = ({ onAnalyze , users,setUsers,selectedUser, setSelectedUser
                   </div>
                 ) : (
                   users.length > 0 && (
-                    <div className="mt-4 w-full">
+                    <div className="mt-4 w-full cursor-pointer">
                       <label className="block text-sm font-semibold">
                         Select a User:
                       </label>
@@ -180,7 +180,7 @@ const FileUploader = ({ onAnalyze , users,setUsers,selectedUser, setSelectedUser
 
                 {feedback && (
                   <div className="">
-                    <p className="mt-2 text-lg text-indigo-600">{feedback}</p>
+                    <p className="mt-2 text-lg text-[#ffb700]">{feedback}</p>
                     <div className="rounded-md">
                       <button
                         onClick={onAnalyze}

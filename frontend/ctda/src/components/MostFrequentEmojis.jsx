@@ -54,62 +54,56 @@ const MostFrequentEmojis = () => {
     );
   }
 
-  const tableData = [
-    {
-      type: "table",
-      columnwidth: [50, 150, 100], // Adjust column widths
-      header: {
-        values: ["<b>#</b>", "<b>Emoji</b>", "<b>Count</b>"],
-        align: "center",
-        font: { family: "Arial", size: 16, color: "white" },
-        fill: { color: "#4f39f6" }, // Darker header
-        height: 35,
-        line: { width: 1, color: "black" },
-      },
-      cells: {
-        values: [
-          emojis.map((_, index) => `<b>${index + 1}</b>`), // Sr No
-          emojis.map((emoji) => emoji.emoji), // Emoji
-          emojis.map((emoji) => emoji.count), // Count
-        ],
-        align: "center",
-        font: { family: "Arial", size: 14, color: "black" },
-        fill: {
-          color: [
-            emojis.map((_, index) =>
-              index % 2 === 0 ? "#F8F9FA" : "#ECF0F1"
-            ),
-          ],
-        }, // Alternating row colors
-        height: 30,
-        line: { width: 1, color: "gray" }, // Table borders
-      },
+  // Stems (vertical sticks)
+  const traceStems = emojis.map((emoji, index) => ({
+    type: "scatter",
+    mode: "lines",
+    x: [index, index], // Each line is independent
+    y: [0, emoji.count], // Vertical line
+    line: { color: "#4F39F6", width: 3 }, // Lollipop stick color changed
+    hoverinfo: "skip",
+    showlegend: false, // Removes legend entry
+  }));
+
+  // Lollipop markers (tops)
+  const traceMarkers = {
+    type: "scatter",
+    mode: "markers",
+    x: emojis.map((_, index) => index),
+    y: emojis.map((emoji) => emoji.count),
+    text: emojis.map((emoji) => emoji.emoji),
+    textposition: "top center",
+    marker: {
+      size: 16,
+      color: "#FFB700",
+      line: { color: "black", width: 2 },
     },
-  ];
+    showlegend: false, // Removes legend entry
+  };
 
   const layout = {
     title: {
       text: "Most Frequent Emojis",
-      font: { color: "black", size: 20, family: "Arial" },
-      x: 0.5, // Center title
+      font: { size: 20 },
+      x: 0.5,
     },
-    autosize: true,
-    responsive: true,
+    xaxis: {
+      tickmode: "array",
+      tickvals: emojis.map((_, index) => index),
+      ticktext: emojis.map((emoji) => emoji.emoji),
+      tickfont: { size: 20 },
+    },
+    yaxis: { title: "Frequency" },
+    margin: { l: 50, r: 20, t: 50, b: 50 },
     paper_bgcolor: "white",
     plot_bgcolor: "white",
-    margin: {
-      l: 10,
-      r: 10,
-      b: 20,
-      t: 50,
-    },
-    height:415,
+    showlegend: false, // Removes the legend
   };
 
   return (
-    <div className="w-full p-4 border border-gray-300 shadow-md bg-white">
+    <div className="w-full p-4 shadow-md bg-white">
       <Plot
-        data={tableData}
+        data={[...traceStems, traceMarkers]}
         layout={layout}
         useResizeHandler
         style={{ width: "100%", height: "100%" }}

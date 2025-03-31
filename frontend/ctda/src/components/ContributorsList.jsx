@@ -59,7 +59,7 @@ const ContributorsList = () => {
 
   return (
     <div className="w-full p-4 border border-gray-300 shadow-md bg-white">
-      <h2 className="text-xl font-semibold text-indigo-600 text-center mb-4">
+      <h2 className="text-xl font-semibold text-gray-900 text-center mb-4">
         Top Contributors
       </h2>
       <div className="flex gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-2">
@@ -69,7 +69,7 @@ const ContributorsList = () => {
             className="min-w-[200px] bg-gray-100 flex flex-col items-center rounded-lg shadow-md p-3 relative"
           >
             {/* Rank Badge */}
-            <div className="absolute -top-2 -left-2 bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+            <div className="absolute -top-2 -left-2 bg-[#ffb700] text-white text-xs font-bold px-2 py-1 rounded-full">
               #{index + 1}
             </div>
 
