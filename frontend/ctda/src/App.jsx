@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BarChart3,
   MessageSquare,
@@ -8,11 +8,22 @@ import {
 import FileUploader from "./components/FileUploader";
 import Results from "./components/Results";
 import { motion, AnimatePresence } from "framer-motion";
+import logo_no_bg from "./assets/Logo_no_bg.png"
+import logo from "./assets/Logo.png"
 
 function App() {
   const [showResults, setShowResults] = useState(false);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleShowResults = () => {
     setShowResults(true);
@@ -20,7 +31,9 @@ function App() {
 
   return (
     <AnimatePresence mode="wait">
-      {showResults ? (
+      {isLoading ? (
+        <LoadingScreen />
+      ) : showResults ? (
         <motion.div
           key={selectedUser}
           initial={{ opacity: 0, x: 50 }}
@@ -47,7 +60,7 @@ function App() {
             <header className="bg-white shadow-sm">
               <nav className="w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <MessageSquare className="w-8 h-8 text-indigo-600" />
+                  <img src={logo} className="w-8 h-8 text-indigo-600" />
                   <span className="font-bold text-xl text-gray-900">CTDA</span>
                 </div>
                 <div className="flex items-center space-x-10">
@@ -125,7 +138,8 @@ function App() {
   );
 }
 
-function FeatureCard({ icon, title, description }) {
+const FeatureCard = ({ icon, title, description }) => {
+
   return (
     <motion.div
       className="p-6 bg-[#fafafa] rounded-xl hover:shadow-lg transition border border-[#364C63]/10"
@@ -138,5 +152,41 @@ function FeatureCard({ icon, title, description }) {
     </motion.div>
   );
 }
+
+
+
+const LoadingScreen = () => {
+  return (
+    <motion.div
+      className="fixed inset-0 z-50 bg-gray-900 flex items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div
+        transition={{
+          repeat: Infinity,
+          repeatType: "reverse",
+          duration: 1.5,
+        }}
+        className="flex flex-col items-center space-y-1"
+      >
+        <img
+          src={logo_no_bg}
+          width={160}
+          height={160}
+          alt="CTDA Logo"
+          className="drop-shadow-lg animate-bounce"
+        />
+        <p className="text-[#FFD700] text-5xl font-medium">
+          <hr></hr>
+          CTDA
+        </p>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 
 export default App;

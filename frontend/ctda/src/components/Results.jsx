@@ -56,7 +56,7 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.75 } },
   };
 
   const chartVariants = {
@@ -64,7 +64,7 @@ function Results({ users, selectedUser, setSelectedUser }) {
     visible: {
       opacity: 1,
       scale: 1,
-      transition: { duration: 0.5, delay: 0.2 },
+      transition: { duration: 0.75, delay: 0.25 },
     },
   };
 

@@ -82,7 +82,7 @@ const Stats = () => {
   return (
     <div className="bg-gray-100 p-6">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 text-center flex items-center justify-center">
+        <h1 className="text-3xl font-bold text-gray-900 text-center flex items-center justify-center my-3">
           <ListIcon className="mr-2" /> Statistical Overview
         </h1>
 
