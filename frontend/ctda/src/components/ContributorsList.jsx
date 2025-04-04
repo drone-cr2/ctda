@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { Info } from "lucide-react";
 const ContributorsList = () => {
   const [contributors, setContributors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,8 +51,13 @@ const ContributorsList = () => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center text-red-500">
-        Error: Not Enough Data for Display
+      <div className="flex justify-center items-center h-full">
+        <div className="flex items-center p-4 bg-blue-50 text-blue-800 rounded-md border border-blue-200 shadow-sm">
+          <Info className="w-5 h-5 mr-2 text-blue-500" />
+          <span>
+            Insufficient data available to generate a plot at the moment.
+          </span>
+        </div>
       </div>
     );
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
-
+import { Info } from "lucide-react";
 const LinePlot = (props) => {
   const [plotData, setPlotData] = useState([]);
   const [layout, setLayout] = useState({});
@@ -86,8 +86,13 @@ const LinePlot = (props) => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-40 text-red-500">
-        Error: Not Enough Data for plot
+      <div className="flex justify-center items-center h-full">
+        <div className="flex items-center p-4 bg-blue-50 text-blue-800 rounded-md border border-blue-200 shadow-sm">
+          <Info className="w-5 h-5 mr-2 text-blue-500" />
+          <span>
+            Insufficient data available to generate a plot at the moment.
+          </span>
+        </div>
       </div>
     );
   }

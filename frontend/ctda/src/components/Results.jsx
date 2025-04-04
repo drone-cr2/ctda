@@ -1,7 +1,4 @@
 import React, { lazy, Suspense, useState, useEffect } from "react";
-import ContributorsList from "./ContributorsList";
-import LollipopChart from "./LollipopChart";
-import HorizontalBarChart from "./HorizontalBarChart";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LineChartIcon,
@@ -14,6 +11,9 @@ import {
   ListIcon,
 } from "lucide-react";
 
+const LollipopChart = lazy(() => import("./LollipopChart"));
+const HorizontalBarChart = lazy(() => import("./HorizontalBarChart"));
+const ContributorsList = lazy(() => import("./ContributorsList"));
 const WordCloud = lazy(() => import("./WordCloud"));
 const PieChart = lazy(() => import("./PieChart"));
 const LinePlot = lazy(() => import("./LinePlot"));

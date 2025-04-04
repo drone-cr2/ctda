@@ -8,6 +8,7 @@ import {
   MessageSquare,
   Text,
   ListIcon,
+  Info,
 } from "lucide-react";
 
 const formatWeekRange = (dateRange) => {
@@ -66,15 +67,20 @@ const Stats = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-600 border-b-4"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-indigo-600 border-b-2"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center text-red-500 text-xl font-semibold">
-        Error: Not Enough Data for plot
+      <div className="flex justify-center items-center h-full">
+        <div className="flex items-center p-4 bg-blue-50 text-blue-800 rounded-md border border-blue-200 shadow-sm">
+          <Info className="w-5 h-5 mr-2 text-blue-500" />
+          <span>
+            Insufficient data available to generate a plot at the moment.
+          </span>
+        </div>
       </div>
     );
   }

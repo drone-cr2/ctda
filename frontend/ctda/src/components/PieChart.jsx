@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-
+import { Info } from "lucide-react";
 const PieChart = (props) => {
   const [plotData, setPlotData] = useState([]);
   const [layout, setLayout] = useState({});
@@ -15,9 +15,18 @@ const PieChart = (props) => {
       const data = await response.json();
 
       const gradientColors = [
-        "#0A0F64", "#1B258A", "#2C3BAE", "#3E51D2", "#5167F6",
-        "#6580FF", "#7B94FF", "#91A8FF", "#A8BDFF", "#C0D2FF",
-        "#D9E6FF", "#F0F7FF"
+        "#0A0F64",
+        "#1B258A",
+        "#2C3BAE",
+        "#3E51D2",
+        "#5167F6",
+        "#6580FF",
+        "#7B94FF",
+        "#91A8FF",
+        "#A8BDFF",
+        "#C0D2FF",
+        "#D9E6FF",
+        "#F0F7FF",
       ];
 
       const processedData = [
@@ -28,9 +37,9 @@ const PieChart = (props) => {
           hovertemplate: "%{label}: %{value} (%{percent})<extra></extra>",
           name: data.data[0].name,
           showlegend: true,
-          marker: { 
-            colors: gradientColors, 
-            line: { color: "white", width: 1.5 } // Slightly thicker for contrast
+          marker: {
+            colors: gradientColors,
+            line: { color: "white", width: 1.5 }, // Slightly thicker for contrast
           },
           textinfo: "label+percent",
           insidetextorientation: "radial",
@@ -79,8 +88,13 @@ const PieChart = (props) => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-40 text-red-500">
-        Error: Not Enough Data for plot
+      <div className="flex justify-center items-center h-full">
+        <div className="flex items-center p-4 bg-blue-50 text-blue-800 rounded-md border border-blue-200 shadow-sm">
+          <Info className="w-5 h-5 mr-2 text-blue-500" />
+          <span>
+            Insufficient data available to generate a plot at the moment.
+          </span>
+        </div>
       </div>
     );
   }
