@@ -3,6 +3,7 @@ import Plot from "react-plotly.js";
 import { Info } from "lucide-react";
 const HorizontalBarChart = ({ apiUrl }) => {
   const [data, setData] = useState(null);
+  const [layout, setLayout] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -25,6 +26,15 @@ const HorizontalBarChart = ({ apiUrl }) => {
         }
 
         const chartData = res.data[0]; // Extract the first dataset
+        const xlabel = res.layout.yaxis.title.text;
+        const ylabel = res.layout.xaxis.title.text;
+        const title = res.layout.title.text;
+
+        setLayout({
+          xlabel: xlabel,
+          ylabel: ylabel,
+          title: title,
+        });
 
         setData({
           labels: chartData.x.reverse(), // User names (reversed for better readability)
@@ -78,9 +88,9 @@ const HorizontalBarChart = ({ apiUrl }) => {
           },
         ]}
         layout={{
-          title: "Top Users",
-          xaxis: { title: "Message Count" },
-          yaxis: { title: "Users", automargin: true },
+          title: layout.title,
+          xaxis: { title: layout.xlabel },
+          yaxis: { title: layout.ylabel, automargin: true },
           showlegend: false,
           bargap: 0, // Adds spacing between bars without reducing bar width
           bargroupgap: 0.5, // Increases vertical spacing between bars
