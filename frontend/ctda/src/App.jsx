@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import {
-  BarChart3,
-  MessageSquare,
-  Brain,
-  Github,
-} from "lucide-react";
-import FileUploader from "./components/FileUploader";
+import { Menu, X, Home, List, Info, Github } from "lucide-react";
 import Results from "./components/Results";
 import { motion, AnimatePresence } from "framer-motion";
-import logo_no_bg from "./assets/Logo_no_bg.png"
-import logo from "./assets/Logo.png"
+import logo_no_bg from "./assets/Logo_no_bg.png";
+import logo from "./assets/Logo.png";
+import Instructions from "./components/Instructions";
+import Features from "./components/Features";
+import FileUploader from "./components/FileUploader";
 
 function App() {
   const [showResults, setShowResults] = useState(false);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [display, setDisplay] = useState("Home");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -27,6 +28,10 @@ function App() {
 
   const handleShowResults = () => {
     setShowResults(true);
+  };
+
+  const handleDisplay = (page) => {
+    setDisplay(page);
   };
 
   return (
@@ -57,103 +62,159 @@ function App() {
         >
           <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
             {/* Header */}
-            <header className="bg-white shadow-sm">
+            <header className="bg-white shadow-sm sticky top-0 z-50">
               <nav className="w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <img src={logo} className="w-8 h-8 text-indigo-600" />
+                {/* Logo */}
+                <div
+                  onClick={() => handleDisplay("Home")}
+                  className="flex items-center space-x-2 cursor-pointer"
+                >
+                  <img src={logo} alt="CTDA logo" className="w-8 h-8" />
                   <span className="font-bold text-xl text-gray-900">CTDA</span>
                 </div>
-                <div className="flex items-center space-x-10">
-                  <a href="/features" className="text-gray-600 hover:text-gray-900">
-                    Features
-                  </a>
-                  <a href="/about" className="text-gray-600 hover:text-gray-900">
-                    About
-                  </a>
+
+                {/* Desktop Menu */}
+                <div className="hidden md:flex items-center space-x-8">
+                  <span
+                    onClick={() => handleDisplay("Home")}
+                    className="flex items-center space-x-1 text-gray-600 hover:text-indigo-600 cursor-pointer"
+                  >
+                    <Home className="w-5 h-5" />
+                    <span>Home</span>
+                  </span>
+                  <span
+                    onClick={() => handleDisplay("Features")}
+                    className="flex items-center space-x-1 text-gray-600 hover:text-indigo-600 cursor-pointer"
+                  >
+                    <List className="w-5 h-5" />
+                    <span>Features</span>
+                  </span>
+                  <span
+                    onClick={() => handleDisplay("Instructions")}
+                    className="flex items-center space-x-1 text-gray-600 hover:text-indigo-600 cursor-pointer"
+                  >
+                    <Info className="w-5 h-5" />
+                    <span>Instructions</span>
+                  </span>
                   <a
                     href="https://github.com/drone-cr2/ctda"
-                    className="text-gray-600 hover:text-gray-900 flex items-center space-x-1"
-                    target="blank"
+                    className="flex items-center space-x-1 text-gray-600 hover:text-indigo-600"
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     <Github className="w-5 h-5" />
                     <span>GitHub</span>
                   </a>
                 </div>
+
+                {/* Mobile Menu Toggle */}
+                <div className="md:hidden">
+                  <button
+                    onClick={toggleMenu}
+                    className="text-gray-700 hover:text-indigo-600 focus:outline-none"
+                  >
+                    {isOpen ? (
+                      <X className="w-6 h-6" />
+                    ) : (
+                      <Menu className="w-6 h-6" />
+                    )}
+                  </button>
+                </div>
               </nav>
+
+              {/* Mobile Menu */}
+              {isOpen && (
+                <div className="md:hidden px-4 pb-4 space-y-4">
+                  <span
+                    onClick={() => {
+                      handleDisplay("Home");
+                      toggleMenu();
+                    }}
+                    className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 cursor-pointer"
+                  >
+                    <Home className="w-5 h-5" />
+                    <span>Home</span>
+                  </span>
+                  <span
+                    onClick={() => {
+                      handleDisplay("Features");
+                      toggleMenu();
+                    }}
+                    className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 cursor-pointer"
+                  >
+                    <List className="w-5 h-5" />
+                    <span>Features</span>
+                  </span>
+                  <span
+                    onClick={() => {
+                      handleDisplay("Instructions");
+                      toggleMenu();
+                    }}
+                    className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 cursor-pointer"
+                  >
+                    <Info className="w-5 h-5" />
+                    <span>Instructions</span>
+                  </span>
+                  <a
+                    href="https://github.com/drone-cr2/ctda"
+                    className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Github className="w-5 h-5" />
+                    <span>GitHub</span>
+                  </a>
+                </div>
+              )}
             </header>
 
-            {/* Hero Section */}
-            <div className="container mx-auto px-6 py-16 md:py-24">
-              <div className="max-w-4xl mx-auto text-center">
-                <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                  Transform Your Chat Data Into
-                  <span className="text-indigo-600"> Actionable Insights</span>
-                </h1>
-                <p className="text-xl text-gray-900/80 mb-8">
-                  CTDA analyzes your professional conversations to uncover
-                  patterns, topics, and interaction dynamics, helping you make
-                  data-driven decisions.
-                </p>
-              </div>
-            </div>
+            {/* Home Page */}
+            {display === "Home" ? (
+              <>
+                {/* Hero Section */}
+                <div className="container mx-auto px-6 py-16 md:py-24">
+                  <div className="max-w-4xl mx-auto text-center">
+                    <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+                      Transform Your Chat Data Into
+                      <span className="text-indigo-600">
+                        {" "}
+                        Actionable Insights
+                      </span>
+                    </h1>
+                    <p className="text-xl text-gray-900/80 mb-8">
+                      CTDA analyzes your professional conversations to uncover
+                      patterns, topics, and interaction dynamics, helping you
+                      make data-driven decisions.
+                    </p>
+                  </div>
+                </div>
 
-            {/* File Upload Section */}
-            <div className="flex justify-center mb-16">
-              <FileUploader
-                onAnalyze={handleShowResults}
-                users={users}
-                setUsers={setUsers}
-                selectedUser={selectedUser}
-                setSelectedUser={setSelectedUser}
-              />
-            </div>
-
-            {/* Features Section */}
-            <section className="py-16 bg-white">
-              <div className="container mx-auto px-6">
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  <FeatureCard
-                    icon={<MessageSquare className="w-8 h-8 text-indigo-600" />}
-                    title="Chat Analysis"
-                    description="Process and analyze exported chat data from WhatsApp and other platforms with ease."
-                  />
-                  <FeatureCard
-                    icon={<Brain className="w-8 h-8 text-indigo-600" />}
-                    title="Topic Modeling"
-                    description="Automatically identify key topics and themes from your conversations."
-                  />
-                  <FeatureCard
-                    icon={<BarChart3 className="w-8 h-8 text-indigo-600" />}
-                    title="Visual Insights"
-                    description="View beautiful, interactive visualizations of your conversation patterns."
+                {/* File Upload Section */}
+                <div className="flex justify-center mb-16">
+                  <FileUploader
+                    onAnalyze={handleShowResults}
+                    users={users}
+                    setUsers={setUsers}
+                    selectedUser={selectedUser}
+                    setSelectedUser={setSelectedUser}
                   />
                 </div>
-              </div>
-            </section>
+              </>
+            ) : (
+              <></>
+            )}
+
+            {/* Features Page */}
+            {display === "Features" ? <Features /> : <></>}
+
+            {/* Instructions Page */}
+            {display === "Instructions" ? <Instructions /> : <></>}
           </div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 }
-
-const FeatureCard = ({ icon, title, description }) => {
-
-  return (
-    <motion.div
-      className="p-6 bg-[#fafafa] rounded-xl hover:shadow-lg transition border border-[#364C63]/10"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <div className="mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold text-[#364C63] mb-2">{title}</h3>
-      <p className="text-[#364C63]/80">{description}</p>
-    </motion.div>
-  );
-}
-
-
 
 const LoadingScreen = () => {
   return (
@@ -179,14 +240,13 @@ const LoadingScreen = () => {
           alt="CTDA Logo"
           className="drop-shadow-lg animate-bounce"
         />
-        <p className="text-[#FFD700] text-5xl font-medium">
+        <div className="text-[#FFD700] text-5xl font-medium">
           <hr></hr>
           CTDA
-        </p>
+        </div>
       </motion.div>
     </motion.div>
   );
-}
-
+};
 
 export default App;

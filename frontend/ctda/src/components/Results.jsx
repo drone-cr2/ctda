@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Stats from "./Stats";
 import {
   LineChartIcon,
   UsersIcon,
@@ -19,7 +20,6 @@ const PieChart = lazy(() => import("./PieChart"));
 const LinePlot = lazy(() => import("./LinePlot"));
 const UserActivityHeatmap = lazy(() => import("./UserActivityHeatmap"));
 const MostFrequentEmojis = lazy(() => import("./MostFrequentEmojis"));
-const Stats = lazy(() => import("./Stats"));
 const PlotlyBarChart = lazy(() => import("./PlotlyPlot"));
 
 function Results({ users, selectedUser, setSelectedUser }) {
@@ -54,20 +54,6 @@ function Results({ users, selectedUser, setSelectedUser }) {
     }
   };
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.75 } },
-  };
-
-  const chartVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.75, delay: 0.25 },
-    },
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -78,9 +64,9 @@ function Results({ users, selectedUser, setSelectedUser }) {
       <div className="p-4 md:p-10 py-16 rounded cursor-pointer">
         {users.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             className="mb-20 mt-4 w-full max-w-sm mx-auto"
           >
             <label className="block text-sm font-semibold text-center">
@@ -110,14 +96,11 @@ function Results({ users, selectedUser, setSelectedUser }) {
         >
           <AnimatePresence>
             <>
-              <motion.div
-                variants={sectionVariants}
-                initial="hidden"
-                animate="visible"
-                className="w-full space-y-16 md:space-y-16"
-              >
+              <motion.div className="w-full space-y-20 md:space-y-24">
                 <motion.div
-                  variants={chartVariants}
+                  initial={{ opacity: 0, x: -100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                   className="p-6 sm:p-2 bg-white rounded-lg shadow-lg w-full"
                 >
                   <Stats />
@@ -125,33 +108,30 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
                 {/* Chat Timeline */}
                 <motion.div
-                  variants={sectionVariants}
+                  initial={{ opacity: 0, x: 100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                   className="bg-white p-6 sm:p-2"
                 >
                   <div className="bg-gray-100 p-6 sm:p-2">
                     <div className="max-w-screen-xl mx-auto space-y-6">
                       {/* Dashboard Header */}
                       <h1 className="text-3xl font-bold text-gray-900 text-center flex items-center justify-center">
-                        <LineChartIcon className="mr-2" /> Chat Timeline Dashboard
+                        <LineChartIcon className="mr-2" /> Chat Timeline
+                        Dashboard
                       </h1>
 
                       {/* Grid Layout for Charts */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Bar Chart */}
-                        <motion.div
-                          variants={chartVariants}
-                          className="bg-white shadow-md rounded-lg p-4 border border-gray-300"
-                        >
+                        <motion.div className="bg-white shadow-md rounded-lg p-4 border border-gray-300">
                           <div className="w-full overflow-hidden">
                             <PlotlyBarChart url="http://127.0.0.1:8080/timeline" />
                           </div>
                         </motion.div>
 
                         {/* Line Chart */}
-                        <motion.div
-                          variants={chartVariants}
-                          className="bg-white shadow-md rounded-lg p-4 border border-gray-300"
-                        >
+                        <motion.div className="bg-white shadow-md rounded-lg p-4 border border-gray-300">
                           <div className="w-full overflow-hidden">
                             <LinePlot url="http://127.0.0.1:8080/timeline" />
                           </div>
@@ -164,7 +144,9 @@ function Results({ users, selectedUser, setSelectedUser }) {
                 {/* Contributors */}
                 {selectedUser === "Overall" && (
                   <motion.div
-                    variants={sectionVariants}
+                    initial={{ opacity: 0, x: -100 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
                     className="bg-white p-6 sm:p-2"
                   >
                     <div className="bg-gray-100 p-6 sm:p-2">
@@ -189,7 +171,9 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
                 {/* Busiest */}
                 <motion.div
-                  variants={sectionVariants}
+                  initial={{ opacity: 0, x: 100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                   className="bg-white p-6 sm:p-2"
                 >
                   <div className="bg-gray-100 p-6 sm:p-2">
@@ -212,7 +196,6 @@ function Results({ users, selectedUser, setSelectedUser }) {
                           { pieUrl: "buzy-days/pie", barUrl: "buzy-days/bar" },
                         ].map(({ pieUrl, barUrl }, i) => (
                           <motion.div
-                            variants={chartVariants}
                             key={i}
                             className="flex-1 flex flex-col space-y-4 items-center my-3 md:my-0"
                           >
@@ -235,7 +218,9 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
                 {/* Activity HeatMap */}
                 <motion.div
-                  variants={sectionVariants}
+                  initial={{ opacity: 0, x: -100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                   className="bg-white p-6 sm:p-2"
                 >
                   <div className="bg-gray-100 p-6 sm:p-2">
@@ -252,7 +237,9 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
                 {/* Most Commons */}
                 <motion.div
-                  variants={sectionVariants}
+                  initial={{ opacity: 0, x: 100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                   className="bg-white p-6 sm:p-2"
                 >
                   <div className="bg-gray-100 p-6 sm:p-2">
@@ -262,16 +249,10 @@ function Results({ users, selectedUser, setSelectedUser }) {
                       </h1>
 
                       <div className="flex flex-col md:flex-row justify-center w-full max-w-screen-xl mx-auto overflow-hidden md:space-x-10 my-4">
-                        <motion.div
-                          variants={chartVariants}
-                          className="w-full md:w-1/2 p-2 md:p-4"
-                        >
+                        <motion.div className="w-full md:w-1/2 p-2 md:p-4">
                           <HorizontalBarChart apiUrl="http://127.0.0.1:8080/top-words" />
                         </motion.div>
-                        <motion.div
-                          variants={chartVariants}
-                          className="w-full md:w-1/2 p-2 md:p-4"
-                        >
+                        <motion.div className="w-full md:w-1/2 p-2 md:p-4">
                           <MostFrequentEmojis />
                         </motion.div>
                       </div>
@@ -281,7 +262,9 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
                 {/* Sentiment Analysis */}
                 <motion.div
-                  variants={sectionVariants}
+                  initial={{ opacity: 0, x: -100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 1.0, delay: 0.1 }}
                   className="bg-white p-6 sm:p-2"
                 >
                   <div className="bg-gray-100 p-6 sm:p-2">
@@ -315,7 +298,6 @@ function Results({ users, selectedUser, setSelectedUser }) {
                       ].map(
                         ({ title, urlPrefix, component: ChartComponent }) => (
                           <motion.div
-                            variants={chartVariants}
                             key={title}
                             className="space-y-4 md:space-y-8 px-2 md:px-4"
                           >
@@ -323,7 +305,6 @@ function Results({ users, selectedUser, setSelectedUser }) {
                             <div className="flex flex-col md:flex-row justify-center w-full max-w-screen-xl mx-auto overflow-hidden md:space-x-5 my-4">
                               {[0, 1, 2].map((i) => (
                                 <motion.div
-                                  variants={chartVariants}
                                   key={i}
                                   className="w-full md:w-1/3 p-2 md:p-4"
                                 >
@@ -339,16 +320,12 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
                       {/* Contributors Table (Only for 'Overall' user) */}
                       {selectedUser === "Overall" && (
-                        <motion.div
-                          variants={chartVariants}
-                          className="space-y-4 md:space-y-8 px-2 md:px-4"
-                        >
+                        <motion.div className="space-y-4 md:space-y-8 px-2 md:px-4">
                           <p className="text-xl text-center">Contributors</p>
                           <div className="flex flex-col md:flex-row justify-center w-full max-w-screen-xl mx-auto overflow-hidden md:space-x-0 my-4">
                             {["Negative", "Neutral", "Positive"].map(
                               (sen, i) => (
                                 <motion.div
-                                  variants={chartVariants}
                                   key={i}
                                   className="w-full md:w-1/3 p-2 md:p-4"
                                 >
@@ -368,7 +345,9 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
                 {/* Busiest Hours */}
                 <motion.div
-                  variants={sectionVariants}
+                  initial={{ opacity: 0, x: 100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                   className="bg-white p-6 sm:p-2"
                 >
                   <div className="bg-gray-100 p-6 sm:p-2">
@@ -378,10 +357,7 @@ function Results({ users, selectedUser, setSelectedUser }) {
                       </h1>
 
                       <div className="flex justify-center w-full max-w-screen-xl mx-auto overflow-hidden">
-                        <motion.div
-                          variants={chartVariants}
-                          className="w-full p-2 md:p-4"
-                        >
+                        <motion.div className="w-full p-2 md:p-4">
                           <PlotlyBarChart url="http://127.0.0.1:8080/buzy-hours" />
                         </motion.div>
                       </div>
@@ -391,7 +367,9 @@ function Results({ users, selectedUser, setSelectedUser }) {
 
                 {/* WordCloud */}
                 <motion.div
-                  variants={sectionVariants}
+                  initial={{ opacity: 0, x: -100 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
                   className="bg-white p-6 sm:p-2"
                 >
                   <div className="bg-gray-100 p-6 sm:p-2">

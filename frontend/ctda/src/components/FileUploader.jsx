@@ -180,7 +180,7 @@ const FileUploader = ({ onAnalyze , users,setUsers,selectedUser, setSelectedUser
 
                 {feedback && (
                   <div className="">
-                    <p className="mt-2 text-lg text-amber-400">{feedback}</p>
+                    <p className="mt-2 text-lg text-indigo-600 font-semibold">{feedback}</p>
                     <div className="rounded-md">
                       <button
                         onClick={onAnalyze}
