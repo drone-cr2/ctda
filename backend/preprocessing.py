@@ -34,10 +34,11 @@ def preprocess(data):
     messages = []
     for message in df['user_message']:
         #  generalised and primitive regex used here due to variablity in contact names saved
-        linesplit =  re.split(':\s',message)
-        if linesplit[1:]:
-            user = linesplit[0]
-            msg = linesplit[1]
+        # Try splitting only once in case there are multiple ': ' in the message
+        linesplit = re.split(r':\s', message, maxsplit=1)
+        # Check if the split produced both user and message parts
+        if len(linesplit) == 2:
+            user, msg = linesplit
             if not (aadhaar_regex.search(msg) or pan_regex.search(msg)):
                 users.append(user)
                 messages.append(msg)

@@ -28,10 +28,10 @@ def top_users(df):
     x_label = "User names"
     y_label = "Message counts"
 
-    buzy_users_series = df['user'].value_counts().head()
-    dfx = series_to_df(buzy_users_series,x_label,y_label)
+    busy_users_series = df['user'].value_counts().head()
+    dfx = series_to_df(busy_users_series,x_label,y_label)
 
-    fig = px.bar(dfx, x=x_label, y=y_label, title='Most Buzy Users',  text=y_label )
+    fig = px.bar(dfx, x=x_label, y=y_label, title='Most Busy Users',  text=y_label )
     fig.update_layout(
         xaxis_title="Top Users(by message counts)",
         yaxis_title="Number of messages",
@@ -116,7 +116,7 @@ def busiest_days(df,user):
         xaxis_title="Days in week",
         yaxis_title="Number of messages (Daily)",
     )
-    fig_pie = px.pie(dfx, names=x_label, values=y_label, title="Buziest days")
+    fig_pie = px.pie(dfx, names=x_label, values=y_label, title="Busiest days")
     return fig_bar,fig_pie
 
 # days plotted against number of words(content length) per day
@@ -151,12 +151,12 @@ def busiest_months(df,user):
     sorted_series = month_count_series.reindex(month_order)
     dfx = series_to_df(sorted_series,x_label,y_label)
 
-    fig_bar = px.bar(dfx, x=x_label, y=y_label, title='Buziest Months',  text=y_label )
+    fig_bar = px.bar(dfx, x=x_label, y=y_label, title='Busiest Months',  text=y_label )
     fig_bar.update_layout(
         xaxis_title="Months in year",
         yaxis_title="Number of messages (Monthly)",
     )
-    fig_pie = px.pie(dfx, names=x_label, values=y_label, title='Buziest Months')
+    fig_pie = px.pie(dfx, names=x_label, values=y_label, title='Busiest Months')
     return fig_bar,fig_pie
 
 # months plotted against number of words(content length) per month
