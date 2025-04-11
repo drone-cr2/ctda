@@ -71,7 +71,7 @@ const ContributorsList = () => {
         {contributors.map((contributor, index) => (
           <div
             key={index}
-            className="min-w-[200px] bg-gray-100 flex flex-col items-center rounded-lg shadow-md p-3 relative"
+            className="min-w-[200px] bg-indigo-100 flex flex-col items-center rounded-lg shadow-md p-3 relative"
           >
             {/* Rank Badge */}
             <div className="absolute -top-2 -left-2 bg-[#ffb700] text-white text-xs font-bold px-2 py-1 rounded-full">
