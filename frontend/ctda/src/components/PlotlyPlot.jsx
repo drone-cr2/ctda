@@ -6,6 +6,10 @@ const PlotlyPlot = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+
+  
+
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -17,11 +21,13 @@ const PlotlyPlot = (props) => {
         return res.json();
       })
       .then((data) => {
+
+
         const updatedData = data.data.map((trace) => ({
           ...trace,
           type: "bar",
           marker: {
-            color: "#4f39f6",
+            color: props.sen || "#4f39f6",
           },
         }));
 
@@ -41,6 +47,8 @@ const PlotlyPlot = (props) => {
           autosize: true,
           responsive: true,
         };
+
+        
 
         setChartData({ data: updatedData, layout: updatedLayout });
       })

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
 import { Info } from "lucide-react";
-const LollipopChart = ({ url, sen }) => {
+const LollipopChart = ({ url, sen, color}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -68,7 +68,7 @@ const LollipopChart = ({ url, sen }) => {
           mode: "lines",
           x: data.flatMap((d, i) => [0, d.value, null]),
           y: yPositions.flatMap((pos) => [pos, pos, null]),
-          line: { color: "#6366F1", width: 3 },
+          line: { color: color || "#4f39f6", width: 3 },
           hoverinfo: "none",
         },
         // Lollipop Heads (dots)
@@ -79,7 +79,7 @@ const LollipopChart = ({ url, sen }) => {
           y: yPositions,
           marker: {
             size: 10,
-            color: "#ffb700",
+            color: "#ffd700",
             line: { width: 2, color: "#000" },
           },
           name: "Contributions",

@@ -7,6 +7,7 @@ const LinePlot = (props) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
   const fetchData = async () => {
     setLoading(true);
     setError(null);
@@ -23,11 +24,11 @@ const LinePlot = (props) => {
           y: data.data[0].y,
           type: "scatter",
           mode: "lines+markers",
-          line: { color: "#4f39f6", width: 2 },
+          line: { color: props.sen || "#4f39f6", width: 2 },
           name: data.data[0].name,
           marker: {
             size: 8,
-            color: "#4f39f6",
+            color: props.sen,
             symbol: "circle",
           },
         },

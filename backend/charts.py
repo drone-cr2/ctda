@@ -31,7 +31,7 @@ def top_users(df):
     busy_users_series = df['user'].value_counts().head()
     dfx = series_to_df(busy_users_series,x_label,y_label)
 
-    fig = px.bar(dfx, x=x_label, y=y_label, title='Most Busy Users',  text=y_label )
+    fig = px.bar(dfx, x=x_label, y=y_label, title='Busiest Users',  text=y_label )
     fig.update_layout(
         xaxis_title="Top Users(by message counts)",
         yaxis_title="Number of messages",

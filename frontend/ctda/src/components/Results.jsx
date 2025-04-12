@@ -308,9 +308,8 @@ function Results({ users, selectedUser, setSelectedUser }) {
                                   key={i}
                                   className="w-full md:w-1/3 p-2 md:p-4"
                                 >
-                                  <ChartComponent
-                                    url={`http://127.0.0.1:8080/${urlPrefix}/${i}`}
-                                  />
+                                  {i === 0 ?  <ChartComponent url={`http://127.0.0.1:8080/${urlPrefix}/${i}`} sen = "#D10000"/> : i === 1 ? <ChartComponent url={`http://127.0.0.1:8080/${urlPrefix}/${i}`} sen = "#0000D1"/> : <ChartComponent url={`http://127.0.0.1:8080/${urlPrefix}/${i}`} sen = "#00D100"/>}
+                                  
                                 </motion.div>
                               ))}
                             </div>
@@ -329,10 +328,7 @@ function Results({ users, selectedUser, setSelectedUser }) {
                                   key={i}
                                   className="w-full md:w-1/3 p-2 md:p-4"
                                 >
-                                  <LollipopChart
-                                    url={`http://127.0.0.1:8080/sen-contribution/${i}`}
-                                    sen={sen}
-                                  />
+                                  {sen === "Negative" ? <LollipopChart url={`http://127.0.0.1:8080/sen-contribution/${i}`} sen={sen} color="#D10000" /> : sen === "Neutral" ? <LollipopChart url={`http://127.0.0.1:8080/sen-contribution/${i}`} sen={sen} color="#0000D1"/> :  <LollipopChart url={`http://127.0.0.1:8080/sen-contribution/${i}`} sen={sen} color="#00D100"/>  }
                                 </motion.div>
                               )
                             )}
